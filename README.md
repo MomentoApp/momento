@@ -1,12 +1,12 @@
 # Project Name
 
-> Pithy project description
+> Momento
 
 ## Team
 
-  - __Product Owner__: Chris Choi
-  - __Scrum Master__: Nick Lebedev
-  - __Development Team Members__: Kamal Mango
+  - __Product Owner__: [Chris Choi](https://github.com/cmhchoi)
+  - __Scrum Master__: [Nick Lebedev](https://github.com/nlebedev)
+  - __Development Team Members__: [Kamal Mango](https://github.com/kamalmango)
 
 ## Table of Contents
 
