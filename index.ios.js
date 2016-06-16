@@ -17,7 +17,6 @@ import CameraView from './app/components/CameraView';
 class momento extends Component {
   render() {
     return (
-     
       <CameraView />
     );
   }
