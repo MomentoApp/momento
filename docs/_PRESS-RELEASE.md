@@ -18,26 +18,27 @@ Once the project moves into development, the press release can be used as a touc
  
 ## Heading ##
   > Name the product in a way the reader (i.e. your target customers) will understand.
-  Mom ento
+  Momento
 ## Sub-Heading ##
-  > Describe who the market for the product is and what benefit they get. One sentence only underneath the title.
+  >People get to save their memories and explore other people's experiences in the past.
 ## Summary ##
   > Give a summary of the product and the benefit. Assume the reader will not read anything else so make this paragraph good.
-  
+  //TODO: Copy from word document
 ## Problem ##
   > Describe the problem your product solves.
-
+  People don't see the most interesting moments that happed in places that they visit don't have an ability to bind their memories to specific places.
 ## Solution ##
   > Describe how your product elegantly solves the problem.
-
+  With momento you can save your video and bind it to the place where it was taken and explore the best moments that other people had.
 ## Quote from You ##
   > A quote from a spokesperson in your company.
-
+  'Relive the moment' - Chris
 ## How to Get Started ##
   > Describe how easy it is to get started.
-
+  To get started with the app, you just need to download it and with very easy facebook authentication you can start using the app right away. Just go to some interesting place and explore what experiences other people had there. Or even share one of your own.
 ## Customer Quote ##
   > Provide a quote from a hypothetical customer that describes how they experienced the benefit.
-
+  "Using momento is awesome. Every time we travel we use momento and see the highlights of the places we go to. With the app we were able to see beautiful fireworks, sunsets, celebrations and much more. Two weeks ago our daughter had a birthday and we captured that moment and 'saved' it to our house. Now this memory lives forever in our home." - Jeff
 ## Closing and Call to Action ##
   > Wrap it up and give pointers where the reader should go next.
+  Excited to relive the best experiences around you? Download the app now and start your amazing journey into the world of memories.
