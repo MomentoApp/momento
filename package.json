@@ -11,5 +11,12 @@
     "react": "^15.1.0",
     "react-native": "0.27.2",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git"
+  },
+  "devDependencies": {
+    "eslint": "^2.12.0",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.8.1",
+    "eslint-plugin-jsx-a11y": "^1.5.3",
+    "eslint-plugin-react": "^5.2.0"
   }
 }

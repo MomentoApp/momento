@@ -144,6 +144,7 @@ export default class Example extends React.Component {
     return icon;
   }
 
+  // captureMode={Camera.constants.CaptureMode.video}
   render() {
     return (
       <View style={styles.container}>
@@ -158,7 +159,6 @@ export default class Example extends React.Component {
           style={styles.preview}
           aspect={this.state.camera.aspect}
           captureTarget={this.state.camera.captureTarget}
-          captureMode={Camera.constants.CaptureMode.video}
           type={this.state.camera.type}
           flashMode={this.state.camera.flashMode}
           defaultTouchToFocus
