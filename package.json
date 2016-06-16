@@ -6,6 +6,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-react": "^5.1.1",
     "react": "^15.1.0",
     "react-native": "0.27.2",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git"
