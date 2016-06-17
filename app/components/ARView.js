@@ -3,10 +3,13 @@ import {
   StyleSheet,
   View,
   WebView,
-  Text
+  Text,
 } from 'react-native';
 
 import Camera from 'react-native-camera';
+import { Actions } from 'react-native-router-flux';
+import defaultStyles from '../styles/style';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -135,6 +138,9 @@ class ARView extends Component {
             style={styles.webView}
             source={{ html: html }}
           />
+        </View>
+        <View style={defaultStyles.navWrap}>
+          <Text style={defaultStyles.nav} onPress={Actions.camera}>Video</Text>
         </View>
       </View>
     );
