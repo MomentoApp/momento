@@ -1,0 +1,7 @@
+1) DROP DATABASE momento; [OPTIONAL]
+2) CREATE DATABASE momento;
+3) \connect momento;
+4) CREATE EXTENSION postgis;
+5) CREATE EXTENSION postgis_topology;
+6) ALTER EXTENSION postgis UPDATE TO "2.2.2";
+7) ALTER EXTENSION postgis_topology UPDATE TO "2.2.2";

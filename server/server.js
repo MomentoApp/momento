@@ -1,16 +1,17 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+// const session = require('express-session');
+const routes = require('./routes');
 
-const port = 3000
+const host = process.env.HOST || 'localhost';
+const port = process.env.PORT || 3000;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
+app
+  .use(bodyParser.json())
+  .use(bodyParser.urlencoded({ extended: true }))
+  .use('/api', routes);
 
 app.listen(port, () => {
-  console.log(`Connected to port ${port}`);
+  console.log(`Connected to ${host}:${port}`);
 });
