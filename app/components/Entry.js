@@ -24,7 +24,7 @@ class Login extends Component {
   render() {
     return (
       <View>
-        <Text style={styles.text}>Hello Momento</Text>
+        <Text style={styles.text}>Login screen</Text>
       </View>
     );
   }
