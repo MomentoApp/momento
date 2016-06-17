@@ -9,13 +9,14 @@ import {
   AppRegistry,
   StyleSheet,
 } from 'react-native';
-import Login from './app/components/Login';
+import Entry from './app/components/Entry';
 import CameraView from './app/components/CameraView';
+import ARView from './app/components/ARView';
 
 class momento extends Component {
   render() {
     return (
-      <CameraView />
+      <ARView />
     );
   }
 }

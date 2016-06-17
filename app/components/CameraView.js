@@ -47,6 +47,13 @@ const styles = StyleSheet.create({
   flashButton: {
     padding: 5,
   },
+  graphics: {
+    width: 100,
+    height: 200,
+    top: 250,
+    left: 50,
+    position: 'absolute',
+  },
 });
 
 export default class Example extends React.Component {
