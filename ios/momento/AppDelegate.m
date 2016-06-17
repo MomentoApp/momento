@@ -32,7 +32,9 @@
    */
 //Change the address to your address (ifconfig and en0 -> inet) or localhost
 
+
   jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
+
 
 
 
