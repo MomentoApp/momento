@@ -36,10 +36,6 @@
   jsCodeLocation = [NSURL URLWithString:@"http://10.6.28.29:8081/index.ios.bundle?platform=ios&dev=true"];
 
 
-
-
-
-
   /**
    * OPTION 2
    * Load from pre-bundled file on disk. The static bundle is automatically
