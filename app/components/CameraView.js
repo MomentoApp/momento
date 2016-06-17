@@ -5,8 +5,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Text,
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Camera from 'react-native-camera';
+import defaultStyles from '../styles/style';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -47,13 +51,7 @@ const styles = StyleSheet.create({
   flashButton: {
     padding: 5,
   },
-  graphics: {
-    width: 100,
-    height: 200,
-    top: 250,
-    left: 50,
-    position: 'absolute',
-  },
+  
 });
 
 export default class Example extends React.Component {
@@ -197,6 +195,9 @@ export default class Example extends React.Component {
               source={require('./../assets/camera/ic_photo_camera_36pt.png')}
             />
           </TouchableOpacity>
+        </View>
+        <View style={defaultStyles.navWrap}>
+          <Text style={defaultStyles.nav} onPress={Actions.ar}>Explore</Text>
         </View>
       </View>
     );
