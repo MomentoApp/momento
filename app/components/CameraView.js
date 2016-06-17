@@ -151,7 +151,7 @@ export default class Example extends React.Component {
     return icon;
   }
 
-  // captureMode={Camera.constants.CaptureMode.video}
+// captureMode={Camera.constants.CaptureMode.video}
   render() {
     return (
       <View style={styles.container}>
