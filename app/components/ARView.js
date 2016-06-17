@@ -3,7 +3,9 @@ import {
   StyleSheet,
   View,
   WebView,
+  Text
 } from 'react-native';
+
 import Camera from 'react-native-camera';
 
 const styles = StyleSheet.create({
@@ -26,6 +28,17 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-end',
     alignItems: 'center',
+  },
+  developerWrap: {
+    position: 'absolute',
+    top: 30,
+    left: 10,
+    right: 0,
+    bottom: 0,
+  },
+  developerText: {
+    color: 'red',
+    backgroundColor: 'transparent',
   },
 });
 
@@ -71,6 +84,38 @@ const html = `<!DOCTYPE html>
 </html>`;
 
 class ARView extends Component {
+  constructor(props) {
+    super(props);
+    // load settings from props otherwise use defaults
+    this.state = {};
+  }
+
+  componentDidMount() {
+    if (!navigator.geolocation) { console.log('geoloaction not available'); }
+    if (navigator.geolocation) { console.log('geoloaction available'); }
+    navigator.geolocation.getCurrentPosition(
+      (initialPosition) => {
+        console.log('initial position is', initialPosition);
+        this.setState({ initialPosition });
+      },
+      (error) => alert('error trying to find initial position', error.message),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+
+    this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
+      // if we want function on position change, it should go here
+      // this.state.changePosFunction(lastPosition);
+
+      console.log('lastPosition', lastPosition);
+      this.setState({ latitude: lastPosition.coords.latitude });
+      this.setState({ longitude: lastPosition.coords.longitude });
+    });
+  }
+
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -81,6 +126,10 @@ class ARView extends Component {
           style={styles.preview}
           aspect={Camera.constants.Aspect.fill}
         />
+        <View style={styles.developerWrap}>
+          <Text style={styles.developerText}>Latitude: {this.state.latitude}</Text>
+          <Text style={styles.developerText}>Longitude: {this.state.longitude}</Text>
+        </View>
         <View style={styles.webViewWrap}>
           <WebView
             style={styles.webView}
