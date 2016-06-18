@@ -3,10 +3,11 @@ import {
   StyleSheet,
   View,
   WebView,
-  Text
+  Text,
 } from 'react-native';
 
 import Camera from 'react-native-camera';
+import Nav from './Nav';
 
 const styles = StyleSheet.create({
   container: {
@@ -136,28 +137,10 @@ class ARView extends Component {
             source={{ html: html }}
           />
         </View>
+        <Nav currentPage="ar" />
       </View>
     );
   }
 }
 
 module.exports = ARView;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

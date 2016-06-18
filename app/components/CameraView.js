@@ -5,8 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Text,
 } from 'react-native';
 import Camera from 'react-native-camera';
+import Nav from './Nav';
 
 const styles = StyleSheet.create({
   container: {
@@ -32,8 +34,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bottomOverlay: {
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    bottom: 65,
+    // backgroundColor: 'rgba(0,0,0,0.4)',
+  },
+  redBorderWrap: {
+    flex: 1,
+    padding: 6,
+    backgroundColor: 'rgba(223,70,70,1)',
+    borderRadius: 50,
   },
   captureButton: {
     flex: 1,
@@ -47,14 +55,22 @@ const styles = StyleSheet.create({
   flashButton: {
     padding: 5,
   },
-  graphics: {
-    width: 100,
-    height: 200,
-    top: 250,
-    left: 50,
+  timeWrap: {
+    flex: 1,
     position: 'absolute',
+    alignItems: 'center',
+    top: 20,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+  },
+  time: {
+    color: 'white',
+    fontWeight: '300',
+    fontSize: 20,
   },
 });
+
 
 export default class Example extends React.Component {
   constructor(props) {
@@ -70,18 +86,51 @@ export default class Example extends React.Component {
         orientation: Camera.constants.Orientation.auto,
         flashMode: Camera.constants.FlashMode.auto,
       },
+      recording: false,
+      recordingTime: '00:00',
     };
 
-    this.takePicture = this.takePicture.bind(this);
+    this.recordVideo = this.recordVideo.bind(this);
     this.switchType = this.switchType.bind(this);
     this.switchFlash = this.switchFlash.bind(this);
   }
 
-  takePicture() {
+  topBarOverlayStyle() {
+    return this.state.recording
+      ? { backgroundColor: 'rgba(255, 0, 0, 0.4)' }
+      : { backgroundColor: 'rgba(0, 0, 0, 0.4)' };
+  }
+
+  runTimer(mode) {
+    if (mode) {
+      const startDate = new Date();
+      this.setState({ timer: setInterval(() => {
+        const timeNow = new Date();
+        let seconds = Math.floor((timeNow - startDate) / 1000);
+        seconds = seconds % 60 < 10 ? '0' + (seconds % 60) : seconds % 60;
+        let minutes = Math.floor(seconds / 60);
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        this.setState({ recordingTime: minutes + ':' + seconds });
+      }, 1000) });
+    } else {
+      this.setState({ recordingTime: '00:00' });
+      clearInterval(this.state.timer);
+    }
+  }
+
+  recordVideo() {
     if (this.camera) {
-      this.camera.capture()
-        .then((data) => console.log(data))
-        .catch(err => console.error(err));
+      if (!this.state.recording) {
+        this.setState({ recording: true });
+        this.runTimer(true);
+        this.camera.capture()
+          .then((data) => console.log(data))
+          .catch(err => console.error(err));
+      } else {
+        this.setState({ recording: false });
+        this.runTimer(false);
+        this.camera.stopCapture();
+      }
     }
   }
 
@@ -151,7 +200,6 @@ export default class Example extends React.Component {
     return icon;
   }
 
-// captureMode={Camera.constants.CaptureMode.video}
   render() {
     return (
       <View style={styles.container}>
@@ -169,8 +217,9 @@ export default class Example extends React.Component {
           type={this.state.camera.type}
           flashMode={this.state.camera.flashMode}
           defaultTouchToFocus
+          captureMode={Camera.constants.CaptureMode.video}
         />
-        <View style={[styles.overlay, styles.topOverlay]}>
+        <View style={[styles.overlay, styles.topOverlay, this.topBarOverlayStyle()]}>
           <TouchableOpacity
             style={styles.typeButton}
             onPress={this.switchType}
@@ -190,15 +239,26 @@ export default class Example extends React.Component {
         </View>
         <View style={[styles.overlay, styles.bottomOverlay]}>
           <TouchableOpacity
-            style={styles.captureButton}
-            onPress={this.takePicture}
+            style={styles.redBorderWrap}
+            onPress={this.recordVideo}
           >
-            <Image
-              source={require('./../assets/camera/ic_photo_camera_36pt.png')}
-            />
+            <TouchableOpacity
+              style={styles.captureButton}
+              onPress={this.recordVideo}
+            >
+              {!this.state.recording
+                ? <Image source={require('./../assets/camera/ic_video_camera_36pt.png')} />
+                : <Image source={require('./../assets/camera/ic_stop_camera_36pt.png')} />
+              }
+            </TouchableOpacity>
           </TouchableOpacity>
         </View>
+        <View style={styles.timeWrap}>
+          <Text style={styles.time}>{this.state.recordingTime}</Text>
+        </View>
+          <Nav currentPage="camera" />
       </View>
     );
   }
 }
+
