@@ -84,6 +84,54 @@ const html = `<!DOCTYPE html>
   </body>
 </html>`;
 
+
+
+
+
+const sechtml = `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=utf-8>
+    <title>My first Three.js app</title>
+    <style>
+      body { margin: 0; }
+      canvas { width: 100%; height: 100% }
+    </style>
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r78/three.js"></script>
+    <script>
+     
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+      var renderer = new THREE.WebGLRenderer({ alpha: true });
+      renderer.setClearColor( 0x000000, 0 ); // the default
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      document.body.appendChild( renderer.domElement );
+
+      var geometry = new THREE.BoxGeometry(1,1,1);
+      var material = new THREE.MeshBasicMaterial({color:"rgb(255, 0, 0)"});
+      var cube = new THREE.Mesh(geometry, material);
+      scene.add(cube);
+
+      camera.position.z = 5;
+
+      function render() {
+        requestAnimationFrame(render);
+        cube.rotation.x += 0.01;
+        cube.rotation.y += 0.01;
+        renderer.render(scene, camera);
+      }
+      render();
+
+    </script>
+  </body>
+</html>`;
+
+
+
+
 class ARView extends Component {
   constructor(props) {
     super(props);
@@ -131,6 +179,7 @@ class ARView extends Component {
           <Text style={styles.developerText}>Latitude: {this.state.latitude}</Text>
           <Text style={styles.developerText}>Longitude: {this.state.longitude}</Text>
         </View>
+
         <View style={styles.webViewWrap}>
           <WebView
             style={styles.webView}
@@ -138,6 +187,7 @@ class ARView extends Component {
           />
         </View>
         <Nav currentPage="ar" />
+
       </View>
     );
   }
