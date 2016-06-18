@@ -12,7 +12,7 @@ module.exports = {
     console.log(newVideo);
     db.Video.create({
       url: newVideo.url,
-      point: { type: 'Point', coordinates: [newVideo.latitude, newVideo.longitude] },
+      point: newVideo.point,
       UserId: newVideo.UserId,
     })
       .then((video) => cb(null, video))

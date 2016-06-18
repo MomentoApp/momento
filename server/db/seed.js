@@ -12,11 +12,23 @@ db.User.create({
   name: 'chris',
 });
 
-const point = { type: 'Point', coordinates: [39.807222, -76.984722] };
-
+// hack reactor
 db.Video.create({
   url: 'https://instagram.fsjc1-2.fna.fbcdn.net/t50.2886-16/13477956_200851573643145_931110641_n.mp4',
-  point,
+  point: { type: 'Point', coordinates: [37.7837221, -122.4091839] },
   UserId: 1,
 });
 
+// west san francisco centre
+db.Video.create({
+  url: 'https://instagram.fsjc1-2.fna.fbcdn.net/t50.2886-16/13477956_200851573643145_931110641_n.mp4',
+  point: { type: 'Point', coordinates: [37.7847912, -122.40713522] },
+  UserId: 1,
+});
+
+// powell station exit
+db.Video.create({
+  url: 'https://instagram.fsjc1-2.fna.fbcdn.net/t50.2886-16/13477956_200851573643145_931110641_n.mp4',
+  point: { type: 'Point', coordinates: [37.784415, -122.408103] },
+  UserId: 1,
+});
