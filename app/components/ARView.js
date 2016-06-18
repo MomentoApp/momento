@@ -84,6 +84,37 @@ const html = `<!DOCTYPE html>
   </body>
 </html>`;
 
+const testObj = [
+  {
+    "id": 1,
+    "url": "https://instagram.fsjc1-2.fna.fbcdn.net/t50.2886-16/13448244_1764286310482288_2066918794_n.mp4",
+    "point": {
+      "type": "Point",
+      "coordinates": [
+        37.7837221,
+        -122.4091839
+      ]
+    },
+    "createdAt": "2016-06-17T05:17:34.996Z",
+    "updatedAt": "2016-06-17T05:17:34.996Z",
+    "UserId": 1
+  },
+  {
+    "id": 2,
+    "url": "https://instagram.fsjc1-2.fna.fbcdn.net/t50.2886-16/13448244_1764286310482288_2066918794_n.mp4",
+    "point": {
+      "type": "Point",
+      "coordinates": [
+        37.7847912,
+        -122.40713522
+      ]
+    },
+    "createdAt": "2016-06-17T05:17:34.996Z",
+    "updatedAt": "2016-06-17T05:17:34.996Z",
+    "UserId": 1
+  }
+]
+
 
 class ARView extends Component {
   constructor(props) {
