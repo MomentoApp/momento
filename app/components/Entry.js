@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import Nav from './Nav';
+// import Nav from '.Nav';
 
 const styles = StyleSheet.create({
   text: {
@@ -26,7 +26,6 @@ class Login extends Component {
     return (
       <View>
         <Text style={styles.text}>Login screen</Text>
-        <Nav />
       </View>
     );
   }
