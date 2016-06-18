@@ -8,6 +8,7 @@ import {
 
 import Camera from 'react-native-camera';
 import Nav from './Nav';
+import { getVideos } from '../utils/queries';
 
 const styles = StyleSheet.create({
   container: {
@@ -84,8 +85,11 @@ const html = `<!DOCTYPE html>
   </body>
 </html>`;
 
+
+
+
 // this is a temporary test object that mimics the JSON that will be received from the db
-const testObj = [
+let testObj = [
   {
     "id": 1,
     "url": "https://instagram.fsjc1-2.fna.fbcdn.net/t50.2886-16/13448244_1764286310482288_2066918794_n.mp4",
@@ -139,6 +143,11 @@ class ARView extends Component {
   }
 
   componentDidMount() {
+    console.log('test before', testObj);
+    getVideos('http://localhost:3000', (videos) => {
+      console.log('got vids', videos);
+      testObj = videos;
+    });
     if (!navigator.geolocation) { console.log('geoloaction not available'); }
     if (navigator.geolocation) { console.log('geoloaction available'); }
     navigator.geolocation.getCurrentPosition(
@@ -165,6 +174,7 @@ class ARView extends Component {
   }
 
   render() {
+    console.log('test after',testObj);
     return (
       <View style={styles.container}>
         <Camera

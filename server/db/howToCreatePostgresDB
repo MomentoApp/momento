@@ -1,3 +1,5 @@
+Inside Postgres terminal:
+
 1) DROP DATABASE momento; [OPTIONAL]
 2) CREATE DATABASE momento;
 3) \connect momento;
@@ -5,3 +7,8 @@
 5) CREATE EXTENSION postgis_topology;
 6) ALTER EXTENSION postgis UPDATE TO "2.2.2";
 7) ALTER EXTENSION postgis_topology UPDATE TO "2.2.2";
+
+Inside another terminal:
+
+8) node server/db/index.js
+9) node server/db/seed.js

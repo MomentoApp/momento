@@ -1,5 +1,5 @@
 module.exports = {
-  username: 'postgres',
+  username: 'nlebedev',
   password: null,
   database: 'momento',
   config: {
