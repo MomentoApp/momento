@@ -7,10 +7,8 @@ import {
   View,
   Text,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import Camera from 'react-native-camera';
-import defaultStyles from '../styles/style';
-
+import Nav from './Nav';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,7 +34,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bottomOverlay: {
-    bottom: 0,
+    bottom: 65,
     // backgroundColor: 'rgba(0,0,0,0.4)',
   },
   redBorderWrap: {
@@ -56,6 +54,20 @@ const styles = StyleSheet.create({
   },
   flashButton: {
     padding: 5,
+  },
+  timeWrap: {
+    flex: 1,
+    position: 'absolute',
+    alignItems: 'center',
+    top: 20,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+  },
+  time: {
+    color: 'white',
+    fontWeight: '300',
+    fontSize: 20,
   },
 });
 
@@ -241,14 +253,12 @@ export default class Example extends React.Component {
             </TouchableOpacity>
           </TouchableOpacity>
         </View>
-        <View style={defaultStyles.navWrap}>
-          <Text style={defaultStyles.nav} onPress={Actions.ar}>{this.state.recordingTime}</Text>
+        <View style={styles.timeWrap}>
+          <Text style={styles.time}>{this.state.recordingTime}</Text>
         </View>
+          <Nav currentPage="camera" />
       </View>
     );
   }
 }
 
-//<View style={defaultStyles.navWrap}>
- //         <Text style={defaultStyles.nav} onPress={Actions.ar}>Explore</Text>
- //       </View>

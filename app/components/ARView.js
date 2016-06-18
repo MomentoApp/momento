@@ -7,9 +7,7 @@ import {
 } from 'react-native';
 
 import Camera from 'react-native-camera';
-import { Actions } from 'react-native-router-flux';
-import defaultStyles from '../styles/style';
-
+import Nav from './Nav';
 
 const styles = StyleSheet.create({
   container: {
@@ -139,31 +137,10 @@ class ARView extends Component {
             source={{ html: html }}
           />
         </View>
-        <View style={defaultStyles.navWrap}>
-          <Text style={defaultStyles.nav} onPress={Actions.camera}>Video</Text>
-        </View>
+        <Nav currentPage="ar" />
       </View>
     );
   }
 }
 
 module.exports = ARView;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
