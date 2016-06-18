@@ -26,6 +26,7 @@ class Login extends Component {
     return (
       <View>
         <Text style={styles.text}>Login screen</Text>
+        <Nav />
       </View>
     );
   }
