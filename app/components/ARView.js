@@ -84,6 +84,7 @@ const html = `<!DOCTYPE html>
   </body>
 </html>`;
 
+// this is a temporary test object that mimics the JSON that will be received from the db
 const testObj = [
   {
     "id": 1,
@@ -107,6 +108,20 @@ const testObj = [
       "coordinates": [
         37.7847912,
         -122.40713522
+      ]
+    },
+    "createdAt": "2016-06-17T05:17:34.996Z",
+    "updatedAt": "2016-06-17T05:17:34.996Z",
+    "UserId": 1
+  },
+  {
+    "id": 3,
+    "url": "https://instagram.fsjc1-2.fna.fbcdn.net/t50.2886-16/13448244_1764286310482288_2066918794_n.mp4",
+    "point": {
+      "type": "Point",
+      "coordinates": [
+        37.74267,
+        -122.48634
       ]
     },
     "createdAt": "2016-06-17T05:17:34.996Z",
@@ -164,15 +179,28 @@ class ARView extends Component {
           <Text style={styles.developerText}>Longitude: {this.state.longitude}</Text>
         </View>
 
-        <View style={styles.webViewWrap}>
-          <WebView
-            style={styles.webView}
-            source={{ html: html }}
-          />
-        </View>
+
+        {(() => {
+            var latitude = Number(Number(this.state.latitude).toFixed(3));
+            var longitude = Number(Number(this.state.longitude).toFixed(3));
+
+            return testObj.map(function(data) {
+              var lat = Number(Number(data.point.coordinates[0]).toFixed(3));
+              var longt = Number(Number(data.point.coordinates[1]).toFixed(3));
+              if ( (latitude === lat) && (longitude === longt) )  {
+                return (
+                  <View style={styles.webViewWrap}>
+                    <WebView
+                      style={styles.webView}
+                      source={{ html: html }}
+                    />
+                  </View>
+                );
+              }
+            });
+        })()}
+        
         <Nav currentPage="ar" />
-
-
       </View>
     );
   }
