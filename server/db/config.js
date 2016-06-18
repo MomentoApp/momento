@@ -1,5 +1,5 @@
 module.exports = {
-  username: 'cmhchoi',
+  username: 'postgres',
   password: null,
   database: 'momento',
   config: {
