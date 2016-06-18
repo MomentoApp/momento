@@ -8,7 +8,6 @@ import {
 
 import Camera from 'react-native-camera';
 import Nav from './Nav';
-import { getVideos } from '../utils/queries';
 import THREE_JS_RENDER from '../lib/render.js';
 
 const styles = StyleSheet.create({
@@ -71,13 +70,9 @@ class ARView extends Component {
   }
 
 
-  componentWillMount() {
-    getVideos('http://10.6.28.29:3000', (videos) => {
-      this.setState({ testObj: videos });
-    });
-  }
-
   componentDidMount() {
+ 
+
     if (!navigator.geolocation) { console.log('geoloaction not available'); }
     if (navigator.geolocation) { console.log('geoloaction available'); }
     navigator.geolocation.getCurrentPosition(
@@ -101,7 +96,6 @@ class ARView extends Component {
   }
 
   render() {
-    // console.log('test after',testObj);
     return (
       <View style={styles.container}>
         <Camera
