@@ -18,9 +18,8 @@ class momento extends Component {
     return (
       <Router>
         <Scene key="root" hideNavBar>
-          <Scene key="camera" component={CameraView} title="Camera" initial />
-          <Scene key="ar" component={ARView} title="AR" />
-          <Scene key="entry" component={Entry} />
+          <Scene key="camera" component={CameraView} title="Camera" initial hideNavBar />
+          <Scene key="ar" component={ARView} title="AR" hideNavBar />
         </Scene>
       </Router>
     );
