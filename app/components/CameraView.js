@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Camera from 'react-native-camera';
 import Nav from './Nav';
+import { Actions } from 'react-native-router-flux';
 
 const styles = StyleSheet.create({
   container: {
@@ -88,6 +89,7 @@ export default class Example extends React.Component {
       },
       recording: false,
       recordingTime: '00:00',
+      videoUrl: 'url not found',
     };
 
     this.recordVideo = this.recordVideo.bind(this);
@@ -124,7 +126,10 @@ export default class Example extends React.Component {
         this.setState({ recording: true });
         this.runTimer(true);
         this.camera.capture()
-          .then((data) => console.log(data))
+          .then((data) => {
+            const redirect = () => { Actions.videoPlayer({ data }); };
+            redirect();
+          })
           .catch(err => console.error(err));
       } else {
         this.setState({ recording: false });
@@ -216,8 +221,8 @@ export default class Example extends React.Component {
           captureTarget={this.state.camera.captureTarget}
           type={this.state.camera.type}
           flashMode={this.state.camera.flashMode}
-          defaultTouchToFocus
           captureMode={Camera.constants.CaptureMode.video}
+          defaultTouchToFocus
         />
         <View style={[styles.overlay, styles.topOverlay, this.topBarOverlayStyle()]}>
           <TouchableOpacity
@@ -254,7 +259,7 @@ export default class Example extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={styles.timeWrap}>
-          <Text style={styles.time}>{this.state.recordingTime}</Text>
+          <Text style={styles.time}>{JSON.stringify(this.state.videoUrl)}</Text>
         </View>
           <Nav currentPage="camera" />
       </View>

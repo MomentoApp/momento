@@ -11,7 +11,9 @@
     "react": "^15.1.0",
     "react-native": "0.27.2",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
-    "react-native-router-flux": "^3.30.0"
+    "react-native-router-flux": "^3.30.0",
+    "react-native-video": "^0.8.0",
+    "react-native-videoplayer": "^1.2.0"
   },
   "devDependencies": {
     "eslint": "^2.12.0",
