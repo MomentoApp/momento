@@ -69,10 +69,7 @@ class ARView extends Component {
     };
   }
 
-
   componentDidMount() {
- 
-
     if (!navigator.geolocation) { console.log('geoloaction not available'); }
     if (navigator.geolocation) { console.log('geoloaction available'); }
     navigator.geolocation.getCurrentPosition(
