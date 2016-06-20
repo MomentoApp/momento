@@ -30,7 +30,12 @@
    * `inet` value under `en0:`) and make sure your computer and iOS device are
    * on the same Wi-Fi network.
    */
+<<<<<<< 3bf541c15ebf6a2799d3fced6971b9750a212423
   jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
+=======
+
+  jsCodeLocation = [NSURL URLWithString:@"http://10.6.22.249:8081/index.ios.bundle?platform=ios&dev=true"];
+>>>>>>> Styling videoplayer
 
   /**
    * OPTION 2

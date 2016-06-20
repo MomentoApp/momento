@@ -1,134 +1,502 @@
 import React, { Component } from 'react';
 import {
   View,
+  StyleSheet,
+  AlertIOS,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  CameraRoll,
 } from 'react-native';
 import Video from 'react-native-video';
 import { RNS3 } from 'react-native-aws3';
 import { saveVideo } from '../utils/queries';
 import AMAZON_S3 from '../config/apiKeys';
+import { Actions } from 'react-native-router-flux';
 
 // Later on in your styles..
+// const styles = StyleSheet.create({
+//   backgroundVideo: {
+//     position: 'absolute',
+//     top: 0,
+//     left: 0,
+//     bottom: 0,
+//     right: 0,
+//   },
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   video: {
+//     position: 'absolute',
+//     top: 0, left: 0, right: 0, bottom: 0,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     backgroundColor: 'transparent',
+//   },
+// });
+
 const styles = StyleSheet.create({
-  backgroundVideo: {
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  fullScreen: {
     position: 'absolute',
     top: 0,
     left: 0,
     bottom: 0,
     right: 0,
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  video: {
+  controls: {
+    backgroundColor: 'transparent',
+    borderRadius: 5,
     position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
+    bottom: 44,
+    left: 4,
+    right: 4,
+  },
+
+  playButtonWrap: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
+    left: 0,
+    right: 0,
+    borderRadius: 50,
+    padding: 6,
+  },
+
+  roundButton: {
+    backgroundColor: 'transparent',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderColor: 'white',
+    borderWidth: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  togglePlayButton: {
     backgroundColor: 'transparent',
   },
+
+  progress: {
+    flex: 1,
+    flexDirection: 'row',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  innerProgressCompleted: {
+    height: 20,
+    backgroundColor: '#cccccc',
+  },
+  innerProgressRemaining: {
+    height: 20,
+    backgroundColor: '#2C2C2C',
+  },
+  generalControls: {
+    flex: 1,
+    flexDirection: 'row',
+    overflow: 'hidden',
+    paddingBottom: 10,
+  },
+  skinControl: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  rateControl: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  volumeControl: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  resizeModeControl: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  controlOption: {
+    alignSelf: 'center',
+    fontSize: 11,
+    color: "white",
+    paddingLeft: 2,
+    paddingRight: 2,
+    lineHeight: 12,
+  },
+  nativeVideoControls: {
+    top: 184,
+    height: 300
+  }
 });
 
- 
 
+// class VideoPlayer extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       response: { headers: { location: 'waiting' } },
+//     };
+//   }
 
+//   componentDidMount() {
+//     // TODO: USER REDUX AND REFACTOR
+//     // if (!navigator.geolocation) { console.log('geoloaction not available'); }
+//     // if (navigator.geolocation) { console.log('geoloaction available'); }
+//     // navigator.geolocation.getCurrentPosition(
+//     //   (initialPosition) => {
+//     //     console.log('initial position is', initialPosition);
+//     //     this.setState({ initialPosition });
+//     //   },
+//     //   (error) => alert('error trying to find initial position', error.message),
+//     //   { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+//     // );
 
-class VideoPlayer extends Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      response: {headers: {location: 'waiting'}},
-    };
-  }
+//     // this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
+//     //   // if we want function on position change, it should go here
+//     //   // this.state.changePosFunction(lastPosition);
 
-  componentDidMount() {
-    if (!navigator.geolocation) { console.log('geoloaction not available'); }
-    if (navigator.geolocation) { console.log('geoloaction available'); }
-    navigator.geolocation.getCurrentPosition(
-      (initialPosition) => {
-        console.log('initial position is', initialPosition);
-        this.setState({ initialPosition });
-      },
-      (error) => alert('error trying to find initial position', error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
+//     //   console.log('lastPosition', lastPosition);
+//     //   this.setState({ latitude: lastPosition.coords.latitude });
+//     //   this.setState({ longitude: lastPosition.coords.longitude });
+//     // });
 
-    this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
-      // if we want function on position change, it should go here
-      // this.state.changePosFunction(lastPosition);
+//     // const file = {
+//     //   uri: this.props.data.path,
+//     //   name: `${this.props.data.size}.mov`,
+//     //   type: 'video/quicktime',
+//     // };
 
-      console.log('lastPosition', lastPosition);
-      this.setState({ latitude: lastPosition.coords.latitude });
-      this.setState({ longitude: lastPosition.coords.longitude });
-    });
+//     // const options = {
+//     //   keyPrefix: 'uploads/',
+//     //   bucket: AMAZON_S3.BUCKET,
+//     //   region: AMAZON_S3.REGION,
+//     //   accessKey: AMAZON_S3.ACCESS_KEY,
+//     //   secretKey: AMAZON_S3.SECRET_KEY,
+//     //   successActionStatus: 201,
+//     // };
 
+//     // const context = this;
+//     // RNS3.put(file, options)
+//     //   .then(response => {
+//     //     if (response.status !== 201) {
+//     //       throw new Error('Failed to upload image to S3');
+//     //     }
+//     //     const video = {
+//     //       url: response.headers.Location,
+//     //       point: {
+//     //         type: 'Point',
+//     //         coordinates: [
+//     //           context.state.initialPosition.coords.latitude,
+//     //           context.state.initialPosition.coords.longitude,
+//     //         ],
+//     //       },
+//     //       UserId: 2,
+//     //     };
+//     //     saveVideo(video, () => {});
+//     //     context.setState({ response });
+//     //     console.log(JSON.stringify('RESPONSE', response));
+//     //   })
+//     //   .catch((e) => console.log(e))
+//     //   .progress((e) => console.log(e.loaded / e.total));
+//   }
 
-    const file = {
-      uri: this.props.data.path,
-      name: this.props.data.size + '.mov',
-      type: 'video/quicktime',
-    };
+//   render() {
+//     return (
+//       <View style={styles.container}>
+//         <Video
+//           source={{ uri: this.props.data.path }}
+//           style={styles.backgroundVideo}
+//           rate={1}
+//           paused={false}
+//           volume={1}
+//           muted={false}
+//           resizeMode="contain"
+//           repeat={false}
+//       />
+//       </View>
+//     );
+//   }
+// }
 
-    const options = {
-      keyPrefix: 'uploads/',
-      bucket: AMAZON_S3.BUCKET,
-      region: AMAZON_S3.REGION,
-      accessKey: AMAZON_S3.ACCESS_KEY,
-      secretKey: AMAZON_S3.SECRET_KEY,
-      successActionStatus: 201,
-    };
+// VideoPlayer.propTypes = {
+//   data: React.PropTypes.object,
+// };
 
-      let context = this;
-      RNS3.put(file, options)
-        .then(response => {
-          if (response.status !== 201) {
-            throw new Error("Failed to upload image to S3");
-          }
-          const video = {
-            url: response.headers.Location,
-            point: {
-              type: 'Point',
-              coordinates: [
-                context.state.initialPosition.coords.latitude,
-                context.state.initialPosition.coords.longitude,
-              ],
-            },
-            UserId: 2,
-          };
-          saveVideo(video, () => {});
-          context.setState({response});
-          console.log(JSON.stringify('RESPONSE', response));
-        })
-        .catch((e)=>console.log(e))
-        .progress((e) => console.log(e.loaded / e.total));
-  }
-
-  render() {
-    
-    return (
-          <Video
-            source={{ uri: this.props.data.path }}
-            style={styles.backgroundVideo}
-            rate={1}
-            paused={false}
-            volume={1}
-            muted={false}
-            resizeMode='contain'
-            repeat={false}
-          />
-
-
-    )
-  }
-}
-
-module.exports = VideoPlayer;
 
 // Within your render function, assuming you have a file called
 // "background.mp4" in your project. You can include multiple videos
 // on a single screen if you like.
+
+
+
+//**********************************************
+
+class VideoPlayer extends Component {
+  constructor(props) {
+    super(props);
+    this.onLoad = this.onLoad.bind(this);
+    this.onProgress = this.onProgress.bind(this);
+    this.togglePlay = this.togglePlay.bind(this);
+    this.tryToPause = this.tryToPause.bind(this);
+    this.state = {
+      rate: 1,
+      volume: 1,
+      muted: false,
+      resizeMode: 'contain',
+      duration: 0.0,
+      currentTime: 0.0,
+      controls: true,
+      paused: true,
+      skin: 'custom',
+      buttonText: 'Play',
+    };
+  }
+
+  onLoad(data) {
+    this.setState({ duration: data.duration });
+  }
+
+  onProgress(data) {
+    this.setState({ currentTime: data.currentTime });
+  }
+
+  getCurrentTimePercentage() {
+    if (this.state.currentTime > 0) {
+      return parseFloat(this.state.currentTime) / parseFloat(this.state.duration);
+    }
+    return 0;
+  }
+
+  renderSkinControl(skin) {
+    const isSelected = this.state.skin === skin;
+    const selectControls = skin === 'native' || skin === 'embed';
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.setState({
+            controls: selectControls,
+            skin: skin,
+          });
+        }}
+      >
+      <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal"}]}>
+        {skin}
+      </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  renderRateControl(rate) {
+    const isSelected = (this.state.rate === rate);
+
+    return (
+      <TouchableOpacity onPress={() => { this.setState({rate: rate}) }}>
+        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+          {rate}x
+        </Text>
+      </TouchableOpacity>
+    )
+  }
+
+  renderResizeModeControl(resizeMode) {
+    const isSelected = (this.state.resizeMode === resizeMode);
+
+    return (
+      <TouchableOpacity onPress={() => { this.setState({resizeMode: resizeMode}) }}>
+        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+          {resizeMode}
+        </Text>
+      </TouchableOpacity>
+    )
+  }
+
+  renderVolumeControl(volume) {
+    const isSelected = (this.state.volume === volume);
+
+    return (
+      <TouchableOpacity onPress={() => { this.setState({volume: volume}) }}>
+        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
+          {volume * 100}%
+        </Text>
+      </TouchableOpacity>
+    )
+  }
+
+  renderCustomSkin() {
+    const flexCompleted = this.getCurrentTimePercentage() * 100;
+    const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
+
+    return (
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.fullScreen} >
+          <Video
+            source={{ uri: 'https://s3.amazonaws.com/momentotest/uploads/4230947.mov' }}
+            style={styles.fullScreen}
+            rate={this.state.rate}
+            paused={this.state.paused}
+            volume={this.state.volume}
+            muted={this.state.muted}
+            resizeMode={this.state.resizeMode}
+            onLoad={this.onLoad}
+            onProgress={this.onProgress}
+            onEnd={() => { AlertIOS.alert('Done!'); }}
+            repeat={false}
+          />
+          <View style={styles.playButtonWrap}>
+            <Text>PAUSE THIS THING!!!</Text>
+          </View>
+        </TouchableOpacity>
+        
+
+        <View style={styles.controls}>
+          <View style={styles.generalControls}>
+            <View style={styles.skinControl}>
+              {this.renderSkinControl('custom')}
+              {this.renderSkinControl('native')}
+              {this.renderSkinControl('embed')}
+            </View>
+          </View>
+          <View style={styles.generalControls}>
+            <View style={styles.rateControl}>
+              {this.renderRateControl(0.5)}
+              {this.renderRateControl(1.0)}
+              {this.renderRateControl(2.0)}
+            </View>
+
+            <View style={styles.volumeControl}>
+              {this.renderVolumeControl(0.5)}
+              {this.renderVolumeControl(1)}
+              {this.renderVolumeControl(1.5)}
+            </View>
+
+            <View style={styles.resizeModeControl}>
+              {this.renderResizeModeControl('cover')}
+              {this.renderResizeModeControl('contain')}
+              {this.renderResizeModeControl('stretch')}
+            </View>
+          </View>
+
+          <View style={styles.trackingControls}>
+            <View style={styles.progress}>
+              <View style={[styles.innerProgressCompleted, {flex: flexCompleted}]} />
+              <View style={[styles.innerProgressRemaining, {flex: flexRemaining}]} />
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  togglePlay() {
+    console.log('toggling play');
+    this.setState({ paused: !this.state.paused });
+    this.setState({ buttonText: this.state.buttonText === 'Play' ? 'Pause' : 'Play' })
+  }
+
+  tryToPause() {
+    if (!this.state.paused) {
+      this.setState({'paused': true});
+    }
+  }
+
+  renderNativeSkin() {
+    const videoStyle = this.state.skin === 'embed' ? styles.nativeVideoControls : styles.fullScreen;
+    return (
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.fullScreen} onPress={this.tryToPause}>
+          <Video
+            source={{ uri: 'https://s3.amazonaws.com/momentotest/uploads/4230947.mov' }}
+            style={videoStyle}
+            rate={this.state.rate}
+            paused={this.state.paused}
+            volume={this.state.volume}
+            muted={this.state.muted}
+            resizeMode={this.state.resizeMode}
+            onLoad={this.onLoad}
+            onProgress={this.onProgress}
+            onEnd={() => { AlertIOS.alert('Done!') }}
+            repeat={false}
+            controls={this.state.controls}
+          />
+        </TouchableOpacity>
+          
+          
+        <View style={styles.playButtonWrap}>
+          <View style={styles.roundButton}>
+            <Text onPress={this.togglePlay} style={styles.togglePlayButton}>{this.state.buttonText}</Text>
+          </View>
+        </View>
+        <View style={styles.controls}>
+          <View style={styles.generalControls}>
+            <View style={styles.skinControl}>
+              {this.renderSkinControl('custom')}
+              {this.renderSkinControl('native')}
+              {this.renderSkinControl('embed')}
+            </View>
+          </View>
+          <View style={styles.generalControls}>
+            <View style={styles.rateControl}>
+              {this.renderRateControl(0.5)}
+              {this.renderRateControl(1.0)}
+              {this.renderRateControl(2.0)}
+            </View>
+
+            <View style={styles.volumeControl}>
+              {this.renderVolumeControl(0.5)}
+              {this.renderVolumeControl(1)}
+              {this.renderVolumeControl(1.5)}
+            </View>
+
+            <View style={styles.resizeModeControl}>
+              {this.renderResizeModeControl('cover')}
+              {this.renderResizeModeControl('contain')}
+              {this.renderResizeModeControl('stretch')}
+            </View>
+          </View>
+        </View>
+
+      </View>
+    );
+  }
+
+  render() {
+    return this.state.controls ? this.renderNativeSkin() : this.renderCustomSkin();
+  }
+}
+
+
+module.exports = VideoPlayer;
+
+
+
+//**********************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

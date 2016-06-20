@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-// import Nav from '.Nav';
+import Nav from './Nav';
 
 const styles = StyleSheet.create({
   text: {

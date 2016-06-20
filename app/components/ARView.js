@@ -60,6 +60,7 @@ const html = `<!DOCTYPE html>
   </body>
 </html>`;
 
+
 class ARView extends Component {
   constructor(props) {
     super(props);
