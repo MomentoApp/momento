@@ -11,7 +11,7 @@ import { RNS3 } from 'react-native-aws3';
 import { saveVideo } from '../utils/queries';
 import AMAZON_S3 from '../config/apiKeys';
 import { Actions } from 'react-native-router-flux';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 // Later on in your styles..
 // const styles = StyleSheet.create({
 //   backgroundVideo: {
@@ -58,26 +58,33 @@ const styles = StyleSheet.create({
     right: 4,
   },
 
+  // playButtonWrap: {
+  //   position: 'absolute',
+  //   backgroundColor: 'transparent',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   left: 0,
+  //   right: 0,
+  //   borderRadius: 50,
+  //   padding: 6,
+  // },
+
+  // roundButton: {
+  //   backgroundColor: 'transparent',
+  //   width: 100,
+  //   height: 100,
+  //   borderRadius: 50,
+  //   borderColor: 'white',
+  //   borderWidth: 10,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
   playButtonWrap: {
-    position: 'absolute',
     backgroundColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'center',
-    left: 0,
-    right: 0,
-    borderRadius: 50,
-    padding: 6,
   },
 
-  roundButton: {
+  playButton: {
     backgroundColor: 'transparent',
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderColor: 'white',
-    borderWidth: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 
   togglePlayButton: {
@@ -135,8 +142,27 @@ const styles = StyleSheet.create({
   },
   nativeVideoControls: {
     top: 184,
-    height: 300
-  }
+    height: 300,
+  },
+  ctrlBtn: {
+    // backgroundColor: 'red',
+    borderWidth: 3,
+    borderRadius: 35,
+    borderColor: 'white',
+    padding: 12,
+    marginLeft: 10,
+    marginRight: 10,
+
+  },
+  ctrlBtnText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: "400",
+  },
+  ctrlBtnWrap: {
+    // backgroundColor: 'red',
+    flexDirection: 'row',
+  },
 });
 
 
@@ -244,8 +270,6 @@ const styles = StyleSheet.create({
 class VideoPlayer extends Component {
   constructor(props) {
     super(props);
-    this.onLoad = this.onLoad.bind(this);
-    this.onProgress = this.onProgress.bind(this);
     this.togglePlay = this.togglePlay.bind(this);
     this.tryToPause = this.tryToPause.bind(this);
     this.state = {
@@ -257,159 +281,47 @@ class VideoPlayer extends Component {
       currentTime: 0.0,
       controls: true,
       paused: true,
-      skin: 'custom',
-      buttonText: 'Play',
+      repeat: false,
     };
   }
 
-  onLoad(data) {
-    this.setState({ duration: data.duration });
-  }
-
-  onProgress(data) {
-    this.setState({ currentTime: data.currentTime });
-  }
-
-  getCurrentTimePercentage() {
-    if (this.state.currentTime > 0) {
-      return parseFloat(this.state.currentTime) / parseFloat(this.state.duration);
-    }
-    return 0;
-  }
-
-  renderSkinControl(skin) {
-    const isSelected = this.state.skin === skin;
-    const selectControls = skin === 'native' || skin === 'embed';
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          this.setState({
-            controls: selectControls,
-            skin: skin,
-          });
-        }}
-      >
-      <Text style={[styles.controlOption, { fontWeight: isSelected ? "bold" : "normal"}]}>
-        {skin}
-      </Text>
-      </TouchableOpacity>
-    );
-  }
-
-  renderRateControl(rate) {
-    const isSelected = (this.state.rate === rate);
-
-    return (
-      <TouchableOpacity onPress={() => { this.setState({rate: rate}) }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
-          {rate}x
-        </Text>
-      </TouchableOpacity>
-    )
-  }
-
-  renderResizeModeControl(resizeMode) {
-    const isSelected = (this.state.resizeMode === resizeMode);
-
-    return (
-      <TouchableOpacity onPress={() => { this.setState({resizeMode: resizeMode}) }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
-          {resizeMode}
-        </Text>
-      </TouchableOpacity>
-    )
-  }
-
-  renderVolumeControl(volume) {
-    const isSelected = (this.state.volume === volume);
-
-    return (
-      <TouchableOpacity onPress={() => { this.setState({volume: volume}) }}>
-        <Text style={[styles.controlOption, {fontWeight: isSelected ? "bold" : "normal"}]}>
-          {volume * 100}%
-        </Text>
-      </TouchableOpacity>
-    )
-  }
-
-  renderCustomSkin() {
-    const flexCompleted = this.getCurrentTimePercentage() * 100;
-    const flexRemaining = (1 - this.getCurrentTimePercentage()) * 100;
-
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.fullScreen} >
-          <Video
-            source={{ uri: 'https://s3.amazonaws.com/momentotest/uploads/4230947.mov' }}
-            style={styles.fullScreen}
-            rate={this.state.rate}
-            paused={this.state.paused}
-            volume={this.state.volume}
-            muted={this.state.muted}
-            resizeMode={this.state.resizeMode}
-            onLoad={this.onLoad}
-            onProgress={this.onProgress}
-            onEnd={() => { AlertIOS.alert('Done!'); }}
-            repeat={false}
-          />
-          <View style={styles.playButtonWrap}>
-            <Text>PAUSE THIS THING!!!</Text>
-          </View>
-        </TouchableOpacity>
-        
-
-        <View style={styles.controls}>
-          <View style={styles.generalControls}>
-            <View style={styles.skinControl}>
-              {this.renderSkinControl('custom')}
-              {this.renderSkinControl('native')}
-              {this.renderSkinControl('embed')}
-            </View>
-          </View>
-          <View style={styles.generalControls}>
-            <View style={styles.rateControl}>
-              {this.renderRateControl(0.5)}
-              {this.renderRateControl(1.0)}
-              {this.renderRateControl(2.0)}
-            </View>
-
-            <View style={styles.volumeControl}>
-              {this.renderVolumeControl(0.5)}
-              {this.renderVolumeControl(1)}
-              {this.renderVolumeControl(1.5)}
-            </View>
-
-            <View style={styles.resizeModeControl}>
-              {this.renderResizeModeControl('cover')}
-              {this.renderResizeModeControl('contain')}
-              {this.renderResizeModeControl('stretch')}
-            </View>
-          </View>
-
-          <View style={styles.trackingControls}>
-            <View style={styles.progress}>
-              <View style={[styles.innerProgressCompleted, {flex: flexCompleted}]} />
-              <View style={[styles.innerProgressRemaining, {flex: flexRemaining}]} />
-            </View>
-          </View>
-        </View>
-      </View>
-    );
+  playButtonStyle() {
+    return this.state.paused
+      ? { opacity: 1 }
+      : { opacity: 0 };
   }
 
   togglePlay() {
     console.log('toggling play');
     this.setState({ paused: !this.state.paused });
-    this.setState({ buttonText: this.state.buttonText === 'Play' ? 'Pause' : 'Play' })
+    this.setState({ buttonText: this.state.buttonText === 'Play' ? 'Pause' : 'Play' });
+    console.log('STYLES:', JSON.stringify(styles.playButtonWrap));
   }
 
   tryToPause() {
     if (!this.state.paused) {
-      this.setState({'paused': true});
+      this.setState({ paused: true });
     }
   }
 
-  renderNativeSkin() {
+  renderControlButtons() {
+    return (
+      <View style={styles.ctrlBtnWrap}>
+        <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.camera}>
+          <Text style={styles.ctrlBtnText}>
+            Go Back
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.ctrlBtn} onPress={() => {}}>
+          <Text style={styles.ctrlBtnText}>
+            Submit
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  render() {
     const videoStyle = this.state.skin === 'embed' ? styles.nativeVideoControls : styles.fullScreen;
     return (
       <View style={styles.container}>
@@ -417,60 +329,36 @@ class VideoPlayer extends Component {
           <Video
             source={{ uri: 'https://s3.amazonaws.com/momentotest/uploads/4230947.mov' }}
             style={videoStyle}
-            rate={this.state.rate}
+            rate={1}
             paused={this.state.paused}
-            volume={this.state.volume}
-            muted={this.state.muted}
-            resizeMode={this.state.resizeMode}
-            onLoad={this.onLoad}
-            onProgress={this.onProgress}
-            onEnd={() => { AlertIOS.alert('Done!') }}
-            repeat={false}
-            controls={this.state.controls}
+            volume={1}
+            muted={false}
+            resizeMode="contain"
+            onEnd={() => { AlertIOS.alert('Done!'); }}
+            repeat={this.state.repeat}
+            controls={false}
           />
         </TouchableOpacity>
-          
-          
-        <View style={styles.playButtonWrap}>
-          <View style={styles.roundButton}>
-            <Text onPress={this.togglePlay} style={styles.togglePlayButton}>{this.state.buttonText}</Text>
-          </View>
-        </View>
+
+        <TouchableOpacity style={styles.playButtonWrap} onPress={this.togglePlay}>
+          <Icon
+            style={[styles.playButton, this.playButtonStyle()]}
+            name="play-circle"
+            size={100}
+            color="white"
+          />
+        </TouchableOpacity>
+
         <View style={styles.controls}>
           <View style={styles.generalControls}>
             <View style={styles.skinControl}>
-              {this.renderSkinControl('custom')}
-              {this.renderSkinControl('native')}
-              {this.renderSkinControl('embed')}
-            </View>
-          </View>
-          <View style={styles.generalControls}>
-            <View style={styles.rateControl}>
-              {this.renderRateControl(0.5)}
-              {this.renderRateControl(1.0)}
-              {this.renderRateControl(2.0)}
-            </View>
-
-            <View style={styles.volumeControl}>
-              {this.renderVolumeControl(0.5)}
-              {this.renderVolumeControl(1)}
-              {this.renderVolumeControl(1.5)}
-            </View>
-
-            <View style={styles.resizeModeControl}>
-              {this.renderResizeModeControl('cover')}
-              {this.renderResizeModeControl('contain')}
-              {this.renderResizeModeControl('stretch')}
+              {this.renderControlButtons()}
             </View>
           </View>
         </View>
 
       </View>
     );
-  }
-
-  render() {
-    return this.state.controls ? this.renderNativeSkin() : this.renderCustomSkin();
   }
 }
 
