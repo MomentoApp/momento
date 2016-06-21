@@ -9,6 +9,7 @@ import {
 import Camera from 'react-native-camera';
 import Nav from './Nav';
 import { getVideos } from '../utils/queries';
+import THREE_JS_RENDER from '../lib/render.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -56,32 +57,7 @@ const html = `<!DOCTYPE html>
   </head>
   <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r78/three.js"></script>
-    <script>
-     
-      var scene = new THREE.Scene();
-      var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-      var renderer = new THREE.WebGLRenderer({ alpha: true });
-      renderer.setClearColor( 0x000000, 0 ); // the default
-      renderer.setSize( window.innerWidth, window.innerHeight );
-      document.body.appendChild( renderer.domElement );
-
-      var geometry = new THREE.BoxGeometry(1,1,1);
-      var material = new THREE.MeshBasicMaterial({color:0x00ff00});
-      var cube = new THREE.Mesh(geometry, material);
-      scene.add(cube);
-
-      camera.position.z = 5;
-
-      function render() {
-        requestAnimationFrame(render);
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-        renderer.render(scene, camera);
-      }
-      render();
-
-    </script>
+    ${THREE_JS_RENDER}
   </body>
 </html>`;
 
@@ -96,7 +72,7 @@ class ARView extends Component {
 
 
   componentWillMount() {
-    getVideos('http://localhost:3000', (videos) => {
+    getVideos('http://10.6.28.29:3000', (videos) => {
       this.setState({ testObj: videos });
     });
   }
@@ -106,7 +82,6 @@ class ARView extends Component {
     if (navigator.geolocation) { console.log('geoloaction available'); }
     navigator.geolocation.getCurrentPosition(
       (initialPosition) => {
-        console.log('initial position is', initialPosition);
         this.setState({ initialPosition });
       },
       (error) => alert('error trying to find initial position', error.message),
@@ -116,8 +91,6 @@ class ARView extends Component {
     this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
       // if we want function on position change, it should go here
       // this.state.changePosFunction(lastPosition);
-
-      console.log('lastPosition', lastPosition);
       this.setState({ latitude: lastPosition.coords.latitude });
       this.setState({ longitude: lastPosition.coords.longitude });
     });
@@ -147,12 +120,13 @@ class ARView extends Component {
         {(() => {       
           const latitude = Number(Number(this.state.latitude).toFixed(3));
           const longitude = Number(Number(this.state.longitude).toFixed(3));
-
           if (this.state.testObj !== null) {
             return this.state.testObj.map(data => {
+              console.log(data.point.coordinates);
               const lat = Number(Number(data.point.coordinates[0]).toFixed(3));
               const longt = Number(Number(data.point.coordinates[1]).toFixed(3));
               if ((latitude === lat) && (longitude === longt)) {
+                console.log('HELOOOOO');
                 return (
                   <View style={styles.webViewWrap}>
                     <WebView
