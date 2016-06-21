@@ -259,7 +259,7 @@ export default class Example extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={styles.timeWrap}>
-          <Text style={styles.time}>{JSON.stringify(this.state.videoUrl)}</Text>
+          <Text style={styles.time}>{this.state.recordingTime}</Text>
         </View>
           <Nav currentPage="camera" />
       </View>

@@ -7,9 +7,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Video from 'react-native-video';
-import { RNS3 } from 'react-native-aws3';
-import { saveVideo } from '../utils/queries';
-import AMAZON_S3 from '../config/apiKeys';
+
+
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 // Later on in your styles..
@@ -157,7 +156,7 @@ const styles = StyleSheet.create({
   ctrlBtnText: {
     color: 'white',
     fontSize: 18,
-    fontWeight: "400",
+    fontWeight: '400',
   },
   ctrlBtnWrap: {
     // backgroundColor: 'red',
@@ -166,102 +165,6 @@ const styles = StyleSheet.create({
 });
 
 
-// class VideoPlayer extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       response: { headers: { location: 'waiting' } },
-//     };
-//   }
-
-//   componentDidMount() {
-//     // TODO: USER REDUX AND REFACTOR
-//     // if (!navigator.geolocation) { console.log('geoloaction not available'); }
-//     // if (navigator.geolocation) { console.log('geoloaction available'); }
-//     // navigator.geolocation.getCurrentPosition(
-//     //   (initialPosition) => {
-//     //     console.log('initial position is', initialPosition);
-//     //     this.setState({ initialPosition });
-//     //   },
-//     //   (error) => alert('error trying to find initial position', error.message),
-//     //   { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-//     // );
-
-//     // this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
-//     //   // if we want function on position change, it should go here
-//     //   // this.state.changePosFunction(lastPosition);
-
-//     //   console.log('lastPosition', lastPosition);
-//     //   this.setState({ latitude: lastPosition.coords.latitude });
-//     //   this.setState({ longitude: lastPosition.coords.longitude });
-//     // });
-
-//     // const file = {
-//     //   uri: this.props.data.path,
-//     //   name: `${this.props.data.size}.mov`,
-//     //   type: 'video/quicktime',
-//     // };
-
-//     // const options = {
-//     //   keyPrefix: 'uploads/',
-//     //   bucket: AMAZON_S3.BUCKET,
-//     //   region: AMAZON_S3.REGION,
-//     //   accessKey: AMAZON_S3.ACCESS_KEY,
-//     //   secretKey: AMAZON_S3.SECRET_KEY,
-//     //   successActionStatus: 201,
-//     // };
-
-//     // const context = this;
-//     // RNS3.put(file, options)
-//     //   .then(response => {
-//     //     if (response.status !== 201) {
-//     //       throw new Error('Failed to upload image to S3');
-//     //     }
-//     //     const video = {
-//     //       url: response.headers.Location,
-//     //       point: {
-//     //         type: 'Point',
-//     //         coordinates: [
-//     //           context.state.initialPosition.coords.latitude,
-//     //           context.state.initialPosition.coords.longitude,
-//     //         ],
-//     //       },
-//     //       UserId: 2,
-//     //     };
-//     //     saveVideo(video, () => {});
-//     //     context.setState({ response });
-//     //     console.log(JSON.stringify('RESPONSE', response));
-//     //   })
-//     //   .catch((e) => console.log(e))
-//     //   .progress((e) => console.log(e.loaded / e.total));
-//   }
-
-//   render() {
-//     return (
-//       <View style={styles.container}>
-//         <Video
-//           source={{ uri: this.props.data.path }}
-//           style={styles.backgroundVideo}
-//           rate={1}
-//           paused={false}
-//           volume={1}
-//           muted={false}
-//           resizeMode="contain"
-//           repeat={false}
-//       />
-//       </View>
-//     );
-//   }
-// }
-
-// VideoPlayer.propTypes = {
-//   data: React.PropTypes.object,
-// };
-
-
-// Within your render function, assuming you have a file called
-// "background.mp4" in your project. You can include multiple videos
-// on a single screen if you like.
 
 
 
@@ -272,6 +175,7 @@ class VideoPlayer extends Component {
     super(props);
     this.togglePlay = this.togglePlay.bind(this);
     this.tryToPause = this.tryToPause.bind(this);
+    this.goToSubmit = this.goToSubmit.bind(this);
     this.state = {
       rate: 1,
       volume: 1,
@@ -282,6 +186,7 @@ class VideoPlayer extends Component {
       controls: true,
       paused: true,
       repeat: false,
+      response: { headers: { location: 'waiting' } },
     };
   }
 
@@ -304,6 +209,10 @@ class VideoPlayer extends Component {
     }
   }
 
+  goToSubmit() {
+    Actions.submit({ data: this.props.data });
+  }
+
   renderControlButtons() {
     return (
       <View style={styles.ctrlBtnWrap}>
@@ -312,7 +221,10 @@ class VideoPlayer extends Component {
             Go Back
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.ctrlBtn} onPress={() => {}}>
+        <TouchableOpacity
+          style={styles.ctrlBtn}
+          onPress={this.goToSubmit}
+        >
           <Text style={styles.ctrlBtnText}>
             Submit
           </Text>
@@ -327,7 +239,7 @@ class VideoPlayer extends Component {
       <View style={styles.container}>
         <TouchableOpacity style={styles.fullScreen} onPress={this.tryToPause}>
           <Video
-            source={{ uri: 'https://s3.amazonaws.com/momentotest/uploads/4230947.mov' }}
+            source={{ uri: this.props.data.path }}
             style={videoStyle}
             rate={1}
             paused={this.state.paused}
@@ -362,12 +274,13 @@ class VideoPlayer extends Component {
   }
 }
 
+VideoPlayer.propTypes = {
+  data: React.PropTypes.object,
+};
 
 module.exports = VideoPlayer;
 
-
-
-//**********************************************
+// **********************************************
 
 
 
