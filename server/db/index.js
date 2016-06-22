@@ -26,4 +26,4 @@ Video.belongsTo(User);
 
 sequelize.sync();
 
-module.exports = { User, Video };
+module.exports = { User, Video, sequelize };

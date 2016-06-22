@@ -6,7 +6,7 @@ const videoController = require('../controllers/videoController');
 router.get('/user', userController.get);
 router.post('/user', userController.post);
 
-router.get('/video', videoController.get);
+router.get('/video/:latitude/:longitude/:radius', videoController.get);
 router.post('/video', videoController.post);
 
 // router.get('/videowithin', videowithinController.get);
