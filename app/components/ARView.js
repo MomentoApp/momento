@@ -67,14 +67,19 @@ const html = `<!DOCTYPE html>
 class ARView extends Component {
   constructor(props) {
     super(props);
+    this.store = this.props.store;
   }
 
   componentDidMount() {
+    this.unsubscribe = this.store.subscribe(() =>
+      this.forceUpdate()
+    );
+ 
     if (!navigator.geolocation) { console.log('geoloaction not available'); }
     if (navigator.geolocation) { console.log('geoloaction available'); }
     navigator.geolocation.getCurrentPosition(
       (initialPosition) => {
-        this.props.store.dispatch(updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude));
+        this.store.dispatch(updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude));
       },
       (error) => alert('error trying to find initial position', error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
@@ -89,6 +94,7 @@ class ARView extends Component {
   }
 
   componentWillUnmount() {
+    this.unsubscribe();
     navigator.geolocation.clearWatch(this.watchID);
   }
 
@@ -103,12 +109,14 @@ class ARView extends Component {
           aspect={Camera.constants.Aspect.fill}
         />
         <View style={styles.developerWrap}>
+          <Text style={styles.developerText}>Latitude: {this.store.getState().position.latitude}</Text>
+          <Text style={styles.developerText}>Longitude: {this.store.getState().position.longitude}</Text>
         </View>
 
 
         {(() => {
-            var latitude = Number(Number(this.props.store.getState().latitude).toFixed(3));
-            var longitude = Number(Number(this.props.store.getState().longitude).toFixed(3));
+            var latitude = Number(Number(this.store.getState().position.latitude).toFixed(3));
+            var longitude = Number(Number(this.store.getState().position.longitude).toFixed(3));
             return testObj.map(function(data) {
               var lat = Number(Number(data.point.coordinates[0]).toFixed(3));
               var longt = Number(Number(data.point.coordinates[1]).toFixed(3));
@@ -130,8 +138,35 @@ class ARView extends Component {
     );
   }
 }
-ARView.contextTypes = {
-  store: React.PropTypes.object,
-};
+
+// const mapStateToProps = (state) => {
+// // tells how to transform the current Redux store state into the props
+// // we want to pass to a presentational component we are wrapping
+//   return {
+//     todos: getVisibleTodos(state.todos, state.visibilityFilter),
+//   };
+// };
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude)
+
+//     onTodoClick: (id) => {
+//       dispatch(toggleTodo(id));
+//     }
+//   }
+// }
+
+// const VisibleARView = connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(ARView);
+
+
+// ARView.contextTypes = {
+//   store: React.PropTypes.object,
+// };
 // module.exports = connect()(ARView);
-export default connect()(ARView);
+// export default VisibleARView;
+
+export default ARView;
