@@ -15,20 +15,26 @@
     "react-native-router-flux": "^3.30.0",
     "react-native-vector-icons": "^2.0.3",
     "react-native-video": "^0.8.0",
-    "react-native-videoplayer": "^1.2.0"
+    "react-native-videoplayer": "^1.2.0",
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2",
+    "redux-logger": "^2.6.1",
+    "redux-promise": "^0.5.3",
+    "redux-thunk": "^2.1.0"
   },
   "devDependencies": {
+    "body-parser": "^1.15.1",
+    "cookie-parser": "^1.4.3",
     "eslint": "^2.12.0",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.0",
-    "body-parser": "^1.15.1",
-    "cookie-parser": "^1.4.3",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
     "pg": "^5.1.0",
     "pg-hstore": "^2.3.2",
+    "redux-devtools": "^3.3.1",
     "sequelize": "^3.23.3"
   }
 }

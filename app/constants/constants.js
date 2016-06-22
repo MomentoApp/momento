@@ -1,0 +1,2 @@
+export const SAVE_VIDEO = 'SAVE_VIDEO';
+export const UPDATE_COORDINATS = 'UPDATE_COORDINATS';

@@ -9,6 +9,9 @@ import {
 import Camera from 'react-native-camera';
 import Nav from './Nav';
 import THREE_JS_RENDER from '../lib/render.js';
+import { getVideos, saveVideo } from '../utils/queries';
+import { updateCoordinats } from '../actions';
+import { connect } from 'react-redux';
 
 const styles = StyleSheet.create({
   container: {
@@ -64,10 +67,6 @@ const html = `<!DOCTYPE html>
 class ARView extends Component {
   constructor(props) {
     super(props);
-    // load settings from props otherwise use defaults
-    this.state = {
-      testObj: null,
-    };
   }
 
   componentDidMount() {
@@ -75,17 +74,17 @@ class ARView extends Component {
     if (navigator.geolocation) { console.log('geoloaction available'); }
     navigator.geolocation.getCurrentPosition(
       (initialPosition) => {
-        this.setState({ initialPosition });
+        this.props.store.dispatch(updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude));
       },
       (error) => alert('error trying to find initial position', error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
 
+
     this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
       // if we want function on position change, it should go here
       // this.state.changePosFunction(lastPosition);
-      this.setState({ latitude: lastPosition.coords.latitude });
-      this.setState({ longitude: lastPosition.coords.longitude });
+      this.props.store.dispatch(updateCoordinats(lastPosition.coords.latitude, lastPosition.coords.longitude));
     });
   }
 
@@ -104,21 +103,16 @@ class ARView extends Component {
           aspect={Camera.constants.Aspect.fill}
         />
         <View style={styles.developerWrap}>
-          <Text style={styles.developerText}>Latitude: {this.state.latitude}</Text>
-          <Text style={styles.developerText}>Longitude: {this.state.longitude}</Text>
         </View>
 
 
-        {(() => {       
-          const latitude = Number(Number(this.state.latitude).toFixed(3));
-          const longitude = Number(Number(this.state.longitude).toFixed(3));
-          if (this.state.testObj !== null) {
-            return this.state.testObj.map(data => {
-              console.log(data.point.coordinates);
-              const lat = Number(Number(data.point.coordinates[0]).toFixed(3));
-              const longt = Number(Number(data.point.coordinates[1]).toFixed(3));
-              if ((latitude === lat) && (longitude === longt)) {
-                console.log('HELOOOOO');
+        {(() => {
+            var latitude = Number(Number(this.props.store.getState().latitude).toFixed(3));
+            var longitude = Number(Number(this.props.store.getState().longitude).toFixed(3));
+            return testObj.map(function(data) {
+              var lat = Number(Number(data.point.coordinates[0]).toFixed(3));
+              var longt = Number(Number(data.point.coordinates[1]).toFixed(3));
+              if ( (latitude === lat) && (longitude === longt) )  {
                 return (
                   <View style={styles.webViewWrap}>
                     <WebView
@@ -136,5 +130,8 @@ class ARView extends Component {
     );
   }
 }
-
-module.exports = ARView;
+ARView.contextTypes = {
+  store: React.PropTypes.object,
+};
+// module.exports = connect()(ARView);
+export default connect()(ARView);
