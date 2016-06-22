@@ -1,11 +1,10 @@
 module.exports = {
-  username: 'kamalmango',
-  password: null,
+  username: 'momento',
+  password: 'Hackreactor',
   database: 'momento',
   config: {
-    host: 'localhost',
+    host: 'momento.caxamxz9bjrd.us-west-2.rds.amazonaws.com',
     dialect: 'postgres',
-    port: 5432,
     pool: {
       max: 5,
       min: 0,
