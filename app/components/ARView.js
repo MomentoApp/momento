@@ -173,7 +173,7 @@ class ARView extends Component {
             () => {
               const latitude = Number(Number(this.store.getState().position.latitude).toFixed(3));
               const longitude = Number(Number(this.store.getState().position.longitude).toFixed(3));
-              return testObj.map(function(data) {
+              return testObj.map((data) => {
                 const lat = Number(Number(data.point.coordinates[0]).toFixed(3));
                 const longt = Number(Number(data.point.coordinates[1]).toFixed(3));
                 if ((latitude === lat) && (longitude === longt)) {
@@ -181,16 +181,16 @@ class ARView extends Component {
                     <View style={styles.webViewWrap}>
                       <WebView
                         style={styles.webView}
-                        source={{ html: html }}
+                        source={{ html }}
                       />
                     </View>
                   );
                 }
+                return undefined;
               });
             }
-          )
-        }()
-      }
+          )()
+        }
         <Nav currentPage="ar" />
       </View>
     );
