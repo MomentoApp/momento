@@ -103,7 +103,9 @@ class SubmitView extends Component {
         },
         UserId: 1,
       };
-      saveVideo(video, () => { console.log('video saved!'); });
+      saveVideo(video, (resp) => {
+        console.log('Received response from db after trying to save:', resp);
+      });
     };
 
     const updateProgress = (loaded, total) => {
