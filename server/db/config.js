@@ -1,9 +1,9 @@
 module.exports = {
-  username: 'momento',
-  password: 'Hackreactor',
-  database: 'momento',
+  username: process.env.db_username,
+  password: process.env.db_password,
+  database: process.env.db_database,
   config: {
-    host: 'momento.caxamxz9bjrd.us-west-2.rds.amazonaws.com',
+    host: process.env.db_host,
     dialect: 'postgres',
     pool: {
       max: 5,
