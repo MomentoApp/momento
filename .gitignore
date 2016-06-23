@@ -5,7 +5,6 @@
 # API KEYS AND OTHER CONFIGURATION SETTINGS
 #
 app/config
-server/db/config.js
 
 # Xcode
 #
