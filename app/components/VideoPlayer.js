@@ -11,28 +11,6 @@ import Video from 'react-native-video';
 
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// Later on in your styles..
-// const styles = StyleSheet.create({
-//   backgroundVideo: {
-//     position: 'absolute',
-//     top: 0,
-//     left: 0,
-//     bottom: 0,
-//     right: 0,
-//   },
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   video: {
-//     position: 'absolute',
-//     top: 0, left: 0, right: 0, bottom: 0,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     backgroundColor: 'transparent',
-//   },
-// });
 
 const styles = StyleSheet.create({
   container: {
@@ -57,27 +35,6 @@ const styles = StyleSheet.create({
     right: 4,
   },
 
-  // playButtonWrap: {
-  //   position: 'absolute',
-  //   backgroundColor: 'transparent',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   left: 0,
-  //   right: 0,
-  //   borderRadius: 50,
-  //   padding: 6,
-  // },
-
-  // roundButton: {
-  //   backgroundColor: 'transparent',
-  //   width: 100,
-  //   height: 100,
-  //   borderRadius: 50,
-  //   borderColor: 'white',
-  //   borderWidth: 10,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
   playButtonWrap: {
     backgroundColor: 'transparent',
   },
@@ -134,7 +91,7 @@ const styles = StyleSheet.create({
   controlOption: {
     alignSelf: 'center',
     fontSize: 11,
-    color: "white",
+    color: 'white',
     paddingLeft: 2,
     paddingRight: 2,
     lineHeight: 12,
@@ -164,15 +121,11 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-
-
-//**********************************************
-
 class VideoPlayer extends Component {
   constructor(props) {
     super(props);
+    this.store = this.props.store;
+    console.log('store is ', this.store);
     this.togglePlay = this.togglePlay.bind(this);
     this.tryToPause = this.tryToPause.bind(this);
     this.goToSubmit = this.goToSubmit.bind(this);
@@ -186,7 +139,6 @@ class VideoPlayer extends Component {
       controls: true,
       paused: true,
       repeat: false,
-      response: { headers: { location: 'waiting' } },
     };
   }
 
@@ -210,7 +162,7 @@ class VideoPlayer extends Component {
   }
 
   goToSubmit() {
-    Actions.submit({ data: this.props.data });
+    Actions.submit();
   }
 
   renderControlButtons() {
@@ -239,7 +191,7 @@ class VideoPlayer extends Component {
       <View style={styles.container}>
         <TouchableOpacity style={styles.fullScreen} onPress={this.tryToPause}>
           <Video
-            source={{ uri: this.props.data.path }}
+            source={{ uri: this.store.getState().videos.currentVideo.path }}
             style={videoStyle}
             rate={1}
             paused={this.state.paused}
@@ -275,29 +227,7 @@ class VideoPlayer extends Component {
 }
 
 VideoPlayer.propTypes = {
-  data: React.PropTypes.object,
+  store: React.PropTypes.object,
 };
 
 module.exports = VideoPlayer;
-
-// **********************************************
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

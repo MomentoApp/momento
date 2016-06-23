@@ -9,9 +9,7 @@ import {
 import Camera from 'react-native-camera';
 import Nav from './Nav';
 import THREE_JS_RENDER from '../lib/render.js';
-import { getVideos, saveVideo } from '../utils/queries';
 import { updateCoordinats } from '../actions';
-import { connect } from 'react-redux';
 
 const styles = StyleSheet.create({
   container: {
@@ -64,9 +62,59 @@ const html = `<!DOCTYPE html>
 </html>`;
 
 
+
+// this is a temporary test object that mimics the JSON that will be received from the db
+let testObj = [
+  {
+    "id": 1,
+    "url": "https://instagram.fsjc1-2.fna.fbcdn.net/t50.2886-16/13448244_1764286310482288_2066918794_n.mp4",
+    "point": {
+      "type": "Point",
+      "coordinates": [
+        37.7837221,
+        -122.4091839
+      ]
+    },
+    "createdAt": "2016-06-17T05:17:34.996Z",
+    "updatedAt": "2016-06-17T05:17:34.996Z",
+    "UserId": 1
+  },
+  {
+    "id": 2,
+    "url": "https://instagram.fsjc1-2.fna.fbcdn.net/t50.2886-16/13448244_1764286310482288_2066918794_n.mp4",
+    "point": {
+      "type": "Point",
+      "coordinates": [
+        37.7847912,
+        -122.40713522
+      ]
+    },
+    "createdAt": "2016-06-17T05:17:34.996Z",
+    "updatedAt": "2016-06-17T05:17:34.996Z",
+    "UserId": 1
+  },
+  {
+    "id": 3,
+    "url": "https://instagram.fsjc1-2.fna.fbcdn.net/t50.2886-16/13448244_1764286310482288_2066918794_n.mp4",
+    "point": {
+      "type": "Point",
+      "coordinates": [
+        37.74267,
+        -122.48634
+      ]
+    },
+    "createdAt": "2016-06-17T05:17:34.996Z",
+    "updatedAt": "2016-06-17T05:17:34.996Z",
+    "UserId": 1
+  }
+]
+
+
 class ARView extends Component {
   constructor(props) {
     super(props);
+    console.log('SHOWING STUFF', JSON.stringify(props));
+    // const { store } = this.context;
     this.store = this.props.store;
   }
 
@@ -79,7 +127,9 @@ class ARView extends Component {
     if (navigator.geolocation) { console.log('geoloaction available'); }
     navigator.geolocation.getCurrentPosition(
       (initialPosition) => {
-        this.store.dispatch(updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude));
+        this.store.dispatch(
+          updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude)
+        );
       },
       (error) => alert('error trying to find initial position', error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
@@ -89,7 +139,9 @@ class ARView extends Component {
     this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
       // if we want function on position change, it should go here
       // this.state.changePosFunction(lastPosition);
-      this.props.store.dispatch(updateCoordinats(lastPosition.coords.latitude, lastPosition.coords.longitude));
+      this.store.dispatch(
+        updateCoordinats(lastPosition.coords.latitude, lastPosition.coords.longitude)
+      );
     });
   }
 
@@ -109,30 +161,36 @@ class ARView extends Component {
           aspect={Camera.constants.Aspect.fill}
         />
         <View style={styles.developerWrap}>
-          <Text style={styles.developerText}>Latitude: {this.store.getState().position.latitude}</Text>
-          <Text style={styles.developerText}>Longitude: {this.store.getState().position.longitude}</Text>
+          <Text style={styles.developerText}>
+            Latitude: {this.store.getState().position.latitude}
+          </Text>
+          <Text style={styles.developerText}>
+            Longitude: {this.store.getState().position.longitude}
+          </Text>
         </View>
-
-
-        {(() => {
-            var latitude = Number(Number(this.store.getState().position.latitude).toFixed(3));
-            var longitude = Number(Number(this.store.getState().position.longitude).toFixed(3));
-            return testObj.map(function(data) {
-              var lat = Number(Number(data.point.coordinates[0]).toFixed(3));
-              var longt = Number(Number(data.point.coordinates[1]).toFixed(3));
-              if ( (latitude === lat) && (longitude === longt) )  {
-                return (
-                  <View style={styles.webViewWrap}>
-                    <WebView
-                      style={styles.webView}
-                      source={{ html: html }}
-                    />
-                  </View>
-                );
-              }
-            });
-          }
-        })()}
+        {
+          (
+            () => {
+              const latitude = Number(Number(this.store.getState().position.latitude).toFixed(3));
+              const longitude = Number(Number(this.store.getState().position.longitude).toFixed(3));
+              return testObj.map(function(data) {
+                const lat = Number(Number(data.point.coordinates[0]).toFixed(3));
+                const longt = Number(Number(data.point.coordinates[1]).toFixed(3));
+                if ((latitude === lat) && (longitude === longt)) {
+                  return (
+                    <View style={styles.webViewWrap}>
+                      <WebView
+                        style={styles.webView}
+                        source={{ html: html }}
+                      />
+                    </View>
+                  );
+                }
+              });
+            }
+          )
+        }()
+      }
         <Nav currentPage="ar" />
       </View>
     );

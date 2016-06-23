@@ -9,6 +9,7 @@ import {
 import { saveToS3 } from '../utils/s3Interface';
 import { saveVideo } from '../utils/queries';
 import { Actions } from 'react-native-router-flux';
+import { updateCoordinats } from '../actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -63,6 +64,7 @@ const styles = StyleSheet.create({
 class SubmitView extends Component {
   constructor(props) {
     super(props);
+    this.store = this.props.store;
     this.state = {
       response: { headers: { location: 'waiting' } },
       progress: 0,
@@ -72,17 +74,22 @@ class SubmitView extends Component {
   componentDidMount() {
     // get current position
     navigator.geolocation.getCurrentPosition(
-      (initialPosition) => { this.setState({ initialPosition }); },
+      (initialPosition) => {
+        this.store.dispatch(
+          updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude)
+        );
+      },
       (error) => console.log('error trying to find initial position', error.message),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
 
-
     const file = {
-      uri: this.props.data.path,
-      name: `${this.props.data.size}.mov`,
+      uri: this.store.getState().videos.currentVideo.path,
+      name: `${this.store.getState().videos.currentVideo.size}.mov`,
       type: 'video/quicktime',
     };
+
+    // dispatch to position
 
     const saveToDb = (response) => {
       const video = {
@@ -90,8 +97,8 @@ class SubmitView extends Component {
         point: {
           type: 'Point',
           coordinates: [
-            this.state.initialPosition.coords.latitude,
-            this.state.initialPosition.coords.longitude,
+            this.store.getState().position.latitude,
+            this.store.getState().position.longitude,
           ],
         },
         UserId: 1,
@@ -134,7 +141,7 @@ class SubmitView extends Component {
 }
 
 SubmitView.propTypes = {
-  data: React.PropTypes.object,
+  store: React.PropTypes.object,
 };
 
 module.exports = SubmitView;

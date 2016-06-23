@@ -1,5 +1,10 @@
 import Camera from 'react-native-camera';
-import { START_RECORDING, STOP_RECORDING, CHANGE_CAMERA_TYPE, CHANGE_FLASH_MODE } from '../constants/constants';
+import {
+  START_RECORDING,
+  STOP_RECORDING,
+  CHANGE_CAMERA_TYPE,
+  CHANGE_FLASH_MODE,
+} from '../constants/constants';
 
 const initialState = {
   aspect: Camera.constants.Aspect.fill,
@@ -8,8 +13,6 @@ const initialState = {
   orientation: Camera.constants.Orientation.auto,
   flashMode: Camera.constants.FlashMode.auto,
   recording: false,
-  recordingTime: '00:00',
-  currentVideo: { url: null },
 };
 
 export default function (state = initialState, action) {
