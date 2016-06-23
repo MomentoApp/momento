@@ -26,8 +26,8 @@ const store = createStore(
 
 const scenes = Actions.create(
   <Scene key="root" hideNavBar>
-    <Scene key="camera" component={CameraView} title="Camera" initial hideNavBar />
-    <Scene key="ar" component={ARView} title="AR" hideNavBar />
+    <Scene key="camera" component={CameraView} title="Camera" hideNavBar />
+    <Scene key="ar" component={ARView} title="AR" initial hideNavBar />
     <Scene key="videoPlayer" component={VideoPlayer} title="Video player" hideNavBar />
     <Scene key="submit" component={SubmitView} title="Submit" hideNavBar />
   </Scene>
