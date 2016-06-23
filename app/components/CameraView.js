@@ -9,6 +9,21 @@ import {
 } from 'react-native';
 import Camera from 'react-native-camera';
 import Nav from './Nav';
+import { Actions } from 'react-native-router-flux';
+import {
+  stopRecording,
+  startRecording,
+  changeFlashMode,
+  changeCameraType,
+  saveClipData } from '../actions';
+
+import rearCameraIcon from './../assets/camera/ic_camera_rear_white.png';
+import frontCameraIcon from './../assets/camera/ic_camera_front_white.png';
+import flashAutoIcon from './../assets/camera/ic_flash_auto_white.png';
+import flashOnIcon from './../assets/camera/ic_flash_on_white.png';
+import flashOffIcon from './../assets/camera/ic_flash_off_white.png';
+import videoCameraIcon from './../assets/camera/ic_video_camera_36pt.png';
+import stopCameraIcon from './../assets/camera/ic_stop_camera_36pt.png';
 
 const styles = StyleSheet.create({
   container: {
@@ -72,31 +87,31 @@ const styles = StyleSheet.create({
 });
 
 
-export default class Example extends React.Component {
+class CameraView extends React.Component {
   constructor(props) {
     super(props);
-
     this.camera = null;
-
-    this.state = {
-      camera: {
-        aspect: Camera.constants.Aspect.fill,
-        captureTarget: Camera.constants.CaptureTarget.cameraRoll,
-        type: Camera.constants.Type.back,
-        orientation: Camera.constants.Orientation.auto,
-        flashMode: Camera.constants.FlashMode.auto,
-      },
-      recording: false,
-      recordingTime: '00:00',
-    };
-
+    this.store = this.props.store;
     this.recordVideo = this.recordVideo.bind(this);
     this.switchType = this.switchType.bind(this);
     this.switchFlash = this.switchFlash.bind(this);
+    this.state = {
+      recordingTime: '00:00',
+    };
+  }
+
+  componentDidMount() {
+    this.unsubscribe = this.store.subscribe(() =>
+      this.forceUpdate()
+    );
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   topBarOverlayStyle() {
-    return this.state.recording
+    return this.store.getState().camera.recording
       ? { backgroundColor: 'rgba(255, 0, 0, 0.4)' }
       : { backgroundColor: 'rgba(0, 0, 0, 0.4)' };
   }
@@ -107,10 +122,10 @@ export default class Example extends React.Component {
       this.setState({ timer: setInterval(() => {
         const timeNow = new Date();
         let seconds = Math.floor((timeNow - startDate) / 1000);
-        seconds = seconds % 60 < 10 ? '0' + (seconds % 60) : seconds % 60;
+        seconds = seconds % 60 < 10 ? `0${(seconds % 60)}` : seconds % 60;
         let minutes = Math.floor(seconds / 60);
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        this.setState({ recordingTime: minutes + ':' + seconds });
+        minutes = minutes < 10 ? `0${minutes}` : minutes;
+        this.setState({ recordingTime: `${minutes}:${seconds}` });
       }, 1000) });
     } else {
       this.setState({ recordingTime: '00:00' });
@@ -120,14 +135,19 @@ export default class Example extends React.Component {
 
   recordVideo() {
     if (this.camera) {
-      if (!this.state.recording) {
-        this.setState({ recording: true });
+      if (!this.store.getState().camera.recording) {
+        console.log('about to start ', this.store.getState().camera.recording);
+        this.store.dispatch(startRecording());
         this.runTimer(true);
         this.camera.capture()
-          .then((data) => console.log(data))
+          .then((data) => {
+            this.store.dispatch(saveClipData(data));
+            const redirect = () => { Actions.videoPlayer(); };
+            redirect();
+          })
           .catch(err => console.error(err));
       } else {
-        this.setState({ recording: false });
+        this.store.dispatch(stopRecording());
         this.runTimer(false);
         this.camera.stopCapture();
       }
@@ -138,30 +158,23 @@ export default class Example extends React.Component {
     let newType;
     const { back, front } = Camera.constants.Type;
 
-    if (this.state.camera.type === back) {
+    if (this.store.getState().camera.type === back) {
       newType = front;
-    } else if (this.state.camera.type === front) {
+    } else if (this.store.getState().camera.type === front) {
       newType = back;
     }
 
-    this.setState({
-      camera: {
-        ...this.state.camera,
-        type: newType,
-      },
-    });
+    this.store.dispatch(changeCameraType(newType));
   }
 
   get typeIcon() {
     let icon;
     const { back, front } = Camera.constants.Type;
-
-    if (this.state.camera.type === back) {
-      icon = require('./../assets/camera/ic_camera_rear_white.png');
-    } else if (this.state.camera.type === front) {
-      icon = require('./../assets/camera/ic_camera_front_white.png');
+    if (this.store.getState().camera.type === back) {
+      icon = rearCameraIcon;
+    } else if (this.store.getState().camera.type === front) {
+      icon = frontCameraIcon;
     }
-
     return icon;
   }
 
@@ -169,32 +182,28 @@ export default class Example extends React.Component {
     let newFlashMode;
     const { auto, on, off } = Camera.constants.FlashMode;
 
-    if (this.state.camera.flashMode === auto) {
+    if (this.store.getState().camera.flashMode === auto) {
       newFlashMode = on;
-    } else if (this.state.camera.flashMode === on) {
+    } else if (this.store.getState().camera.flashMode === on) {
       newFlashMode = off;
-    } else if (this.state.camera.flashMode === off) {
+    } else if (this.store.getState().camera.flashMode === off) {
       newFlashMode = auto;
     }
 
-    this.setState({
-      camera: {
-        ...this.state.camera,
-        flashMode: newFlashMode,
-      },
-    });
+    this.store.dispatch(changeFlashMode(newFlashMode));
   }
+
 
   get flashIcon() {
     let icon;
     const { auto, on, off } = Camera.constants.FlashMode;
 
-    if (this.state.camera.flashMode === auto) {
-      icon = require('./../assets/camera/ic_flash_auto_white.png');
-    } else if (this.state.camera.flashMode === on) {
-      icon = require('./../assets/camera/ic_flash_on_white.png');
-    } else if (this.state.camera.flashMode === off) {
-      icon = require('./../assets/camera/ic_flash_off_white.png');
+    if (this.store.getState().camera.flashMode === auto) {
+      icon = flashAutoIcon;
+    } else if (this.store.getState().camera.flashMode === on) {
+      icon = flashOnIcon;
+    } else if (this.store.getState().camera.flashMode === off) {
+      icon = flashOffIcon;
     }
 
     return icon;
@@ -212,12 +221,12 @@ export default class Example extends React.Component {
             this.camera = cam;
           }}
           style={styles.preview}
-          aspect={this.state.camera.aspect}
-          captureTarget={this.state.camera.captureTarget}
-          type={this.state.camera.type}
-          flashMode={this.state.camera.flashMode}
-          defaultTouchToFocus
+          aspect={this.store.getState().camera.aspect}
+          captureTarget={this.store.getState().camera.captureTarget}
+          type={this.store.getState().camera.type}
+          flashMode={this.store.getState().camera.flashMode}
           captureMode={Camera.constants.CaptureMode.video}
+          defaultTouchToFocus
         />
         <View style={[styles.overlay, styles.topOverlay, this.topBarOverlayStyle()]}>
           <TouchableOpacity
@@ -246,9 +255,9 @@ export default class Example extends React.Component {
               style={styles.captureButton}
               onPress={this.recordVideo}
             >
-              {!this.state.recording
-                ? <Image source={require('./../assets/camera/ic_video_camera_36pt.png')} />
-                : <Image source={require('./../assets/camera/ic_stop_camera_36pt.png')} />
+              {!this.store.getState().camera.recording
+                ? <Image source={videoCameraIcon} />
+                : <Image source={stopCameraIcon} />
               }
             </TouchableOpacity>
           </TouchableOpacity>
@@ -256,9 +265,15 @@ export default class Example extends React.Component {
         <View style={styles.timeWrap}>
           <Text style={styles.time}>{this.state.recordingTime}</Text>
         </View>
-          <Nav currentPage="camera" />
+        <Nav currentPage="camera" />
       </View>
     );
   }
 }
+
+CameraView.propTypes = {
+  store: React.PropTypes.object,
+};
+
+module.exports = CameraView;
 

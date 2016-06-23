@@ -13,4 +13,8 @@ module.exports = {
     "plugins": [
         "react"
     ],
+    "rules": {
+        "no-console": ["error", { allow: ["warn", "error", "log"] }],
+        "no-alert": 0,
+    }
 };

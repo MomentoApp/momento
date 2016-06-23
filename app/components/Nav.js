@@ -28,15 +28,9 @@ const styles = {
 
 class Nav extends Component {
   navStyle(page) {
-    if (this.props.currentPage === page) {
-      return {
-        fontWeight: '800',
-      };
-    } else {
-      return {
-        fontWeight: '300',
-      };
-    }
+    return this.props.currentPage === page
+      ? { fontWeight: '800' }
+      : { fontWeight: '300' };
   }
 
   render() {
