@@ -4,7 +4,7 @@
 
 # API KEYS AND OTHER CONFIGURATION SETTINGS
 #
-app/config
+app/config/
 
 # Xcode
 #
