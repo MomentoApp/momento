@@ -1,4 +1,5 @@
 import * as constants from '../constants';
+
 import { ListView } from 'react-native';
 // position
 export const updateCoordinats = (latitude, longitude) => (

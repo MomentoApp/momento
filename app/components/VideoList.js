@@ -7,6 +7,7 @@ import {
   RecyclerViewBackedScrollView,
 } from 'react-native';
 
+
 import { getVideos } from '../utils/queries';
 import { updateVideoList, updateCoordinats } from '../actions';
 import VideoEntry from './VideoEntry';
@@ -111,7 +112,6 @@ class VideoList extends Component {
     // </View>
     const kmAway = getVideoDistanceInKm(video, this.store.getState().position);
     const vid = Object.assign({}, video, { userName: 'awesomeUser', kmAway });
-    
 
     return (
       <View>
@@ -124,6 +124,7 @@ class VideoList extends Component {
     return (
       <View style={style.container}>
         {this.showLoadedVids()}
+
       </View>
     );
   }
@@ -131,4 +132,3 @@ class VideoList extends Component {
 }
 
 module.exports = VideoList;
-
