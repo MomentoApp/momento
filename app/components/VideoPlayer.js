@@ -11,6 +11,8 @@ import Video from 'react-native-video';
 
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { MODE_WATCH, MODE_SUBMIT } from '../constants';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -165,24 +167,36 @@ class VideoPlayer extends Component {
     Actions.submit();
   }
 
-  renderControlButtons() {
-    return (
-      <View style={styles.ctrlBtnWrap}>
-        <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.camera}>
-          <Text style={styles.ctrlBtnText}>
-            Go Back
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.ctrlBtn}
-          onPress={this.goToSubmit}
-        >
-          <Text style={styles.ctrlBtnText}>
-            Submit
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
+  renderControls() {
+    if (this.props.mode === MODE_SUBMIT) {
+      return (
+        <View style={styles.ctrlBtnWrap}>
+          <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.camera}>
+            <Text style={styles.ctrlBtnText}>
+              Go Back
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.ctrlBtn}
+            onPress={this.goToSubmit}
+          >
+            <Text style={styles.ctrlBtnText}>
+              Submit
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else if (this.props.mode === MODE_WATCH) {
+      return (
+        <View style={styles.ctrlBtnWrap}>
+          <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.videoList}>
+            <Text style={styles.ctrlBtnText}>
+              Go Back
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
   }
 
   render() {
@@ -191,7 +205,7 @@ class VideoPlayer extends Component {
       <View style={styles.container}>
         <TouchableOpacity style={styles.fullScreen} onPress={this.tryToPause}>
           <Video
-            source={{ uri: this.store.getState().videos.currentVideo.path }}
+            source={{ uri: this.store.getState().videos.currentVideo.url }}
             style={videoStyle}
             rate={1}
             paused={this.state.paused}
@@ -216,7 +230,7 @@ class VideoPlayer extends Component {
         <View style={styles.controls}>
           <View style={styles.generalControls}>
             <View style={styles.skinControl}>
-              {this.renderControlButtons()}
+              {this.renderControls()}
             </View>
           </View>
         </View>

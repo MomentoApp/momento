@@ -4,7 +4,7 @@ import {
   STOP_RECORDING,
   CHANGE_CAMERA_TYPE,
   CHANGE_FLASH_MODE,
-} from '../constants/constants';
+} from '../constants';
 
 const initialState = {
   aspect: Camera.constants.Aspect.fill,

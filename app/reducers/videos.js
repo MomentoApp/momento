@@ -1,7 +1,7 @@
 import {
   SAVE_CLIP_DATA,
   UPDATE_VIDEO_LIST,
-} from '../constants/constants';
+} from '../constants';
 
 const initialState = {
   videosLoaded: false,

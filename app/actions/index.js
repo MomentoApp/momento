@@ -8,7 +8,7 @@ import {
   CLEAR_RECORDING_TIME,
   SAVE_CLIP_DATA,
   UPDATE_VIDEO_LIST,
-} from '../constants/constants';
+} from '../constants';
 
 import { ListView } from 'react-native';
 // position

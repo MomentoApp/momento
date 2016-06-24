@@ -15,8 +15,51 @@ import { getVideoDistanceInKm } from '../utils/orientation';
 
 
 const style = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   list: {
     flex: 9,
+  },
+  status: {
+    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left:0,
+    right:0,
+    height: 60,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    flexDirection: 'column',
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  title: {
+    flex: 1,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginTop: 0,
+  },
+  text: {
+    fontSize: 26,
+    alignSelf: 'center',
+    fontWeight: 'bold',
+  },
+  videoList: {
+    marginTop: 70,
+  },
+  navbar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  loading: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: 'red',
   },
 });
 
@@ -71,7 +114,11 @@ class VideoList extends Component {
         renderRow={this.renderItem}
       />);
     }
-    return (<Text>Loading</Text>);
+    return (
+      <View style={style.loading}>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
 
   renderItem(video) {
@@ -84,21 +131,30 @@ class VideoList extends Component {
     
     // </View>
     const kmAway = getVideoDistanceInKm(video, this.store.getState().position);
-    const vid = Object.assign({}, { userName: 'awesomeUser', title: 'Some awesome title', kmAway });
+    const vid = Object.assign({}, video, { userName: 'awesomeUser', title: 'Some awesome title', kmAway });
     
 
     return (
       <View>
-        <VideoEntry video={vid} />
+        <VideoEntry video={vid} store={this.store} />
       </View>
     );
   }
 
   render() {
     return (
-      <View>
+      <View style={style.container}>
+        <View style={style.status}>
+          <View style={style.title}>
+            <Text style={style.text}>Moments nearby</Text>
+          </View>
+        </View>
+        <View style={style.videoList}>
         {this.showLoadedVids()}
-        <Nav />
+        </View>
+        <View style={style.navbar}>
+          <Nav currentPage="videoList" />
+        </View>
       </View>
     );
   }

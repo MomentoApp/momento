@@ -1,4 +1,4 @@
-import { UPDATE_COORDINATS } from '../constants/constants';
+import { UPDATE_COORDINATS } from '../constants';
 
 const initialState = { latitude: 100, longitude: 200 };
 

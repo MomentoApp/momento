@@ -24,6 +24,8 @@ import flashOnIcon from './../assets/camera/ic_flash_on_white.png';
 import flashOffIcon from './../assets/camera/ic_flash_off_white.png';
 import videoCameraIcon from './../assets/camera/ic_video_camera_36pt.png';
 import stopCameraIcon from './../assets/camera/ic_stop_camera_36pt.png';
+import { MODE_SUBMIT } from '../constants';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -141,8 +143,10 @@ class CameraView extends React.Component {
         this.runTimer(true);
         this.camera.capture()
           .then((data) => {
-            this.store.dispatch(saveClipData(data));
-            const redirect = () => { Actions.videoPlayer(); };
+            const video = Object.assign({}, data, { url: data.url });
+            delete video.path;
+            this.store.dispatch(saveClipData(video));
+            const redirect = () => { Actions.videoPlayer({mode: MODE_SUBMIT}); };
             redirect();
           })
           .catch(err => console.error(err));
