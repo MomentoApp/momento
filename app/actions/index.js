@@ -7,8 +7,11 @@ import {
   INCREASE_RECORDING_TIME,
   CLEAR_RECORDING_TIME,
   SAVE_CLIP_DATA,
+  UPDATE_VIDEO_LIST,
 } from '../constants/constants';
-//position
+
+import { ListView } from 'react-native';
+// position
 export const updateCoordinats = (latitude, longitude) => (
   {
     type: UPDATE_COORDINATS,
@@ -63,4 +66,12 @@ export const saveClipData = (data) => (
     data,
   }
 );
-
+// update video list from database
+export const updateVideoList = (videos) => {
+  const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+  return {
+    type: UPDATE_VIDEO_LIST,
+    dataSource: ds.cloneWithRows(videos),
+    videos,
+  };
+};

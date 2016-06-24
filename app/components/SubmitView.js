@@ -93,6 +93,8 @@ class SubmitView extends Component {
 
     const saveToDb = (response) => {
       const video = {
+        // title: 'My awesome video',
+        // userName: 'Awesome user'
         url: response.headers.Location,
         point: {
           type: 'Point',
