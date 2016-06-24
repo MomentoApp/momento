@@ -3,7 +3,7 @@
 .DS_Store
 
 # API KEYS AND OTHER CONFIGURATION SETTINGS
-app/config/apiKeys.js
+app/config/
 
 # Xcode
 #
