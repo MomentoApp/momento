@@ -127,7 +127,6 @@ class VideoPlayer extends Component {
   constructor(props) {
     super(props);
     this.store = this.props.store;
-    console.log('store is ', this.store);
     this.togglePlay = this.togglePlay.bind(this);
     this.tryToPause = this.tryToPause.bind(this);
     this.goToSubmit = this.goToSubmit.bind(this);
@@ -186,17 +185,17 @@ class VideoPlayer extends Component {
           </TouchableOpacity>
         </View>
       );
-    } else if (this.props.mode === MODE_WATCH) {
-      return (
-        <View style={styles.ctrlBtnWrap}>
-          <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.videoList}>
-            <Text style={styles.ctrlBtnText}>
-              Go Back
-            </Text>
-          </TouchableOpacity>
-        </View>
-      );
     }
+    // } else if (this.props.mode === MODE_WATCH) {
+    return (
+      <View style={styles.ctrlBtnWrap}>
+        <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.videoList}>
+          <Text style={styles.ctrlBtnText}>
+            Go Back
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 
   render() {

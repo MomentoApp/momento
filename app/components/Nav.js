@@ -39,6 +39,7 @@ class Nav extends Component {
         <Text style={[styles.nav, this.navStyle('camera')]} onPress={Actions.camera}>Video</Text>
         <Text style={[styles.nav, this.navStyle('ar')]} onPress={Actions.ar}>AR</Text>
         <Text style={[styles.nav, this.navStyle('videoList')]} onPress={Actions.videoList}>List</Text>
+        <Text style={[styles.nav, this.navStyle('videoMap')]} onPress={Actions.videoMap}>Map</Text>
       </View>
     );
   }

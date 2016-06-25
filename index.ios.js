@@ -9,6 +9,7 @@ import ARView from './app/components/ARView';
 import VideoPlayer from './app/components/VideoPlayer';
 import SubmitView from './app/components/SubmitView';
 import VideoList from './app/components/VideoList';
+import VideoMap from './app/components/VideoMap';
 
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
@@ -32,6 +33,7 @@ const scenes = Actions.create(
     <Scene key="videoPlayer" component={VideoPlayer} title="Video player" hideNavBar />
     <Scene key="submit" component={SubmitView} title="Submit" hideNavBar />
     <Scene key="videoList" component={VideoList} title="Video list" initial hideNavBar />
+    <Scene key="videoMap" component={VideoMap} title="Map" hideNavBar />
   </Scene>
 );
 
