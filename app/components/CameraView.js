@@ -143,7 +143,7 @@ class CameraView extends React.Component {
         this.runTimer(true);
         this.camera.capture()
           .then((data) => {
-            const video = Object.assign({}, data, { url: data.url });
+            const video = Object.assign({}, data, { url: data.path });
             delete video.path;
             this.store.dispatch(saveClipData(video));
             const redirect = () => { Actions.videoPlayer({mode: MODE_SUBMIT}); };

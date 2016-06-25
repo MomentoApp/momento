@@ -84,7 +84,7 @@ class SubmitView extends Component {
     );
 
     const file = {
-      uri: this.store.getState().videos.currentVideo.path,
+      uri: this.store.getState().videos.currentVideo.url,
       name: `${this.store.getState().videos.currentVideo.size}.mov`,
       type: 'video/quicktime',
     };
@@ -104,6 +104,7 @@ class SubmitView extends Component {
           ],
         },
         UserId: 1,
+        title: this.store.getState().videos.currentVideo.title,
       };
       saveVideo(video, (resp) => {
         console.log('Received response from db after trying to save:', resp);

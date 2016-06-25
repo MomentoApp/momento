@@ -12,7 +12,7 @@ import Video from 'react-native-video';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MODE_WATCH, MODE_SUBMIT } from '../constants';
-
+import { setVideoTitle } from '../actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -163,7 +163,20 @@ class VideoPlayer extends Component {
   }
 
   goToSubmit() {
-    Actions.submit();
+    // AlertIOS.prompt('Name your moment', null, text => console.log("You typed in " + text), null, 'Title not provided');
+   AlertIOS.prompt(
+    'Name your moment',
+    null,
+     [
+      { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+      { text: 'OK', onPress: title => {
+        this.store.dispatch(setVideoTitle(title));
+        Actions.submit();
+      } },
+     ],
+    'secure-text'
+);
+    // Actions.submit();
   }
 
   renderControls() {
@@ -187,6 +200,7 @@ class VideoPlayer extends Component {
       );
     }
     // } else if (this.props.mode === MODE_WATCH) {
+
     return (
       <View style={styles.ctrlBtnWrap}>
         <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.videoList}>

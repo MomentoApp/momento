@@ -8,6 +8,7 @@ import {
   CLEAR_RECORDING_TIME,
   SAVE_CLIP_DATA,
   UPDATE_VIDEO_LIST,
+  SET_VIDEO_TITLE,
 } from '../constants';
 
 import { ListView } from 'react-native';
@@ -66,6 +67,14 @@ export const saveClipData = (data) => (
     data,
   }
 );
+
+export const setVideoTitle = (title) => (
+  {
+    type: SET_VIDEO_TITLE,
+    title,
+  }
+);
+
 // update video list from database
 export const updateVideoList = (videos) => {
   const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });

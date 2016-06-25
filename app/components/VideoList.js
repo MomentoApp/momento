@@ -4,6 +4,7 @@ import {
   View,
   ListView,
   StyleSheet,
+  RecyclerViewBackedScrollView,
 } from 'react-native';
 
 import Nav from './Nav';
@@ -19,7 +20,7 @@ const style = StyleSheet.create({
     flex: 1,
   },
   list: {
-    flex: 9,
+    flex: 3,
   },
   status: {
     flex: 1,
@@ -48,6 +49,8 @@ const style = StyleSheet.create({
   },
   videoList: {
     marginTop: 70,
+    flex:1,
+    marginBottom: 60,
   },
   navbar: {
     position: 'absolute',
@@ -105,14 +108,32 @@ class VideoList extends Component {
     navigator.geolocation.clearWatch(this.watchID);
   }
 
+  _renderSeperator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
+    return (
+      <View
+        key={`${sectionID}-${rowID}`}
+        style={{
+          height: adjacentRowHighlighted ? 4 : 1,
+          backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',
+        }}
+      />
+    );
+  }
 
   showLoadedVids() {
     if (this.store.getState().videos.videosLoaded) {
-      return (<ListView
+      return (
+        <ListView
         style={style.list}
+        automaticallyAdjustContentInsets={false}
         dataSource={this.store.getState().videos.dataSource}
+        initialListSize={9}
         renderRow={this.renderItem}
+        renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
+        renderSeparator={this._renderSeperator}
       />);
+
+
     }
     return (
       <View style={style.loading}>
@@ -131,7 +152,7 @@ class VideoList extends Component {
     
     // </View>
     const kmAway = getVideoDistanceInKm(video, this.store.getState().position);
-    const vid = Object.assign({}, video, { userName: 'awesomeUser', title: 'Some awesome title', kmAway });
+    const vid = Object.assign({}, video, { userName: 'awesomeUser', kmAway });
     
 
     return (
