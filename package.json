@@ -7,8 +7,10 @@
     "test": "mocha --opts test/mocha.opts --compilers js:babel-core/register test/__specs__/**/*.spec.js"
   },
   "dependencies": {
+    "es6-promise": "^3.2.1",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-react": "^5.1.1",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^15.1.0",
     "react-native": "0.27.2",
     "react-native-aws3": "0.0.1",
