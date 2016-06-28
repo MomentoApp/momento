@@ -82,7 +82,7 @@ class VideoEntry extends Component {
     return (
       <TouchableHighlight
         style={style.wrap}
-        onPress={()=>{
+        onPress={() => {
           this.store.dispatch(setCurrentVideo(this.props.video));
           Actions.videoPlayer({mode: MODE_WATCH});
         }
