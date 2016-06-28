@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
-  WebView,
   Text,
 } from 'react-native';
 
 import Camera from 'react-native-camera';
+import Nav from './Nav';
+import WebViewBridge from 'react-native-webview-bridge';
 import THREE_JS_RENDER from '../lib/render.js';
+import LocationMath from '../lib/locationMath.js';
+import HANDLE_ORIENTATION from '../lib/orientationHandler.js';
 import { updateCoordinats } from '../actions';
 
 const styles = StyleSheet.create({
@@ -53,25 +56,62 @@ const html = `<!DOCTYPE html>
     <style>
       body { margin: 0; }
       canvas { width: 100%; height: 100% }
+      .output { color: red; }
     </style>
   </head>
   <body>
-    <div class="alpha"></div>
-    <div class="beta"></div>
-    <div class="gamma"></div>
+
+    <pre class="output"></pre>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r78/three.js"></script>
     <script src="https://code.jquery.com/jquery-3.0.0.js" integrity="sha256-jrPLZ+8vDxt2FnE1zvZXCkCcebI/C8Dt5xyaQBjxQIo=" crossorigin="anonymous"></script>
     ${THREE_JS_RENDER}
-    <script>window.addEventListener('deviceorientation', function(event) {
-  // alert(event.alpha + ' : ' + event.beta + ' : ' + event.gamma);
-  $('.alpha').text("Alpha:" + event.alpha);
-  });
-  </script>
-
+    ${HANDLE_ORIENTATION}
   </body>
 </html>`;
 
-// this is a temporary test object that mimics the JSON that will be received from the db
+
+const injectScript = `
+  function webViewBridgeReady(cb) {
+    //checks whether WebViewBridge exists in global scope.
+    if (window.WebViewBridge) {
+      cb(window.WebViewBridge);
+      return;
+    }
+
+    function handler() {
+      //remove the handler from listener since we don't need it anymore
+      document.removeEventListener('WebViewBridge', handler, false);
+      //pass the WebViewBridge object to the callback
+      cb(window.WebViewBridge);
+    }
+
+    //if WebViewBridge doesn't exist in global scope attach itself to document
+    //event system. Once the code is being injected by extension, the handler will
+    //be called.
+    document.addEventListener('WebViewBridge', handler, false);
+  }
+
+  webViewBridgeReady( function (webViewBridge) {
+    webViewBridge.send( "BRIDGE_READY" );
+    webViewBridge.onMessage = function (message) {
+      // Message is an array of all of the pins we want to display,
+      // where x and z on each pin is the relative location to the
+      // device in feet.
+      var message = JSON.parse( message );
+
+      mesh.visible = false;
+      message.locs.forEach( function( loc, i ) {
+        meshes[i] = mesh.clone();
+        meshes[i].visible = true;
+        scene.add(meshes[i]);
+        meshes[i].position.x = loc.x;
+        meshes[i].position.z = loc.z;
+        //meshes[i].position.y = loc.y;
+      });
+    };
+  });
+`;
+
 let testObj = [
   {
     "id": 1,
@@ -79,8 +119,8 @@ let testObj = [
     "point": {
       "type": "Point",
       "coordinates": [
-        37.7837221,
-        -122.4091839
+        37.783832002659196,
+        -122.40910136324729
       ]
     },
     "createdAt": "2016-06-17T05:17:34.996Z",
@@ -93,8 +133,8 @@ let testObj = [
     "point": {
       "type": "Point",
       "coordinates": [
-        37.7847912,
-        -122.40713522
+        37.7847912966740586,
+        -122.40713522122437
       ]
     },
     "createdAt": "2016-06-17T05:17:34.996Z",
@@ -107,16 +147,15 @@ let testObj = [
     "point": {
       "type": "Point",
       "coordinates": [
-        37.74267,
-        -122.48634
+        37.7428727,
+        -122.4861611
       ]
     },
     "createdAt": "2016-06-17T05:17:34.996Z",
     "updatedAt": "2016-06-17T05:17:34.996Z",
     "UserId": 1
   }
-]
-
+];
 
 class ARView extends Component {
   constructor(props) {
@@ -129,7 +168,6 @@ class ARView extends Component {
     this.unsubscribe = this.store.subscribe(() =>
       this.forceUpdate()
     );
- 
     if (!navigator.geolocation) { console.log('geoloaction not available'); }
     if (navigator.geolocation) { console.log('geoloaction available'); }
     navigator.geolocation.getCurrentPosition(
@@ -157,6 +195,37 @@ class ARView extends Component {
     navigator.geolocation.clearWatch(this.watchID);
   }
 
+  onBridgeMessage(message) {
+    if (message === 'BRIDGE_READY') {
+      this.sendLocsToBridge.call(this, this.getCurrentLocation());
+    }
+  }
+
+  getCurrentLocation() {
+    const currentLocation = { latitude: null, longitude: null };
+    const latitude = this.store.getState().position.latitude;
+    const longitude = this.store.getState().position.longitude;
+    currentLocation.latitude = latitude;
+    currentLocation.longitude = longitude;
+    return currentLocation;
+  }
+
+  calculateLocations(currentLocation, locObj) {
+    const locations = [];
+    locObj.forEach(loc => {
+      locations.push(LocationMath.relativeLocsInFeet(currentLocation, loc));
+    });
+
+    return locations;
+  }
+
+  sendLocsToBridge(coordinates) {
+    const message = {};
+    message.locs = this.calculateLocations(coordinates, testObj);
+    this.refs.webviewbridge.sendToBridge(JSON.stringify(message));
+  }
+
+
   render() {
     return (
       <View style={styles.container}>
@@ -175,62 +244,19 @@ class ARView extends Component {
             Longitude: {this.store.getState().position.longitude}
           </Text>
         </View>
-        {
-          (
-            () => {
-              const latitude = Number(Number(this.store.getState().position.latitude).toFixed(3));
-              const longitude = Number(Number(this.store.getState().position.longitude).toFixed(3));
-              return testObj.map((data) => {
-                const lat = Number(Number(data.point.coordinates[0]).toFixed(3));
-                const longt = Number(Number(data.point.coordinates[1]).toFixed(3));
-                if ((latitude === lat) && (longitude === longt)) {
-                  return (
-                    <View style={styles.webViewWrap}>
-                      <WebView
-                        style={styles.webView}
-                        source={{ html }}
-                      />
-                    </View>
-                  );
-                }
-                return undefined;
-              });
-            }
-          )()
-        }
+        <View style={styles.webViewWrap}>
+          <WebViewBridge
+            ref="webviewbridge"
+            onBridgeMessage={this.onBridgeMessage.bind(this)}
+            injectedJavaScript={injectScript}
+            style={styles.webView}
+            source={{ html }}
+          />
+        </View>
+        <Nav currentPage="ar" />
       </View>
     );
   }
 }
-
-// const mapStateToProps = (state) => {
-// // tells how to transform the current Redux store state into the props
-// // we want to pass to a presentational component we are wrapping
-//   return {
-//     todos: getVisibleTodos(state.todos, state.visibilityFilter),
-//   };
-// };
-
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude)
-
-//     onTodoClick: (id) => {
-//       dispatch(toggleTodo(id));
-//     }
-//   }
-// }
-
-// const VisibleARView = connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(ARView);
-
-
-// ARView.contextTypes = {
-//   store: React.PropTypes.object,
-// };
-// module.exports = connect()(ARView);
-// export default VisibleARView;
 
 export default ARView;
