@@ -48,9 +48,9 @@ export const clearRecordingTime = () => (
   }
 );
 // videos
-export const saveClipData = (data) => (
+export const setCurrentVideo = (data) => (
   {
-    type: constants.SAVE_CLIP_DATA,
+    type: constants.SET_CURRENT_VIDEO,
     data,
   }
 );
