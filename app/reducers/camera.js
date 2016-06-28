@@ -15,8 +15,7 @@ const initialState = {
   recording: false,
 };
 
-export default function (state = initialState, action) {
-  console.log('about to create ', Object.assign({}, state, { recording: true }));
+const cameraReducer = (state = initialState, action) => {
   switch (action.type) {
     case START_RECORDING:
       return Object.assign({}, state, { recording: true });
@@ -29,5 +28,6 @@ export default function (state = initialState, action) {
     default:
       return state;
   }
-}
+};
 
+module.exports = cameraReducer;

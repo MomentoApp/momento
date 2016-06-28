@@ -5,7 +5,7 @@ import chai from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 // Ignore all node_modules except these
 function noop() {
-    return null;
+  return null;
 }
 require.extensions['.png'] = noop;
 
@@ -17,7 +17,8 @@ const modulesToCompile = [
   'react-native-vector-icons',
   'react-native-mock',
   'react-native-parallax-scroll-view',
-  'react-native-simple-store'
+  'react-native-simple-store',
+  'react-native-camera',
 ].map((moduleName) => new RegExp(`/node_modules/${moduleName}`));
 const rcPath = path.join(__dirname, '..', '.babelrc');
 const source = fs.readFileSync(rcPath).toString();
@@ -38,7 +39,9 @@ global.expect = chai.expect;
 chai.use(chaiEnzyme());
 // Setup mocks
 require('react-native-mock/mock');
-const React = require('react-native')
+const React = require('react-native');
 React.NavigationExperimental = {
-  AnimatedView: React.View
+  AnimatedView: React.View,
 };
+
+

@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "mocha --opts test/mocha.opts --compilers js:babel-core/register test/__specs__/**/*.spec.js"
+    "test": "mocha --opts test/mocha.opts test/__specs__/**/*.spec.js"
   },
   "dependencies": {
+    "babel-preset-react-native-stage-0": "^1.0.1",
     "es6-promise": "^3.2.1",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-react": "^5.1.1",
@@ -44,6 +45,7 @@
     "express": "^4.13.4",
     "express-session": "^1.13.0",
     "mocha": "^2.5.3",
+    "mockery": "^1.7.0",
     "node-babel": "^0.1.2",
     "pg": "^5.1.0",
     "pg-hstore": "^2.3.2",
@@ -52,6 +54,7 @@
     "react-dom": "^15.1.0",
     "react-native-mock": "^0.2.3",
     "redux-devtools": "^3.3.1",
+    "rewire": "^2.5.1",
     "sequelize": "^3.23.3",
     "sinon": "^1.17.4"
   }

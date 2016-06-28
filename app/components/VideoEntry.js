@@ -9,7 +9,7 @@ import {
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Actions } from 'react-native-router-flux';
-import { saveClipData } from '../actions';
+import { setCurrentVideo } from '../actions';
 import { MODE_WATCH } from '../constants';
 
 const style = StyleSheet.create({
@@ -83,7 +83,7 @@ class VideoEntry extends Component {
       <TouchableHighlight
         style={style.wrap}
         onPress={()=>{
-          this.store.dispatch(saveClipData(this.props.video));
+          this.store.dispatch(setCurrentVideo(this.props.video));
           Actions.videoPlayer({mode: MODE_WATCH});
         }
         }
