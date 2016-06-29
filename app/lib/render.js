@@ -25,8 +25,6 @@ const THREE_JS_RENDER = `
       var material = new THREE.MeshLambertMaterial({color:0x0066FF, wireframe: true, transparent: true, opacity: 0.9});
 
       mesh = new THREE.Mesh( geometry, material );
-      scene.add( mesh );
-      mesh.position.z = -50;
 
       renderer = new THREE.WebGLRenderer();
       renderer.setPixelRatio( window.devicePixelRatio );
