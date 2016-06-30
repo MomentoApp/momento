@@ -8,8 +8,8 @@ import {
 
 import { saveToS3 } from '../utils/s3Interface';
 import { saveVideo } from '../utils/queries';
-import { Actions } from 'react-native-router-flux';
-import { updateCoordinats } from '../actions';
+import { Actions } from '../../custom_modules/react-native-router-flux';
+import { updateCoordinats, popNeeded } from '../actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -64,7 +64,9 @@ const styles = StyleSheet.create({
 class SubmitView extends Component {
   constructor(props) {
     super(props);
-    this.store = this.props.store;
+    this.store = props.store;
+    this.goBack = this.goBack.bind(this);
+    console.log('THIS IS THE PROPS OF SUBMIT VIEW', this.store);
     this.state = {
       response: { headers: { location: 'waiting' } },
       progress: 0,
@@ -89,7 +91,6 @@ class SubmitView extends Component {
       type: 'video/quicktime',
     };
 
-    // dispatch to position
 
     const saveToDb = (response) => {
       const video = {
@@ -122,6 +123,11 @@ class SubmitView extends Component {
     saveToS3(file, saveToDb, updateProgress);
   }
 
+  goBack() {
+    this.store.dispatch(popNeeded(true));
+    Actions.popTo('videoWrap');
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -133,7 +139,7 @@ class SubmitView extends Component {
         </View>
 
         <View style={styles.finishBtnWrap}>
-          <TouchableOpacity style={styles.finishBtn} onPress={Actions.camera}>
+          <TouchableOpacity style={styles.finishBtn} onPress={this.goBack}>
             <Text style={styles.finishBtnText}>
               Finish
             </Text>

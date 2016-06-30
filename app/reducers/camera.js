@@ -4,6 +4,9 @@ import {
   STOP_RECORDING,
   CHANGE_CAMERA_TYPE,
   CHANGE_FLASH_MODE,
+  CHANGE_CAMERA_VISIBILITY_FLAG,
+  SWITCH_CAMERA_AR_OR_VIDEO,
+  VIDEO,
 } from '../constants';
 
 const initialState = {
@@ -13,6 +16,8 @@ const initialState = {
   orientation: Camera.constants.Orientation.auto,
   flashMode: Camera.constants.FlashMode.auto,
   recording: false,
+  visibilityFlag: false,
+  ARorVideo: VIDEO,
 };
 
 const cameraReducer = (state = initialState, action) => {
@@ -25,6 +30,10 @@ const cameraReducer = (state = initialState, action) => {
       return Object.assign({}, state, { type: action.viewType });
     case CHANGE_FLASH_MODE:
       return Object.assign({}, state, { flashMode: action.mode });
+    case CHANGE_CAMERA_VISIBILITY_FLAG:
+      return Object.assign({}, state, { visibilityFlag: action.visibilityFlag });
+    case SWITCH_CAMERA_AR_OR_VIDEO:
+      return Object.assign({}, state, { ARorVideo: action.mode });
     default:
       return state;
   }

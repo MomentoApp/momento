@@ -9,10 +9,10 @@ import {
 import Video from 'react-native-video';
 
 
-import { Actions } from 'react-native-router-flux';
+import { Actions } from '../../custom_modules/react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { MODE_WATCH, MODE_SUBMIT } from '../constants';
-import { setVideoTitle } from '../actions';
+import { MODE_SUBMIT } from '../constants';
+import { setVideoTitle, popNeeded } from '../actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -126,7 +126,8 @@ const styles = StyleSheet.create({
 class VideoPlayer extends Component {
   constructor(props) {
     super(props);
-    this.store = this.props.store;
+    console.log('VIDEO PLAYER RECEIVED THESE PROPS', props);
+    this.store = props.store;
     this.togglePlay = this.togglePlay.bind(this);
     this.tryToPause = this.tryToPause.bind(this);
     this.goToSubmit = this.goToSubmit.bind(this);
@@ -142,6 +143,22 @@ class VideoPlayer extends Component {
       repeat: false,
     };
   }
+
+  componentDidMount() {
+    this.unsubscribe = this.store.subscribe(() =>
+      this.forceUpdate()
+    );
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  performPop() {
+    this.store.dispatch(popNeeded(false));
+    Actions.pop();
+  }
+
 
   playButtonStyle() {
     return this.state.paused
@@ -163,27 +180,24 @@ class VideoPlayer extends Component {
   }
 
   goToSubmit() {
-    // AlertIOS.prompt('Name your moment', null, text => console.log("You typed in " + text), null, 'Title not provided');
-   AlertIOS.prompt(
-    'Name your moment',
-    null,
-     [
-      { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-      { text: 'OK', onPress: title => {
-        this.store.dispatch(setVideoTitle(title));
-        Actions.submit();
-      } },
-     ],
-    'secure-text'
+    AlertIOS.prompt(
+      'Name your moment',
+      null,
+      [
+        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        { text: 'OK', onPress: title => {
+          this.store.dispatch(setVideoTitle(title));
+          Actions.submit();
+        } },
+      ]
 );
-    // Actions.submit();
   }
 
   renderControls() {
     if (this.props.mode === MODE_SUBMIT) {
       return (
         <View style={styles.ctrlBtnWrap}>
-          <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.camera}>
+          <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.pop}>
             <Text style={styles.ctrlBtnText}>
               Go Back
             </Text>
@@ -203,7 +217,7 @@ class VideoPlayer extends Component {
 
     return (
       <View style={styles.ctrlBtnWrap}>
-        <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.videoList}>
+        <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.pop}>
           <Text style={styles.ctrlBtnText}>
             Go Back
           </Text>
@@ -255,6 +269,7 @@ class VideoPlayer extends Component {
 
 VideoPlayer.propTypes = {
   store: React.PropTypes.object,
+  mode: React.PropTypes.string,
 };
 
 module.exports = VideoPlayer;

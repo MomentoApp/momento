@@ -10,6 +10,8 @@ describe('Camera reducer', () => {
       orientation: 0,
       recording: false,
       type: 1,
+      visibilityFlag: false,
+      ARorVideo: constants.VIDEO,
     };
     expect(
       reducer(undefined, {})

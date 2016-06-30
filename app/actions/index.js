@@ -15,11 +15,11 @@ export const stopRecording = () => (
   }
 );
 
-export const startRecording = () => {
-  return {
+export const startRecording = () => (
+  {
     type: constants.START_RECORDING,
-  };
-};
+  }
+);
 
 export const changeCameraType = (viewType) => (
   {
@@ -47,6 +47,21 @@ export const clearRecordingTime = () => (
     type: constants.CLEAR_RECORDING_TIME,
   }
 );
+
+export const changeCameraVisibilityFlag = (visibilityFlag) => (
+  {
+    type: constants.CHANGE_CAMERA_VISIBILITY_FLAG,
+    visibilityFlag,
+  }
+);
+
+export const switchCameraAROrVideo = (mode) => (
+  {
+    type: constants.SWITCH_CAMERA_AR_OR_VIDEO,
+    mode,
+  }
+);
+
 // videos
 export const setCurrentVideo = (data) => (
   {
@@ -71,3 +86,11 @@ export const updateVideoList = (videos) => {
     videos,
   };
 };
+
+// navigation
+export const popNeeded = (popFlag) => (
+  {
+    type: constants.POP_NEEDED,
+    popFlag,
+  }
+);

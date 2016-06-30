@@ -7,62 +7,21 @@ import {
   RecyclerViewBackedScrollView,
 } from 'react-native';
 
-import Nav from './Nav';
 import { getVideos } from '../utils/queries';
 import { updateVideoList, updateCoordinats } from '../actions';
 import VideoEntry from './VideoEntry';
 import { getVideoDistanceInKm } from '../utils/orientation';
 
-
-
 const style = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  list: {
-    flex: 3,
-  },
-  status: {
-    flex: 1,
-    position: 'absolute',
-    top: 0,
-    left:0,
-    right:0,
-    height: 60,
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    flexDirection: 'column',
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  title: {
-    flex: 1,
-    flexDirection: 'row',
-    alignSelf: 'center',
-    marginTop: 0,
-  },
-  text: {
-    fontSize: 26,
-    alignSelf: 'center',
-    fontWeight: 'bold',
-  },
-  videoList: {
-    marginTop: 70,
     flex:1,
-    marginBottom: 60,
-  },
-  navbar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    marginTop: 64,
+    marginBottom: 52,
   },
   loading: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: 'red',
   },
 });
 
@@ -113,8 +72,8 @@ class VideoList extends Component {
       <View
         key={`${sectionID}-${rowID}`}
         style={{
-          height: adjacentRowHighlighted ? 4 : 1,
-          backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',
+          // height: adjacentRowHighlighted ? 4 : 1,
+          // backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',
         }}
       />
     );
@@ -124,7 +83,6 @@ class VideoList extends Component {
     if (this.store.getState().videos.videosLoaded) {
       return (
         <ListView
-        style={style.list}
         automaticallyAdjustContentInsets={false}
         dataSource={this.store.getState().videos.dataSource}
         initialListSize={9}
@@ -165,17 +123,7 @@ class VideoList extends Component {
   render() {
     return (
       <View style={style.container}>
-        <View style={style.status}>
-          <View style={style.title}>
-            <Text style={style.text}>Moments nearby</Text>
-          </View>
-        </View>
-        <View style={style.videoList}>
         {this.showLoadedVids()}
-        </View>
-        <View style={style.navbar}>
-          <Nav currentPage="videoList" />
-        </View>
       </View>
     );
   }
@@ -183,8 +131,4 @@ class VideoList extends Component {
 }
 
 module.exports = VideoList;
-
-///////////////////////////////////////////
-
-////////////////////////////////////////////
 

@@ -1,16 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, MapView, View } from 'react-native';
 import { updateCoordinats } from '../actions';
-import Nav from './Nav';
 
 const style = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  mapWrap: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: 64,
+    marginBottom: 52,
   },
   map: {
     position: 'absolute',
@@ -61,23 +57,23 @@ class VideoMap extends Component {
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     };
-    const markers = [
-      {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        title: 'My marker',
-        description: 'This is description for marker',
-      },
-    ];
+    // const markers = [
+    //   {
+    //     latitude: 37.78825,
+    //     longitude: -122.4324,
+    //     title: 'My marker',
+    //     description: 'This is description for marker',
+    //   },
+    // ];
 
-    const TestMarkers = this.store.getState().videos.videos.map(video => {
-      return {
+    const TestMarkers = this.store.getState().videos.videos.map(video => (
+      {
         latitude: video.point.coordinates[0],
         longitude: video.point.coordinates[1],
         title: video.title || 'no title available',
         description: 'Description for the marker',
-      };
-    });
+      }
+    ));
 
     console.log(TestMarkers);
 
@@ -85,20 +81,19 @@ class VideoMap extends Component {
         // followUserLocation
     return (
       <View style={style.container}>
-        <View style={style.mapWrap}>
-          <MapView
-            style={style.map}
-            region={region}
-            annotations={TestMarkers}
-            showsUserLocation
-          />
-        </View>
-        <Nav style={style.nav} currentPage="videoMap" />
+        <MapView
+          style={style.map}
+          region={region}
+          annotations={TestMarkers}
+          showsUserLocation
+        />
       </View>
-
     );
   }
 }
 
+VideoMap.propTypes = {
+  store: React.PropTypes.object,
+};
 
 module.exports = VideoMap;

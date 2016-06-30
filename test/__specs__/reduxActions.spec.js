@@ -62,13 +62,13 @@ describe('Redux actions:', () => {
     expect(actions.clearRecordingTime()).to.deep.equal(expectedAction);
   });
 
-  it('should save clip data', () => {
+  it('should set current video', () => {
     const data = {};
     const expectedAction = {
-      type: constants.SAVE_CLIP_DATA,
+      type: constants.SET_CURRENT_VIDEO,
       data,
     };
-    expect(actions.saveClipData(data)).to.deep.equal(expectedAction);
+    expect(actions.setCurrentVideo(data)).to.deep.equal(expectedAction);
   });
 
   it('should save video title', () => {

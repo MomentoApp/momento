@@ -7,13 +7,13 @@ import {
 } from 'react-native';
 
 import Camera from 'react-native-camera';
-import Nav from './Nav';
 import THREE_JS_RENDER from '../lib/render.js';
 import { updateCoordinats } from '../actions';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 52,
   },
   webViewWrap: {
     position: 'absolute',
@@ -198,7 +198,6 @@ class ARView extends Component {
             }
           )()
         }
-        <Nav currentPage="ar" />
       </View>
     );
   }

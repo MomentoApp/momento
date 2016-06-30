@@ -3,12 +3,11 @@ import {
   Text,
   View,
   TouchableHighlight,
-  Image,
   StyleSheet,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Actions } from 'react-native-router-flux';
+import { Actions } from '../../custom_modules/react-native-router-flux';
 import { setCurrentVideo } from '../actions';
 import { MODE_WATCH } from '../constants';
 
@@ -61,7 +60,7 @@ const style = StyleSheet.create({
     flex: 1,
     alignSelf: 'center',
     height: 50,
-  }
+  },
 });
 
     // <View>
@@ -77,14 +76,14 @@ class VideoEntry extends Component {
     this.store = this.props.store;
     console.log('store is', this.store);
   }
- 
+
   render() {
     return (
       <TouchableHighlight
         style={style.wrap}
         onPress={() => {
           this.store.dispatch(setCurrentVideo(this.props.video));
-          Actions.videoPlayer({mode: MODE_WATCH});
+          Actions.videoPlayerForList({ mode: MODE_WATCH });
         }
         }
       >
@@ -110,23 +109,13 @@ class VideoEntry extends Component {
           </View>
         </View>
       </TouchableHighlight>
-    )
+    );
   }
+}
 
-
-
-
+VideoEntry.propTypes = {
+  video: React.PropTypes.object,
+  store: React.PropTypes.object,
 };
-
-// class VideoEntry extends Component {
-//   render() {
-//     return (
-//       <Text>Hey there from video entry</Text>
-//     );
-//   }
-// }
-
-
-
 
 module.exports = VideoEntry;
