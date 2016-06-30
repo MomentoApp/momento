@@ -6,6 +6,9 @@ const HANDLE_ORIENTATION = `
       return Math.PI / 180 * degree;
     }
 
+    var beta = null;
+    var alpha = null;
+
     function handleOrientation(event) {
       var x = event.beta;  // In degree in the range [-180,180]
       var y = event.gamma; // In degree in the range [-90,90]
@@ -21,14 +24,22 @@ const HANDLE_ORIENTATION = `
       //output.innerHTML = "alpha: " + z;
       //output.innerHTML = "gamma: " + y;
       //output.innerHTML = "beta: " + x;
-    
-      camera.rotation.y = -degreeToRad(z);
-  
-      camera.updateMatrix(); // make sure camera's local matrix is updated
-      camera.updateMatrixWorld(); // make sure camera's world matrix is updated
-      camera.matrixWorldInverse.getInverse( camera.matrixWorld );
-      frustum.setFromMatrix( new THREE.Matrix4().multiply( camera.projectionMatrix, camera.matrixWorldInverse ) );
-  
+
+      //camera.rotation.y = -degreeToRad(z);
+      camera.rotation.x = -degreeToRad(x) - degreeToRad(110);
+      //camera.rotation.x = -degreeToRad(x + 90);
+
+
+      // if ((x - beta) > 0.1 || (beta - x) > 0.1) {
+      //   camera.rotation.x = -degreeToRad(x) + degreeToRad(90);
+      // }
+
+      if ((z - alpha) > 1 || (alpha - z) > 1) {
+        camera.rotation.y = -degreeToRad(z);
+      }
+
+      beta = x;
+      alpha = z;
     }
 
     window.addEventListener('deviceorientation', handleOrientation);

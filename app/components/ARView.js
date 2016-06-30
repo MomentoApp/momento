@@ -106,7 +106,6 @@ const injectScript = `
         scene.add(meshes[i]);
         meshes[i].position.x = loc.x;
         meshes[i].position.z = loc.z;
-        //meshes[i].position.y = loc.y;
       });
     };
   });
