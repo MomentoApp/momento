@@ -14,7 +14,9 @@ import {
   startRecording,
   changeFlashMode,
   changeCameraType,
-  setCurrentVideo } from '../actions';
+  setCurrentVideo,
+  updateCoordinats,
+} from '../actions';
 
 import rearCameraIcon from './../assets/camera/ic_camera_rear_white.png';
 import frontCameraIcon from './../assets/camera/ic_camera_front_white.png';
@@ -23,17 +25,17 @@ import flashOnIcon from './../assets/camera/ic_flash_on_white.png';
 import flashOffIcon from './../assets/camera/ic_flash_off_white.png';
 import videoCameraIcon from './../assets/camera/ic_video_camera_36pt.png';
 import stopCameraIcon from './../assets/camera/ic_stop_camera_36pt.png';
-import { MODE_SUBMIT, VIDEO } from '../constants';
+import { MODE_SUBMIT, VIDEO, AR } from '../constants';
+
+import WebViewBridge from 'react-native-webview-bridge';
+import THREE_JS_RENDER from '../lib/render.js';
+import LocationMath from '../lib/locationMath.js';
+import HANDLE_ORIENTATION from '../lib/orientationHandler.js';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginBottom: 52,
-  },
-  preview: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
   },
   overlay: {
     position: 'absolute',
@@ -84,8 +86,105 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 20,
   },
+  // AR styles
+  webViewWrap: {
+    position: 'absolute',
+    top: -13,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'transparent',
+  },
+  webView: {
+    backgroundColor: 'transparent',
+  },
+  preview: {
+    flex: 1,
+    // flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  developerWrap: {
+    position: 'absolute',
+    top: 0,
+    left: 10,
+    right: 0,
+    bottom: 0,
+  },
+  developerText: {
+    color: 'red',
+    backgroundColor: 'transparent',
+  },
+
 });
 
+
+// ***************************************************
+
+
+const html = `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=utf-8>
+    <title>My first Three.js app</title>
+    <style>
+      body { margin: 0; }
+      canvas { width: 100%; height: 100% }
+      .output { color: red; }
+    </style>
+  </head>
+  <body>
+
+    <pre class="output"></pre>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r78/three.js"></script>
+    <script src="https://code.jquery.com/jquery-3.0.0.js" integrity="sha256-jrPLZ+8vDxt2FnE1zvZXCkCcebI/C8Dt5xyaQBjxQIo=" crossorigin="anonymous"></script>
+    ${THREE_JS_RENDER}
+    ${HANDLE_ORIENTATION}
+  </body>
+</html>`;
+
+const injectScript = `
+  function webViewBridgeReady(cb) {
+    //checks whether WebViewBridge exists in global scope.
+    if (window.WebViewBridge) {
+      cb(window.WebViewBridge);
+      return;
+    }
+
+    function handler() {
+      //remove the handler from listener since we don't need it anymore
+      document.removeEventListener('WebViewBridge', handler, false);
+      //pass the WebViewBridge object to the callback
+      cb(window.WebViewBridge);
+    }
+
+    //if WebViewBridge doesn't exist in global scope attach itself to document
+    //event system. Once the code is being injected by extension, the handler will
+    //be called.
+    document.addEventListener('WebViewBridge', handler, false);
+  }
+
+  webViewBridgeReady( function (webViewBridge) {
+    webViewBridge.send( "BRIDGE_READY" );
+    webViewBridge.onMessage = function (message) {
+      // Message is an array of all of the pins we want to display,
+      // where x and z on each pin is the relative location to the
+      // device in feet.
+      var message = JSON.parse( message );
+
+      mesh.visible = false;
+      message.locs.forEach( function( loc, i ) {
+        meshes[i] = mesh.clone();
+        meshes[i].visible = true;
+        scene.add(meshes[i]);
+        meshes[i].position.x = loc.x;
+        meshes[i].position.z = loc.z;
+      });
+    };
+  });
+`;
+
+// ***************************************************
 
 class CameraView extends React.Component {
   constructor(props) {
@@ -95,20 +194,77 @@ class CameraView extends React.Component {
     this.recordVideo = this.recordVideo.bind(this);
     this.switchType = this.switchType.bind(this);
     this.switchFlash = this.switchFlash.bind(this);
+    this.onBridgeMessage = this.onBridgeMessage.bind(this);
     this.state = {
       recordingTime: '00:00',
     };
   }
 
+// *********** AR VIEW METHODS ************
+
   componentDidMount() {
     this.unsubscribe = this.store.subscribe(() =>
       this.forceUpdate()
     );
+    if (!navigator.geolocation) { console.log('geoloaction not available'); }
+    if (navigator.geolocation) { console.log('geoloaction available'); }
+    navigator.geolocation.getCurrentPosition(
+      (initialPosition) => {
+        this.store.dispatch(
+          updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude)
+        );
+      },
+      (error) => alert('error trying to find initial position', error.message),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+
+
+    this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
+      // if we want function on position change, it should go here
+      // this.state.changePosFunction(lastPosition);
+      this.store.dispatch(
+        updateCoordinats(lastPosition.coords.latitude, lastPosition.coords.longitude)
+      );
+    });
   }
 
   componentWillUnmount() {
     this.unsubscribe();
+    navigator.geolocation.clearWatch(this.watchID);
   }
+
+  onBridgeMessage(message) {
+    if (message === 'BRIDGE_READY') {
+      this.sendLocsToBridge.call(this, this.getCurrentLocation());
+    }
+  }
+
+  getCurrentLocation() {
+    const currentLocation = { latitude: null, longitude: null };
+    const latitude = this.store.getState().position.latitude;
+    const longitude = this.store.getState().position.longitude;
+    currentLocation.latitude = latitude;
+    currentLocation.longitude = longitude;
+    return currentLocation;
+  }
+
+  calculateLocations(currentLocation, locObj) {
+    const locations = [];
+    locObj.forEach(loc => {
+      locations.push(LocationMath.relativeLocsInFeet(currentLocation, loc));
+    });
+
+    return locations;
+  }
+
+  sendLocsToBridge(coordinates) {
+    const message = {};
+    message.locs = this.calculateLocations(coordinates, this.store.getState().videos.videos);
+    this.refs.webviewbridge.sendToBridge(JSON.stringify(message));
+  }
+
+
+// ****************************************
 
   topBarOverlayStyle() {
     return this.store.getState().camera.recording
@@ -272,6 +428,39 @@ class CameraView extends React.Component {
     return null;
   }
 
+  renderAREngine() {
+    if (this.store.getState().camera.ARorVideo === AR) {
+      return (
+        <View style={styles.webViewWrap}>
+          <WebViewBridge
+            ref="webviewbridge"
+            onBridgeMessage={this.onBridgeMessage}
+            injectedJavaScript={injectScript}
+            style={styles.webView}
+            source={{ html }}
+          />
+        </View>
+      );
+    }
+    return null;
+  }
+
+  renderARDevWrap() {
+    if (this.store.getState().camera.ARorVideo === AR) {
+      return (
+        <View style={styles.developerWrap}>
+          <Text style={styles.developerText}>
+            Latitude: {this.store.getState().position.latitude}
+          </Text>
+          <Text style={styles.developerText}>
+            Longitude: {this.store.getState().position.longitude}
+          </Text>
+        </View>
+      );
+    }
+    return null;
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -296,6 +485,10 @@ class CameraView extends React.Component {
         {this.renderBottomVideoBar()}
 
         {this.renderVideoTime()}
+
+        {this.renderARDevWrap()}
+
+        {this.renderAREngine()}
 
       </View>
     );
