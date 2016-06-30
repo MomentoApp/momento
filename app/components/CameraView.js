@@ -8,14 +8,13 @@ import {
   Text,
 } from 'react-native';
 import Camera from 'react-native-camera';
-import Nav from './Nav';
-import { Actions } from 'react-native-router-flux';
+import { Actions } from '../../custom_modules/react-native-router-flux';
 import {
   stopRecording,
   startRecording,
   changeFlashMode,
   changeCameraType,
-  saveClipData } from '../actions';
+  setCurrentVideo } from '../actions';
 
 import rearCameraIcon from './../assets/camera/ic_camera_rear_white.png';
 import frontCameraIcon from './../assets/camera/ic_camera_front_white.png';
@@ -24,10 +23,12 @@ import flashOnIcon from './../assets/camera/ic_flash_on_white.png';
 import flashOffIcon from './../assets/camera/ic_flash_off_white.png';
 import videoCameraIcon from './../assets/camera/ic_video_camera_36pt.png';
 import stopCameraIcon from './../assets/camera/ic_stop_camera_36pt.png';
+import { MODE_SUBMIT, VIDEO } from '../constants';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 52,
   },
   preview: {
     flex: 1,
@@ -49,8 +50,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bottomOverlay: {
-    bottom: 65,
-    // backgroundColor: 'rgba(0,0,0,0.4)',
+    bottom: 20,
   },
   redBorderWrap: {
     flex: 1,
@@ -141,8 +141,10 @@ class CameraView extends React.Component {
         this.runTimer(true);
         this.camera.capture()
           .then((data) => {
-            this.store.dispatch(saveClipData(data));
-            const redirect = () => { Actions.videoPlayer(); };
+            const video = Object.assign({}, data, { url: data.path });
+            delete video.path;
+            this.store.dispatch(setCurrentVideo(video));
+            const redirect = () => { Actions.videoPlayer({ mode: MODE_SUBMIT }); };
             redirect();
           })
           .catch(err => console.error(err));
@@ -209,6 +211,67 @@ class CameraView extends React.Component {
     return icon;
   }
 
+  renderTopVideoBar() {
+    if (this.store.getState().camera.ARorVideo === VIDEO) {
+      return (
+        <View style={[styles.overlay, styles.topOverlay, this.topBarOverlayStyle()]}>
+          <TouchableOpacity
+            style={styles.typeButton}
+            onPress={this.switchType}
+          >
+            <Image
+              source={this.typeIcon}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.flashButton}
+            onPress={this.switchFlash}
+          >
+            <Image
+              source={this.flashIcon}
+            />
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return null;
+  }
+
+  renderBottomVideoBar() {
+    if (this.store.getState().camera.ARorVideo === VIDEO) {
+      return (
+        <View style={[styles.overlay, styles.bottomOverlay]}>
+          <TouchableOpacity
+            style={styles.redBorderWrap}
+            onPress={this.recordVideo}
+          >
+            <TouchableOpacity
+              style={styles.captureButton}
+              onPress={this.recordVideo}
+            >
+              {!this.store.getState().camera.recording
+                ? <Image source={videoCameraIcon} />
+                : <Image source={stopCameraIcon} />
+              }
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    return null;
+  }
+
+  renderVideoTime() {
+    if (this.store.getState().camera.ARorVideo === VIDEO) {
+      return (
+        <View style={styles.timeWrap}>
+          <Text style={styles.time}>{this.state.recordingTime}</Text>
+        </View>
+      );
+    }
+    return null;
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -228,44 +291,12 @@ class CameraView extends React.Component {
           captureMode={Camera.constants.CaptureMode.video}
           defaultTouchToFocus
         />
-        <View style={[styles.overlay, styles.topOverlay, this.topBarOverlayStyle()]}>
-          <TouchableOpacity
-            style={styles.typeButton}
-            onPress={this.switchType}
-          >
-            <Image
-              source={this.typeIcon}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.flashButton}
-            onPress={this.switchFlash}
-          >
-            <Image
-              source={this.flashIcon}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={[styles.overlay, styles.bottomOverlay]}>
-          <TouchableOpacity
-            style={styles.redBorderWrap}
-            onPress={this.recordVideo}
-          >
-            <TouchableOpacity
-              style={styles.captureButton}
-              onPress={this.recordVideo}
-            >
-              {!this.store.getState().camera.recording
-                ? <Image source={videoCameraIcon} />
-                : <Image source={stopCameraIcon} />
-              }
-            </TouchableOpacity>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.timeWrap}>
-          <Text style={styles.time}>{this.state.recordingTime}</Text>
-        </View>
-        <Nav currentPage="camera" />
+        {this.renderTopVideoBar()}
+
+        {this.renderBottomVideoBar()}
+
+        {this.renderVideoTime()}
+
       </View>
     );
   }

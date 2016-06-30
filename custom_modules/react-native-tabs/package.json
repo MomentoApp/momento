@@ -1,0 +1,88 @@
+{
+  "_args": [
+    [
+      {
+        "name": "react-native-tabs",
+        "raw": "react-native-tabs@1.0.7",
+        "rawSpec": "1.0.7",
+        "scope": null,
+        "spec": "1.0.7",
+        "type": "version"
+      },
+      "/Users/nlebedev/dev/HR/momento/node_modules/react-native-router-flux"
+    ]
+  ],
+  "_from": "react-native-tabs@1.0.7",
+  "_id": "react-native-tabs@1.0.7",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/react-native-tabs",
+  "_nodeVersion": "5.5.0",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/react-native-tabs-1.0.7.tgz_1463041093148_0.2508537252433598"
+  },
+  "_npmUser": {
+    "email": "pavlo.aksonov@gmail.com",
+    "name": "aksonov"
+  },
+  "_npmVersion": "3.5.3",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "react-native-tabs",
+    "raw": "react-native-tabs@1.0.7",
+    "rawSpec": "1.0.7",
+    "scope": null,
+    "spec": "1.0.7",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "/react-native-router-flux"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-tabs/-/react-native-tabs-1.0.7.tgz",
+  "_shasum": "5160a4dd9ff47d69c431a14568d5971468eb74dc",
+  "_shrinkwrap": null,
+  "_spec": "react-native-tabs@1.0.7",
+  "_where": "/Users/nlebedev/dev/HR/momento/node_modules/react-native-router-flux",
+  "author": {
+    "name": "Pavlo Aksonov"
+  },
+  "bugs": {
+    "url": "https://github.com/aksonov/react-native-tabs/issues"
+  },
+  "dependencies": {},
+  "description": "React Native platform-independent tabs. Could be used for bottom tab bars as well as sectioned views (with tab buttons)",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "5160a4dd9ff47d69c431a14568d5971468eb74dc",
+    "tarball": "https://registry.npmjs.org/react-native-tabs/-/react-native-tabs-1.0.7.tgz"
+  },
+  "gitHead": "a7cea3b278fe34d63992cf5d7b55bc7e592885e6",
+  "homepage": "https://github.com/aksonov/react-native-tabs#readme",
+  "keywords": [
+    "react-native",
+    "react-components",
+    "tabbar",
+    "tabs"
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "email": "pavlo.aksonov@gmail.com",
+      "name": "aksonov"
+    }
+  ],
+  "name": "react-native-tabs",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aksonov/react-native-tabs.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.7"
+}
