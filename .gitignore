@@ -3,6 +3,7 @@
 .DS_Store
 
 # API KEYS AND OTHER CONFIGURATION SETTINGS
+app/config
 
 # Xcode
 #
@@ -22,6 +23,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+project.xcworkspace
 
 # Android/IJ
 #

@@ -96,7 +96,7 @@ class SubmitView extends Component {
       const video = {
         // title: 'My awesome video',
         // userName: 'Awesome user'
-        url: response.headers.Location,
+        url: this.store.getState().videos.currentVideo.url,
         point: {
           type: 'Point',
           coordinates: [
