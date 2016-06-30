@@ -9,8 +9,10 @@ import {
 import Video from 'react-native-video';
 
 
-import { Actions } from 'react-native-router-flux';
+import { Actions } from '../../custom_modules/react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { MODE_SUBMIT } from '../constants';
+import { setVideoTitle, popNeeded } from '../actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -124,8 +126,8 @@ const styles = StyleSheet.create({
 class VideoPlayer extends Component {
   constructor(props) {
     super(props);
-    this.store = this.props.store;
-    console.log('store is ', this.store);
+    console.log('VIDEO PLAYER RECEIVED THESE PROPS', props);
+    this.store = props.store;
     this.togglePlay = this.togglePlay.bind(this);
     this.tryToPause = this.tryToPause.bind(this);
     this.goToSubmit = this.goToSubmit.bind(this);
@@ -141,6 +143,22 @@ class VideoPlayer extends Component {
       repeat: false,
     };
   }
+
+  componentDidMount() {
+    this.unsubscribe = this.store.subscribe(() =>
+      this.forceUpdate()
+    );
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  performPop() {
+    this.store.dispatch(popNeeded(false));
+    Actions.pop();
+  }
+
 
   playButtonStyle() {
     return this.state.paused
@@ -162,23 +180,46 @@ class VideoPlayer extends Component {
   }
 
   goToSubmit() {
-    Actions.submit();
+    AlertIOS.prompt(
+      'Name your moment',
+      null,
+      [
+        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        { text: 'OK', onPress: title => {
+          this.store.dispatch(setVideoTitle(title));
+          Actions.submit();
+        } },
+      ]
+);
   }
 
-  renderControlButtons() {
+  renderControls() {
+    if (this.props.mode === MODE_SUBMIT) {
+      return (
+        <View style={styles.ctrlBtnWrap}>
+          <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.pop}>
+            <Text style={styles.ctrlBtnText}>
+              Go Back
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.ctrlBtn}
+            onPress={this.goToSubmit}
+          >
+            <Text style={styles.ctrlBtnText}>
+              Submit
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+    // } else if (this.props.mode === MODE_WATCH) {
+
     return (
       <View style={styles.ctrlBtnWrap}>
-        <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.camera}>
+        <TouchableOpacity style={styles.ctrlBtn} onPress={Actions.pop}>
           <Text style={styles.ctrlBtnText}>
             Go Back
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.ctrlBtn}
-          onPress={this.goToSubmit}
-        >
-          <Text style={styles.ctrlBtnText}>
-            Submit
           </Text>
         </TouchableOpacity>
       </View>
@@ -191,7 +232,7 @@ class VideoPlayer extends Component {
       <View style={styles.container}>
         <TouchableOpacity style={styles.fullScreen} onPress={this.tryToPause}>
           <Video
-            source={{ uri: this.store.getState().videos.currentVideo.path }}
+            source={{ uri: this.store.getState().videos.currentVideo.url }}
             style={videoStyle}
             rate={1}
             paused={this.state.paused}
@@ -216,7 +257,7 @@ class VideoPlayer extends Component {
         <View style={styles.controls}>
           <View style={styles.generalControls}>
             <View style={styles.skinControl}>
-              {this.renderControlButtons()}
+              {this.renderControls()}
             </View>
           </View>
         </View>
@@ -228,6 +269,7 @@ class VideoPlayer extends Component {
 
 VideoPlayer.propTypes = {
   store: React.PropTypes.object,
+  mode: React.PropTypes.string,
 };
 
 module.exports = VideoPlayer;

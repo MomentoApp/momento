@@ -7,13 +7,13 @@ import {
 } from 'react-native';
 
 import Camera from 'react-native-camera';
-import Nav from './Nav';
 import THREE_JS_RENDER from '../lib/render.js';
 import { updateCoordinats } from '../actions';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginBottom: 52,
   },
   webViewWrap: {
     position: 'absolute',
@@ -56,12 +56,20 @@ const html = `<!DOCTYPE html>
     </style>
   </head>
   <body>
+    <div class="alpha"></div>
+    <div class="beta"></div>
+    <div class="gamma"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r78/three.js"></script>
+    <script src="https://code.jquery.com/jquery-3.0.0.js" integrity="sha256-jrPLZ+8vDxt2FnE1zvZXCkCcebI/C8Dt5xyaQBjxQIo=" crossorigin="anonymous"></script>
     ${THREE_JS_RENDER}
+    <script>window.addEventListener('deviceorientation', function(event) {
+  // alert(event.alpha + ' : ' + event.beta + ' : ' + event.gamma);
+  $('.alpha').text("Alpha:" + event.alpha);
+  });
+  </script>
+
   </body>
 </html>`;
-
-
 
 // this is a temporary test object that mimics the JSON that will be received from the db
 let testObj = [
@@ -113,7 +121,6 @@ let testObj = [
 class ARView extends Component {
   constructor(props) {
     super(props);
-    console.log('SHOWING STUFF', JSON.stringify(props));
     // const { store } = this.context;
     this.store = this.props.store;
   }
@@ -191,7 +198,6 @@ class ARView extends Component {
             }
           )()
         }
-        <Nav currentPage="ar" />
       </View>
     );
   }

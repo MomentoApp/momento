@@ -6,7 +6,7 @@ const THREE_JS_RENDER = `
 
     var renderer = new THREE.WebGLRenderer({ alpha: true });
     renderer.setClearColor( 0x000000, 0 ); // the default
-    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.setSize( window.innerWidth / 2, window.innerHeight/2 );
     document.body.appendChild( renderer.domElement );
 
     var geometry = new THREE.BoxGeometry(1,1,1);

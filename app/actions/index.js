@@ -1,17 +1,10 @@
-import {
-  UPDATE_COORDINATS,
-  STOP_RECORDING,
-  START_RECORDING,
-  CHANGE_CAMERA_TYPE,
-  CHANGE_FLASH_MODE,
-  INCREASE_RECORDING_TIME,
-  CLEAR_RECORDING_TIME,
-  SAVE_CLIP_DATA,
-} from '../constants/constants';
-//position
+import * as constants from '../constants';
+
+import { ListView } from 'react-native';
+// position
 export const updateCoordinats = (latitude, longitude) => (
   {
-    type: UPDATE_COORDINATS,
+    type: constants.UPDATE_COORDINATS,
     latitude,
     longitude,
   }
@@ -19,48 +12,86 @@ export const updateCoordinats = (latitude, longitude) => (
 // camera
 export const stopRecording = () => (
   {
-    type: STOP_RECORDING,
+    type: constants.STOP_RECORDING,
   }
 );
 
-export const startRecording = () => {
-  console.log('here');
-  return {
-    type: START_RECORDING,
-  };
-};
+export const startRecording = () => (
+  {
+    type: constants.START_RECORDING,
+  }
+);
 
 export const changeCameraType = (viewType) => (
   {
-    type: CHANGE_CAMERA_TYPE,
+    type: constants.CHANGE_CAMERA_TYPE,
     viewType,
   }
 );
 
 export const changeFlashMode = (mode) => (
   {
-    type: CHANGE_FLASH_MODE,
+    type: constants.CHANGE_FLASH_MODE,
     mode,
   }
 );
 
 export const increaseRecordingTime = (recordingTime) => (
   {
-    type: INCREASE_RECORDING_TIME,
+    type: constants.INCREASE_RECORDING_TIME,
     recordingTime,
   }
 );
 
 export const clearRecordingTime = () => (
   {
-    type: CLEAR_RECORDING_TIME,
+    type: constants.CLEAR_RECORDING_TIME,
   }
 );
-// videos
-export const saveClipData = (data) => (
+
+export const changeCameraVisibilityFlag = (visibilityFlag) => (
   {
-    type: SAVE_CLIP_DATA,
+    type: constants.CHANGE_CAMERA_VISIBILITY_FLAG,
+    visibilityFlag,
+  }
+);
+
+export const switchCameraAROrVideo = (mode) => (
+  {
+    type: constants.SWITCH_CAMERA_AR_OR_VIDEO,
+    mode,
+  }
+);
+
+// videos
+export const setCurrentVideo = (data) => (
+  {
+    type: constants.SET_CURRENT_VIDEO,
     data,
   }
 );
 
+export const setVideoTitle = (title) => (
+  {
+    type: constants.SET_VIDEO_TITLE,
+    title,
+  }
+);
+
+// update video list from database
+export const updateVideoList = (videos) => {
+  const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+  return {
+    type: constants.UPDATE_VIDEO_LIST,
+    dataSource: ds.cloneWithRows(videos),
+    videos,
+  };
+};
+
+// navigation
+export const popNeeded = (popFlag) => (
+  {
+    type: constants.POP_NEEDED,
+    popFlag,
+  }
+);
