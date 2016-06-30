@@ -4,19 +4,8 @@ import {
   AppRegistry,
   Text,
 } from 'react-native';
-<<<<<<< 3ee955d0ba96328088bc6964eda45c1bea543c86
 import { Scene, Actions, Router, Modal } from './custom_modules/react-native-router-flux';
 import TabView from './app/containers/TabView';
-=======
-import { Scene, Actions, Router } from 'react-native-router-flux';
-// import Entry from './app/components/Entry';
-import CameraView from './app/components/CameraView';
-import ARView from './app/components/ARView';
-import VideoPlayer from './app/components/VideoPlayer';
-import SubmitView from './app/components/SubmitView';
-import VideoList from './app/components/VideoList';
->>>>>>> Basic implementation of list view
-
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import rootReducer from './app/reducers/rootReducer.js';
@@ -51,7 +40,6 @@ const styles = StyleSheet.create({
 // when renaming the scenes, be aware that some of their keys
 // are used in custom_modules/react-native-router-flux/src/TabBar
 const scenes = Actions.create(
-<<<<<<< 3ee955d0ba96328088bc6964eda45c1bea543c86
   <Scene key="modal" component={Modal} >
     <Scene key="root" hideNavBar>
       <Scene
@@ -87,14 +75,6 @@ const scenes = Actions.create(
       </Scene>
       <Scene key="error" component={Error} />
     </Scene>
-=======
-  <Scene key="root" hideNavBar>
-    <Scene key="camera" component={CameraView} title="Camera" hideNavBar />
-    <Scene key="ar" component={ARView} title="AR" hideNavBar />
-    <Scene key="videoPlayer" component={VideoPlayer} title="Video player" hideNavBar />
-    <Scene key="submit" component={SubmitView} title="Submit" hideNavBar />
-    <Scene key="videoList" component={VideoList} title="Video list" initial hideNavBar />
->>>>>>> Basic implementation of list view
   </Scene>
 );
 
