@@ -1,30 +1,62 @@
 const THREE_JS_RENDER = `
-  <script>
-     
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+   <script>
+    var camera, scene, renderer;
+    var meshes = [];
+    var mesh;
+    var fovPortrait = 53;
+    var fovLandscape = 37.5;
 
-    var renderer = new THREE.WebGLRenderer({ alpha: true });
-    renderer.setClearColor( 0x000000, 0 ); // the default
-    renderer.setSize( window.innerWidth / 2, window.innerHeight/2 );
-    document.body.appendChild( renderer.domElement );
 
-    var geometry = new THREE.BoxGeometry(1,1,1);
-    var material = new THREE.MeshBasicMaterial({color:0x00ff00});
-    var cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
+    init();
+    animate();
 
-    camera.position.z = 5;
+    function init() {
+      camera = new THREE.PerspectiveCamera( fovPortrait, window.innerWidth / window.innerHeight, 1, 5280 );
+      scene = new THREE.Scene();
+
+      var ambient = new THREE.AmbientLight( 0x555555 );
+      scene.add(ambient);
+
+      var light = new THREE.DirectionalLight( 0xffffff );
+      light.position = camera.position;
+      scene.add(light);
+
+      var geometry = new THREE.SphereGeometry(10,32,32);
+      var material = new THREE.MeshLambertMaterial({color:0x0066FF, wireframe: true, transparent: true, opacity: 0.9});
+
+      mesh = new THREE.Mesh( geometry, material );
+
+      renderer = new THREE.WebGLRenderer();
+      renderer.setPixelRatio( window.devicePixelRatio );
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      document.body.appendChild( renderer.domElement );
+      window.addEventListener( 'resize', onWindowResize, false );
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.fov = camera.aspect > 1 ? fovLandscape : fovPortrait;
+      camera.updateProjectionMatrix();
+      renderer.setSize( window.innerWidth, window.innerHeight );
+    }
+
+    function animate() {
+      requestAnimationFrame( animate );
+      render();
+    }
 
     function render() {
-      requestAnimationFrame(render);
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
-      renderer.render(scene, camera);
-    }
-    render();
+      meshes.forEach( function( mesh ) {
+        mesh.rotation.y += 0.01;
+        mesh.rotation.x += 0.01;
+      });
 
+      renderer.render( scene, camera );
+    }
   </script>
 `;
 
 export default THREE_JS_RENDER;
+
+
+
