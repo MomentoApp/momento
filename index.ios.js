@@ -12,6 +12,8 @@ import rootReducer from './app/reducers/rootReducer.js';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 import promise from 'redux-promise';
+import LoginContainer from './app/containers/LoginContainer';
+
 
 const TabIcon = ({ selected, title }) => (
   <Text style={{ color: selected ? 'red' : 'black' }}>{title}</Text>
@@ -41,6 +43,7 @@ const styles = StyleSheet.create({
 // are used in custom_modules/react-native-router-flux/src/TabBar
 const scenes = Actions.create(
   <Scene key="modal" component={Modal} >
+    <Scene key="login" title="Login" component={LoginContainer} />
     <Scene key="root" hideNavBar>
       <Scene
         key="main"
