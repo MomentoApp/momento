@@ -41,8 +41,8 @@ class VideoList extends Component {
       this.forceUpdate()
     );
 
-    if (!navigator.geolocation) { console.log('geoloaction not available'); }
-    if (navigator.geolocation) { console.log('geoloaction available'); }
+    // if (!navigator.geolocation) { console.log('geoloaction not available'); }
+    // if (navigator.geolocation) { console.log('geoloaction available'); }
     navigator.geolocation.getCurrentPosition(
       (initialPosition) => {
         this.store.dispatch(

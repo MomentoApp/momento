@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { FBLogin, FBLoginManager } from 'react-native-facebook-login';
+import { FBLogin } from 'react-native-facebook-login';
+import { storeUserCredentials, deleteUserCredentials } from '../actions/index.js';
+import { Actions } from '../../custom_modules/react-native-router-flux';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,24 +12,26 @@ const styles = StyleSheet.create({
   },
 });
 
-class LoginContainer extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <FBLogin
-          style={{ marginBottom: 10 }}
-          onLogin={data => console.log('You have successfully logged in', data)}
-          onLogout={() => console.log('you have successfully logged out')}
-          onLoginFound={data => console.log('login found', data)}
-          onLoginNotFound={() => console.log('you signed out')}
-          onError={err => console.log('Error', err)}
-          onCancel={() => console.log('user cancelled')}
-          onPermissionsMission={data => console.log('Permissions missing', data)}
-        />
+const LoginContainer = ({ store }) => (
+  <View style={styles.container}>
+    <FBLogin
+      style={{ marginBottom: 10 }}
+      onLogin={data => { store.dispatch(storeUserCredentials(data)); Actions.main(); }}
+      onLogout={() => store.dispatch(deleteUserCredentials())}
+      onLoginFound={data => {
+        store.dispatch(storeUserCredentials(data));
+        // Actions.main();
+      }}
+      onLoginNotFound={() => console.log('Login not found')}
+      onError={err => console.log('Error', err)}
+      onCancel={() => console.log('user cancelled')}
+      onPermissionsMission={data => console.log('Permissions missing', data)}
+    />
+  </View>
+);
 
-      </View>
-    );
-  }
-}
+LoginContainer.propTypes = {
+  store: React.PropTypes.object,
+};
 
 module.exports = LoginContainer;

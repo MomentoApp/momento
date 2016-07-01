@@ -88,10 +88,17 @@ export const updateVideoList = (videos) => {
   };
 };
 
-// navigation
-export const popNeeded = (popFlag) => (
+// user
+export const storeUserCredentials = (data) => {
+  console.log('here');
+  return {
+    type: constants.STORE_USER_CREDENTIALS,
+    data,
+  };
+};
+
+export const deleteUserCredentials = () => (
   {
-    type: constants.POP_NEEDED,
-    popFlag,
+    type: constants.DELETE_USER_CREDENTIALS,
   }
 );

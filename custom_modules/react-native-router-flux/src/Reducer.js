@@ -37,7 +37,6 @@ function checkPropertiesEqual(action, lastAction) {
 }
 
 function inject(state, action, props, scenes) {
-  console.log('STATE IN INJECT IS', state);
   const condition = action.type === REFRESH_ACTION ? state.key === props.key ||
   state.sceneKey === action.key : state.sceneKey === props.parent;
   // console.log("INJECT:", action.key, state.sceneKey, condition);

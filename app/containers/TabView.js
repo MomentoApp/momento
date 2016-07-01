@@ -5,6 +5,8 @@ import VideoMap from '../components/VideoMap';
 import CameraView from '../components/CameraView';
 import VideoPlayer from '../components/VideoPlayer';
 import Submit from '../components/SubmitView';
+import Profile from '../components/Profile';
+
 
 import { MODE_SUBMIT, MODE_WATCH } from '../constants';
 
@@ -31,8 +33,6 @@ class TabView extends Component {
   render() {
     // note: AR is rendered manually inside react-native-router-flux TabBar
     // to avoid rendering camera two times
-    console.log('i am here with this.props.name', this.props.name);
-    console.log('this.props', this.props);
     return (
       <View style={[styles.container, this.props.sceneStyle]}>
         {this.props.name === 'video' &&
@@ -57,6 +57,11 @@ class TabView extends Component {
         {this.props.name === 'submit' &&
           <Submit store={this.props.store} />
         }
+
+        {this.props.name === 'profile' &&
+          <Profile store={this.props.store} />
+        }
+
       </View>
     );
   }

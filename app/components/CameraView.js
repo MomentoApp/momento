@@ -206,8 +206,8 @@ class CameraView extends React.Component {
     this.unsubscribe = this.store.subscribe(() =>
       this.forceUpdate()
     );
-    if (!navigator.geolocation) { console.log('geoloaction not available'); }
-    if (navigator.geolocation) { console.log('geoloaction available'); }
+    // if (!navigator.geolocation) { console.log('geoloaction not available'); }
+    // if (navigator.geolocation) { console.log('geoloaction available'); }
     navigator.geolocation.getCurrentPosition(
       (initialPosition) => {
         this.store.dispatch(
