@@ -75,7 +75,7 @@ const scenes = Actions.create(
           />
         </Scene>
         <Scene key="map" component={TabView} title="Map" icon={TabIcon} />
-        <Scene key="profile" component={TabView} title="User Profile" icon={TabIcon} />
+        <Scene key="profile" component={TabView} title="User Profile" icon={TabIcon} hideNavBar />
       </Scene>
       <Scene key="error" component={Error} />
     </Scene>

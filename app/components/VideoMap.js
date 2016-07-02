@@ -31,23 +31,10 @@ class VideoMap extends Component {
     this.unsubscribe = this.store.subscribe(() =>
       this.forceUpdate()
     );
-
-    navigator.geolocation.getCurrentPosition((initialPosition) => {
-      this.store.dispatch(
-        updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude)
-      );
-    }, (error) => console.log('error trying to find initial position', error.message),
-    { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 });
-    this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
-      this.store.dispatch(
-        updateCoordinats(lastPosition.coords.latitude, lastPosition.coords.longitude)
-      );
-    });
   }
 
   componentWillUnmount() {
     this.unsubscribe();
-    navigator.geolocation.clearWatch(this.watchID);
   }
 
   render() {

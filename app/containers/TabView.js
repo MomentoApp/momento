@@ -6,7 +6,7 @@ import CameraView from '../components/CameraView';
 import VideoPlayer from '../components/VideoPlayer';
 import Submit from '../components/SubmitView';
 import Profile from '../components/Profile';
-
+import { updateCoordinats } from '../actions';
 
 import { MODE_SUBMIT, MODE_WATCH } from '../constants';
 
@@ -23,11 +23,23 @@ const styles = StyleSheet.create({
   },
 });
 
-
 class TabView extends Component {
   constructor(props) {
     super(props);
     this.store = this.props.store;
+  }
+
+  componentDidMount() {
+    this.unsubscribe = this.store.subscribe(() =>
+      this.forceUpdate()
+    );
+
+   
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   render() {

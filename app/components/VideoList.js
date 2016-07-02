@@ -8,14 +8,15 @@ import {
 } from 'react-native';
 
 
-import { getVideos } from '../utils/queries';
-import { updateVideoList, updateCoordinats } from '../actions';
 import VideoEntry from './VideoEntry';
 import { getVideoDistanceInKm } from '../utils/orientation';
+import { getVideos } from '../utils/queries';
+import { updateVideoList, updateCoordinats } from '../actions';
+import getHeaders from '../utils/helpers';
 
 const style = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
     marginTop: 64,
     marginBottom: 52,
   },
@@ -29,11 +30,14 @@ const style = StyleSheet.create({
 class VideoList extends Component {
   constructor(props) {
     super(props);
-    this.store = this.props.store;
+    this.store = props.store;
     this.renderItem = this.renderItem.bind(this);
-    getVideos( (videos) => {
-      this.store.dispatch(updateVideoList(videos));
-    });
+
+    getVideos(
+      getHeaders(this.store),
+      this.store.getState().position,
+      (videos) => { this.store.dispatch(updateVideoList(videos)); }
+    );
   }
 
   componentDidMount() {
@@ -41,8 +45,8 @@ class VideoList extends Component {
       this.forceUpdate()
     );
 
-    // if (!navigator.geolocation) { console.log('geoloaction not available'); }
-    // if (navigator.geolocation) { console.log('geoloaction available'); }
+    if (!navigator.geolocation) { console.log('geoloaction not available'); }
+    if (navigator.geolocation) { console.log('geoloaction available'); }
     navigator.geolocation.getCurrentPosition(
       (initialPosition) => {
         this.store.dispatch(
@@ -68,7 +72,7 @@ class VideoList extends Component {
     navigator.geolocation.clearWatch(this.watchID);
   }
 
-  _renderSeperator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
+  _renderSeperator(sectionID, rowID, adjacentRowHighlighted) {
     return (
       <View
         key={`${sectionID}-${rowID}`}

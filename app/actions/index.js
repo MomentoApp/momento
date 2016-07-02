@@ -90,7 +90,6 @@ export const updateVideoList = (videos) => {
 
 // user
 export const storeUserCredentials = (data) => {
-  console.log('here');
   return {
     type: constants.STORE_USER_CREDENTIALS,
     data,
@@ -100,5 +99,20 @@ export const storeUserCredentials = (data) => {
 export const deleteUserCredentials = () => (
   {
     type: constants.DELETE_USER_CREDENTIALS,
+  }
+);
+
+export const setUserNameEmail = (name, email) => (
+  {
+    type: constants.SET_USER_NAME_EMAIL,
+    name,
+    email,
+  }
+);
+
+export const setUserPicture = (pictureUrl) => (
+  {
+    type: constants.SET_USER_PICTURE,
+    pictureUrl,
   }
 );
