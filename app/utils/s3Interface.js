@@ -15,7 +15,7 @@ const saveToS3 = (file, cb, progressCb) => {
   .then(response => {
     if (response.status !== 201) console.log('Failed to upload to S3');
     cb(response);
-    console.log(JSON.stringify('RESPONSE', response));
+    console.log('RESPONSE', JSON.stringify(response));
   })
   .catch((e) => console.log(e))
   .progress((e) => { progressCb(e.loaded, e.total); });

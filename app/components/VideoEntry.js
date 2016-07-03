@@ -74,7 +74,6 @@ class VideoEntry extends Component {
   constructor(props) {
     super(props);
     this.store = this.props.store;
-    console.log('store is', this.store);
   }
 
   render() {

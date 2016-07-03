@@ -78,20 +78,53 @@ export const setVideoTitle = (title) => (
   }
 );
 
-// update video list from database
-export const updateVideoList = (videos) => {
+// update all videos list from database
+export const updateAllVideosList = (videos) => {
   const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
   return {
-    type: constants.UPDATE_VIDEO_LIST,
+    type: constants.UPDATE_ALL_VIDEOS_LIST,
     dataSource: ds.cloneWithRows(videos),
     videos,
   };
 };
 
-// navigation
-export const popNeeded = (popFlag) => (
+
+// user
+
+// update user videos list from database
+export const updateUserVideosList = (videos) => {
+  const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+  return {
+    type: constants.UPDATE_USER_VIDEOS_LIST,
+    dataSource: ds.cloneWithRows(videos),
+    videos,
+  };
+};
+
+export const storeUserCredentials = (data) => (
   {
-    type: constants.POP_NEEDED,
-    popFlag,
+    type: constants.STORE_USER_CREDENTIALS,
+    data,
+  }
+);
+
+export const deleteUserCredentials = () => (
+  {
+    type: constants.DELETE_USER_CREDENTIALS,
+  }
+);
+
+export const setUserNameEmail = (name, email) => (
+  {
+    type: constants.SET_USER_NAME_EMAIL,
+    name,
+    email,
+  }
+);
+
+export const setUserPicture = (token) => (
+  {
+    type: constants.SET_USER_PICTURE,
+    pictureUrl: `https://graph.facebook.com/v2.6/me/picture?&height=200&width=200&access_token=${token}`,
   }
 );

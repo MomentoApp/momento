@@ -15,7 +15,6 @@ import {
   changeFlashMode,
   changeCameraType,
   setCurrentVideo,
-  updateCoordinats,
 } from '../actions';
 
 import rearCameraIcon from './../assets/camera/ic_camera_rear_white.png';
@@ -206,31 +205,10 @@ class CameraView extends React.Component {
     this.unsubscribe = this.store.subscribe(() =>
       this.forceUpdate()
     );
-    if (!navigator.geolocation) { console.log('geoloaction not available'); }
-    if (navigator.geolocation) { console.log('geoloaction available'); }
-    navigator.geolocation.getCurrentPosition(
-      (initialPosition) => {
-        this.store.dispatch(
-          updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude)
-        );
-      },
-      (error) => alert('error trying to find initial position', error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-
-
-    this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
-      // if we want function on position change, it should go here
-      // this.state.changePosFunction(lastPosition);
-      this.store.dispatch(
-        updateCoordinats(lastPosition.coords.latitude, lastPosition.coords.longitude)
-      );
-    });
   }
 
   componentWillUnmount() {
     this.unsubscribe();
-    navigator.geolocation.clearWatch(this.watchID);
   }
 
   onBridgeMessage(message) {

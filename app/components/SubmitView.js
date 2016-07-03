@@ -9,7 +9,7 @@ import {
 import { saveToS3 } from '../utils/s3Interface';
 import { saveVideo } from '../utils/queries';
 import { Actions } from '../../custom_modules/react-native-router-flux';
-import { updateCoordinats, popNeeded } from '../actions';
+import secret from '../config/secret';
 
 const styles = StyleSheet.create({
   container: {
@@ -74,16 +74,6 @@ class SubmitView extends Component {
   }
 
   componentDidMount() {
-    // get current position
-    navigator.geolocation.getCurrentPosition(
-      (initialPosition) => {
-        this.store.dispatch(
-          updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude)
-        );
-      },
-      (error) => console.log('error trying to find initial position', error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
 
     const file = {
       uri: this.store.getState().videos.currentVideo.url,
@@ -91,8 +81,7 @@ class SubmitView extends Component {
       type: 'video/quicktime',
     };
 
-
-    const saveToDb = (response) => {
+    const saveToDb = () => {
       const video = {
         // title: 'My awesome video',
         // userName: 'Awesome user'
@@ -104,10 +93,15 @@ class SubmitView extends Component {
             this.store.getState().position.longitude,
           ],
         },
-        UserId: 1,
         title: this.store.getState().videos.currentVideo.title,
       };
-      saveVideo(video, (resp) => {
+
+      const headers = {
+        id: this.store.getState().user.userId,
+        token: this.store.getState().user.token,
+        secret,
+      };
+      saveVideo(headers, video, (resp) => {
         console.log('Received response from db after trying to save:', resp);
       });
     };
@@ -124,7 +118,6 @@ class SubmitView extends Component {
   }
 
   goBack() {
-    this.store.dispatch(popNeeded(true));
     Actions.popTo('videoWrap');
   }
 

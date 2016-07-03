@@ -19,6 +19,7 @@
     "react-native-button": "^1.6.0",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-drawer": "^2.2.4",
+    "react-native-facebook-login": "^1.2.0",
     "react-native-router-flux": "^3.30.0",
     "react-native-vector-icons": "^2.0.3",
     "react-native-video": "^0.8.0",
