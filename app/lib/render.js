@@ -5,6 +5,7 @@ const THREE_JS_RENDER = `
     var mesh;
     var fovPortrait = 53;
     var fovLandscape = 37.5;
+    var frustum;
 
 
     init();
@@ -12,6 +13,7 @@ const THREE_JS_RENDER = `
 
     function init() {
       camera = new THREE.PerspectiveCamera( fovPortrait, window.innerWidth / window.innerHeight, 1, 5280 );
+      frustum = new THREE.Frustum();
       scene = new THREE.Scene();
 
       var ambient = new THREE.AmbientLight( 0x555555 );
@@ -21,7 +23,8 @@ const THREE_JS_RENDER = `
       light.position = camera.position;
       scene.add(light);
 
-      var geometry = new THREE.SphereGeometry(10,32,32);
+      //var geometry = new THREE.SphereGeometry(10,32,32);
+      var geometry = new THREE.SphereGeometry(30,32,32);
       var material = new THREE.MeshLambertMaterial({color:0x0066FF, wireframe: true, transparent: true, opacity: 0.9});
 
       mesh = new THREE.Mesh( geometry, material );

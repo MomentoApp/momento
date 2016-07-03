@@ -26,18 +26,30 @@ const HANDLE_ORIENTATION = `
       //output.innerHTML = "beta: " + x;
 
       //camera.rotation.y = -degreeToRad(z);
-      camera.rotation.x = -degreeToRad(x) - degreeToRad(110);
       //camera.rotation.x = -degreeToRad(x + 90);
+      
+      //camera.lookAt(new THREE.Vector3(x,y,z));
+      camera.rotation.x = -degreeToRad(x) - degreeToRad(110);
+      //camera.rotation.x = -degreeToRad(x) - degreeToRad((x/100) + 110);
+      //camera.rotation.x = -degreeToRad(x) - degreeToRad(x*1.5);
+      //camera.rotation.x = -degreeToRad(x);
+      //camera.up.x = -degreeToRad(x);
 
 
-      // if ((x - beta) > 0.1 || (beta - x) > 0.1) {
+
+      // if ((x - beta) > 1 || (beta - x) > 1) {
       //   camera.rotation.x = -degreeToRad(x) + degreeToRad(90);
+      // }
+
+      // if ((x-beta) > 1) {
+      //   mesh.position.y += degreeToRad(x);
       // }
 
       if ((z - alpha) > 1 || (alpha - z) > 1) {
         camera.rotation.y = -degreeToRad(z);
       }
 
+      
       beta = x;
       alpha = z;
     }
