@@ -2,23 +2,24 @@ require('es6-promise').polyfill();
 require('fetch-everywhere');
 import SERVER_ADDRESS from '../config/serverAddress';
 
-const radius = 2000000000000;
+const radius = 20000000000;
 
-const getVideos = (headers, location, cb) =>
-  fetch(`${SERVER_ADDRESS} + /api/video/${location.latitude}/${location.longitude}/${radius}`,
+const getAllVideos = (headers, location, cb) => {
+  console.log('location', location);
+  return fetch(`${SERVER_ADDRESS} + /api/video/${location.latitude}/${location.longitude}/${radius}`,
     {
       method: 'GET',
       headers,
     })
     .then(response => response.json())
     .then(result => cb(result))
-    .catch(error => console.log('Error getting videos:', error)
-);
+    .catch(error => console.log('Error getting videos:', error));
+};
 
-const getUserVideos = (headers, cb) => fetch(`${SERVER_ADDRESS} + /api/user_videos/`,
+const getUserVideos = (headers, cb) => fetch(`${SERVER_ADDRESS} + /api/user_video`,
   {
     method: 'GET',
-    headers,
+    headers: { 'Content-Type': 'application/json', ...headers },
   })
   .then(response => response.json())
   .then(result => cb(result))
@@ -30,9 +31,9 @@ const saveVideo = (headers, video, cb) => fetch(`${SERVER_ADDRESS} + /api/video`
   {
     method: 'POST',
     body: JSON.stringify(video),
-    headers: { 'Content-type': 'application/json', headers },
+    headers: { 'Content-type': 'application/json', ...headers },
   })
-  .then(response => response.json())
+  .then(response => response)
   .then(result => cb(result))
   .catch(error => console.log('Error saving videos:', error)
 );
@@ -72,7 +73,7 @@ const saveUserToDb = (headers, name, email, pictureUrl, cb) => (
   .catch(error => console.log('Error saving user:', error))
 );
 
-module.exports.getVideos = getVideos;
+module.exports.getAllVideos = getAllVideos;
 module.exports.getUserVideos = getUserVideos;
 module.exports.saveVideo = saveVideo;
 module.exports.getUserNameEmail = getUserNameEmail;

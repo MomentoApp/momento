@@ -10,9 +10,10 @@ import {
 
 import VideoEntry from './VideoEntry';
 import { getVideoDistanceInKm } from '../utils/orientation';
-import { getVideos } from '../utils/queries';
-import { updateVideoList, updateCoordinats } from '../actions';
+import { getAllVideos, getUserVideos } from '../utils/queries';
+import { updateAllVideosList, updateUserVideosList, updateCoordinats } from '../actions';
 import getHeaders from '../utils/helpers';
+import { updateCurrentPosition } from '../utils/navigation';
 
 const style = StyleSheet.create({
   container: {
@@ -32,12 +33,24 @@ class VideoList extends Component {
     super(props);
     this.store = props.store;
     this.renderItem = this.renderItem.bind(this);
+  }
 
-    getVideos(
-      getHeaders(this.store),
-      this.store.getState().position,
-      (videos) => { this.store.dispatch(updateVideoList(videos)); }
-    );
+  componentWillMount() {
+    updateCurrentPosition(this.store,
+    () => {
+      if (this.props.mode !== 'user') {
+        getAllVideos(
+          getHeaders(this.store),
+          this.store.getState().position,
+          (videos) => { this.store.dispatch(updateAllVideosList(videos)); }
+        );
+      } else {
+        getUserVideos(
+          getHeaders(this.store),
+          (videos) => { this.store.dispatch(updateUserVideosList(videos)); }
+        );
+      }
+    });
   }
 
   componentDidMount() {
@@ -85,19 +98,34 @@ class VideoList extends Component {
   }
 
   showLoadedVids() {
-    if (this.store.getState().videos.videosLoaded) {
-      return (
-        <ListView
-        automaticallyAdjustContentInsets={false}
-        dataSource={this.store.getState().videos.dataSource}
-        initialListSize={9}
-        renderRow={this.renderItem}
-        renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
-        renderSeparator={this._renderSeperator}
-      />);
-
-
+    if (this.props.mode === 'user') {
+      if (this.store.getState().videos.userVideosLoaded) {
+        return (
+          <ListView
+            automaticallyAdjustContentInsets={false}
+            dataSource={this.store.getState().videos.userDataSource}
+            initialListSize={9}
+            renderRow={this.renderItem}
+            renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
+            renderSeparator={this._renderSeperator}
+          />);
+      }
+    } else {
+      if (this.store.getState().videos.videosLoaded) {
+        return (
+          <ListView
+            automaticallyAdjustContentInsets={false}
+            dataSource={this.store.getState().videos.dataSource}
+            initialListSize={9}
+            renderRow={this.renderItem}
+            renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
+            renderSeparator={this._renderSeperator}
+        />);
+      }
     }
+
+
+
     return (
       <View style={style.loading}>
         <Text>Loading...</Text>
@@ -106,13 +134,12 @@ class VideoList extends Component {
   }
 
   renderItem(video) {
-    const lat1 = video.point.coordinates[0];
-    const lng1 = video.point.coordinates[1];
-    const lat2 = this.store.getState().position.latitude;
-    const lng2 = this.store.getState().position.longitude;
+    // const lat1 = video.point.coordinates[0];
+    // const lng1 = video.point.coordinates[1];
+    // const lat2 = this.store.getState().position.latitude;
+    // const lng2 = this.store.getState().position.longitude;
     // <View>
       // <Text>{getDistanceInKm(lat1, lng1, lat2, lng2)}URL:{video.url} LAT: {video.point.coordinates[0]}</Text>
-    
     // </View>
     const kmAway = getVideoDistanceInKm(video, this.store.getState().position);
     const vid = Object.assign({}, video, { userName: 'awesomeUser', kmAway });

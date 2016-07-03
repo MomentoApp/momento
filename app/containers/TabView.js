@@ -6,7 +6,7 @@ import CameraView from '../components/CameraView';
 import VideoPlayer from '../components/VideoPlayer';
 import Submit from '../components/SubmitView';
 import Profile from '../components/Profile';
-import { updateCoordinats } from '../actions';
+import { updateCurrentPosition } from '../utils/navigation';
 
 import { MODE_SUBMIT, MODE_WATCH } from '../constants';
 
@@ -33,13 +33,10 @@ class TabView extends Component {
     this.unsubscribe = this.store.subscribe(() =>
       this.forceUpdate()
     );
-
-   
   }
 
   componentWillUnmount() {
     this.unsubscribe();
-    navigator.geolocation.clearWatch(this.watchID);
   }
 
   render() {

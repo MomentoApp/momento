@@ -81,7 +81,7 @@ class SubmitView extends Component {
       type: 'video/quicktime',
     };
 
-    const saveToDb = (response) => {
+    const saveToDb = () => {
       const video = {
         // title: 'My awesome video',
         // userName: 'Awesome user'
@@ -93,7 +93,6 @@ class SubmitView extends Component {
             this.store.getState().position.longitude,
           ],
         },
-        UserId: 1,
         title: this.store.getState().videos.currentVideo.title,
       };
 

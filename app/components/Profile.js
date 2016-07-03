@@ -15,21 +15,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   backgroundImage: {
-    width:200,
-    height: 200,
-    padding: 120,
-    marginTop: 65,
-    justifyContent: 'center'
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
 });
 
 const Profile = ({ store }) => (
-    <View style={styles.container}>
-      <Image style={styles.backgroundImage} source={{ uri: `https://graph.facebook.com/v2.6/me/picture?&height=200&width=200&access_token=${store.getState().user.token}` }} />
-      <Text>
-        This is the USER PAGE BABY!
-      </Text>
-    </View>
+  <View style={styles.container}>
+    <Image style={styles.backgroundImage} source={{ uri: store.getState().user.pictureUrl }} />
+    <Text>
+      {store.getState().user.name}
+    </Text>
+    <VideoList mode="user" store={store} />
+
+  </View>
 );
 
 Profile.propTypes = {

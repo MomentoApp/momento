@@ -21,12 +21,14 @@ const LoginContainer = ({ store }) => (
       onLogin={data => {
         console.log('get function:!!!!!!!!!!');
         store.dispatch(storeUserCredentials(data));
-        // send request to FB for additional data
+        // send request to FB for name and email
         getUserNameEmail(
           store.getState().user.token,
-          (name, email, pictureUrl) =>
-            store.dispatch(setUserNameEmail(name, email, pictureUrl))
+          (name, email) =>
+            store.dispatch(setUserNameEmail(name, email))
         )
+        // save profile picture in Redux store
+        .then(() => store.dispatch(setUserPicture(store.getState().user.token)))
         // save user to DB
         .then(() => saveUserToDb(
           {
@@ -51,7 +53,8 @@ const LoginContainer = ({ store }) => (
           store.getState().user.token,
           (name, email) =>
             store.dispatch(setUserNameEmail(name, email))
-        );
+        )// save profile picture in Redux store
+        .then(() => store.dispatch(setUserPicture(store.getState().user.token)));
         Actions.main();
       }}
       onLoginNotFound={() => console.log('Login not found')}
