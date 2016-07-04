@@ -5,7 +5,7 @@ import { storeUserCredentials, deleteUserCredentials, setUserNameEmail, setUserP
 import { Actions } from '../../custom_modules/react-native-router-flux';
 import { getUserNameEmail, getUserPicture, saveUserToDb } from '../utils/queries';
 import secret from '../config/secret';
-import coverImage from '../assets/images/login_cover.jpg';
+import coverImage from '../assets/images/momento.jpg';
 
 const styles = StyleSheet.create({
   container: {
@@ -47,6 +47,12 @@ const styles = StyleSheet.create({
   },
   fbButton: {
   },
+  /* momento: */
+  // gradient: {
+    // flex: 1,
+    // backgroundColor: 'rgba(91,68,68,0.66)',
+  // },
+
   // {
   //   flex:1,
   //   width:null,
@@ -61,7 +67,7 @@ const styles = StyleSheet.create({
 const LoginContainer = ({ store }) => (
 
   <Image style={styles.container} source={coverImage}>
-    <StatusBar hidden={true} />
+    <StatusBar hidden />
     <View style={styles.headerWrap}>
       <Text style={styles.header}>
         Momento
