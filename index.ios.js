@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
 const scenes = Actions.create(
   <Scene key="modal" component={Modal} >
     <Scene key="root" hideNavBar>
-      <Scene key="login" title="Login" component={LoginContainer} />
+      <Scene key="login" title="Login" component={LoginContainer} hideNavBar hideTabBar/>
       <Scene
         key="main"
         tabs
