@@ -81,6 +81,12 @@ class SubmitView extends Component {
       type: 'video/quicktime',
     };
 
+    const thumbnail = {
+      uri: this.store.getState().videos.currentVideo.thumbnailPath,
+      name: `${this.store.getState().videos.currentVideo.size}.jpg`,
+      type: 'image/jpeg',
+    };
+
     const saveToDb = () => {
       const video = {
         // title: 'My awesome video',
@@ -114,7 +120,10 @@ class SubmitView extends Component {
       }
     };
 
-    saveToS3(file, saveToDb, updateProgress);
+    saveToS3(thumbnail, () => {}, () => {})
+    .then(() => {
+      saveToS3(file, saveToDb, updateProgress);
+    });
   }
 
   goBack() {

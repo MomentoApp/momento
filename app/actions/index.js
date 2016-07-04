@@ -71,6 +71,13 @@ export const setCurrentVideo = (data) => (
   }
 );
 
+export const setThumbnailPath = (path) => (
+  {
+    type: constants.SET_THUMBNAIL_PATH,
+    path,
+  }
+);
+
 export const setVideoTitle = (title) => (
   {
     type: constants.SET_VIDEO_TITLE,

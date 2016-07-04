@@ -23,6 +23,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		13BE98461D2A221B00237155 /* Copperplate Gothic Bold in Resources */ = {isa = PBXBuildFile; fileRef = 13BE98451D2A221B00237155 /* Copperplate Gothic Bold */; };
 		13DA929B1D25DC40005B7525 /* libRCTFBLogin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13DA928E1D25DB86005B7525 /* libRCTFBLogin.a */; };
 		13DA929F1D25E3C2005B7525 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13DA929C1D25E3C2005B7525 /* FBSDKCoreKit.framework */; };
 		13DA92A01D25E3C2005B7525 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13DA929D1D25E3C2005B7525 /* FBSDKLoginKit.framework */; };
@@ -181,6 +182,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = momento/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = momento/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = momento/main.m; sourceTree = "<group>"; };
+		13BE98451D2A221B00237155 /* Copperplate Gothic Bold */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Copperplate Gothic Bold"; sourceTree = "<group>"; };
 		13DA92871D25DB85005B7525 /* RCTFBLogin.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTFBLogin.xcodeproj; path = "../node_modules/react-native-facebook-login/RCTFBLogin.xcodeproj"; sourceTree = "<group>"; };
 		13DA929C1D25E3C2005B7525 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = "../node_modules/react-native-facebook-login/FacebookSDK/FBSDKCoreKit.framework"; sourceTree = "<group>"; };
 		13DA929D1D25E3C2005B7525 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = "../node_modules/react-native-facebook-login/FacebookSDK/FBSDKLoginKit.framework"; sourceTree = "<group>"; };
@@ -431,6 +433,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				13BE98451D2A221B00237155 /* Copperplate Gothic Bold */,
 				13DA929C1D25E3C2005B7525 /* FBSDKCoreKit.framework */,
 				13DA929D1D25E3C2005B7525 /* FBSDKLoginKit.framework */,
 				13DA929E1D25E3C2005B7525 /* FBSDKShareKit.framework */,
@@ -734,6 +737,7 @@
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				D709F0E00AB943AB83F6FB52 /* Entypo.ttf in Resources */,
 				3ABB866AFE4E4BCA92C4117C /* EvilIcons.ttf in Resources */,
+				13BE98461D2A221B00237155 /* Copperplate Gothic Bold in Resources */,
 				C3D5C53418A64DFA85E5F2ED /* FontAwesome.ttf in Resources */,
 				C4DF86CF56374B70A5E2E170 /* Foundation.ttf in Resources */,
 				6E391ED873C643B4983FBD7D /* Ionicons.ttf in Resources */,
