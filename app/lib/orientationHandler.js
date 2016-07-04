@@ -27,26 +27,26 @@ const HANDLE_ORIENTATION = `
 
   
       //camera.rotation.x = -degreeToRad(x + 90);
-      //camera.rotation.x = -degreeToRad(x) - degreeToRad(110);
+      camera.rotation.x = -degreeToRad(x) - degreeToRad(110);
       //camera.rotation.x = -degreeToRad(x) - degreeToRad((x/100) + 110);
       //camera.rotation.x = -degreeToRad(x) - degreeToRad(x*1.5);
       
 
-      for (var i = 0; i < meshes.length; i++) {
-        if (!obj[meshes[i]]) {
-          obj[meshes[i]] = meshes[i].position.y;
-        }
+      // for (var i = 0; i < meshes.length; i++) {
+      //   if (!obj[meshes[i]]) {
+      //     obj[meshes[i]] = meshes[i].position.y;
+      //   }
 
-        if (x >= 75 && x <= 80) {
-          meshes[i].position.y = obj[meshes[i]];
-        }
+      //   if (x >= 75 && x <= 80) {
+      //     meshes[i].position.y = obj[meshes[i]];
+      //   }
 
-        if (Number(x).toFixed(0) > Number(beta).toFixed(0)) {
-          meshes[i].position.y += -degreeToRad(x)*2;
-        } else if (Number(x).toFixed(0) < Number(beta).toFixed(0)) {
-          meshes[i].position.y += degreeToRad(x)*2;
-        }
-      }
+      //   if (Number(x).toFixed(0) > Number(beta).toFixed(0)) {
+      //     meshes[i].position.y += -degreeToRad(x)*2;
+      //   } else if (Number(x).toFixed(0) < Number(beta).toFixed(0)) {
+      //     meshes[i].position.y += degreeToRad(x)*2;
+      //   }
+      // }
 
       if (Number(z).toFixed(0) !== Number(alpha).toFixed(0)) {
         camera.rotation.y = -degreeToRad(z);
