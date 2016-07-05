@@ -10,6 +10,7 @@ const HANDLE_ORIENTATION = `
     var alpha = null;
     var gamma = null;
 
+
     function handleOrientation(event) {
       var x = event.beta;  // In degree in the range [-180,180]
       var y = event.gamma; // In degree in the range [-90,90]
@@ -34,9 +35,9 @@ const HANDLE_ORIENTATION = `
       
 
       for (var i = 0; i < meshes.length; i++) {
-        if (!obj[meshes[i]]) {
-          obj[meshes[i]] = meshes[i].position.y;
-        }
+        // if (!obj[meshes[i]]) {
+        //   obj[meshes[i]] = meshes[i].position.y;
+        // }
 
         // if (x >= 75 && x <= 80) {
         //   meshes[i].position.y = obj[meshes[i]];

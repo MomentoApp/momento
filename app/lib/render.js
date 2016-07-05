@@ -27,11 +27,52 @@ const THREE_JS_RENDER = `
       light.position = camera.position;
       scene.add(light);
 
-      //var geometry = new THREE.SphereGeometry(10,32,32);
-      var geometry = new THREE.SphereGeometry(30,32,32);
-      var material = new THREE.MeshLambertMaterial({color:0x0066FF, wireframe: true, transparent: true, opacity: 0.9});
+     //  var geometry = new THREE.SphereGeometry(10,32,32);
 
+     // var geometry = new THREE.SphereGeometry(30,32,32);
+     //  var material = new THREE.MeshLambertMaterial({color:0x0066FF, wireframe: true, transparent: true, opacity: 0.9});
+     // mesh = new THREE.Mesh( geometry, material );
+
+      
+
+
+
+     var thumbnail = 'https://momentotest.s3.amazonaws.com/uploads%2F11575832.jpg';
+
+      var geometry = new THREE.SphereGeometry( 30, 32, 32 );
+
+      var loader = new THREE.TextureLoader();
+      // var texture = loader.load('../lib/img/iphone2.jpg');
+      var texture = loader.load(thumbnail);
+      var material = new THREE.MeshBasicMaterial( { map: texture } );
+      
       mesh = new THREE.Mesh( geometry, material );
+
+      //alert(mesh);
+
+      //scene.add( mesh );
+
+      // var loader = new THREE.TextureLoader();
+      //  loader.load(
+      //    'img/iphone2.jpg',
+      //    function(texture) {
+      //      var geometry = new THREE.SphereGeometry( 500, 32, 16 );
+      //      var material = new THREE.MeshBasicMaterial( {
+      //        map: texture
+      //      });
+      //      var mesh = new THREE.Mesh( geometry, material );
+      //      scene.add( mesh );
+      //    },
+      //    function(xhr) {
+      //      console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+      //    },
+      //    function(xhr) {
+      //      console.log( 'An error happened' );
+      //    }
+      //  );
+
+
+
 
       renderer = new THREE.WebGLRenderer();
       renderer.setPixelRatio( window.devicePixelRatio );
