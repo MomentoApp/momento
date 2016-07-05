@@ -8,6 +8,7 @@ const HANDLE_ORIENTATION = `
     var obj = {};
     var beta = null;
     var alpha = null;
+    var gamma = null;
 
     function handleOrientation(event) {
       var x = event.beta;  // In degree in the range [-180,180]
@@ -21,39 +22,48 @@ const HANDLE_ORIENTATION = `
         z = event.alpha;
       }
 
-      //output.innerHTML = "alpha: " + z;
-      //output.innerHTML = "gamma: " + y;
-      //output.innerHTML = "beta: " + x;
+      output.innerHTML = "alpha: " + Number(z).toFixed(0) + ' ';
+      output.innerHTML += "gamma: " + Number(y).toFixed(0) + ' ';
+      output.innerHTML += "beta: " + Number(x).toFixed(0) + ' ';
 
   
       //camera.rotation.x = -degreeToRad(x + 90);
-      camera.rotation.x = -degreeToRad(x) - degreeToRad(110);
+      //camera.rotation.x = -degreeToRad(x) - degreeToRad(110);
       //camera.rotation.x = -degreeToRad(x) - degreeToRad((x/100) + 110);
       //camera.rotation.x = -degreeToRad(x) - degreeToRad(x*1.5);
       
 
-      // for (var i = 0; i < meshes.length; i++) {
-      //   if (!obj[meshes[i]]) {
-      //     obj[meshes[i]] = meshes[i].position.y;
-      //   }
+      for (var i = 0; i < meshes.length; i++) {
+        if (!obj[meshes[i]]) {
+          obj[meshes[i]] = meshes[i].position.y;
+        }
 
-      //   if (x >= 75 && x <= 80) {
-      //     meshes[i].position.y = obj[meshes[i]];
-      //   }
+        // if (x >= 75 && x <= 80) {
+        //   meshes[i].position.y = obj[meshes[i]];
+        // }
 
-      //   if (Number(x).toFixed(0) > Number(beta).toFixed(0)) {
-      //     meshes[i].position.y += -degreeToRad(x)*2;
-      //   } else if (Number(x).toFixed(0) < Number(beta).toFixed(0)) {
-      //     meshes[i].position.y += degreeToRad(x)*2;
-      //   }
-      // }
+        if (Number(x) > Number(beta)) {
+          meshes[i].position.y -= Math.abs(Math.tan(degreeToRad(beta) - degreeToRad(x)) * meshes[i].position.z);
+        } else if (Number(x) < Number(beta)) {
+          meshes[i].position.y += Math.abs(Math.tan(degreeToRad(beta) - degreeToRad(x)) * meshes[i].position.z);
+        }
 
-      if (Number(z).toFixed(0) !== Number(alpha).toFixed(0)) {
+        // if (Number(z) > Number(gamma)) {
+        // meshes[i].position.x += (degreeToRad(gamma) - degreeToRad(z)) ;
+        // } 
+        // else if (Number(z) < Number(alpha)) {
+        //   meshes[i].position.x += (degreeToRad(alpha) - degreeToRad(z)) ;
+        // }
+
+      }
+
+      if (Number(z) !== Number(alpha)) {
         camera.rotation.y = -degreeToRad(z);
       }
 
       beta = x;
       alpha = z;
+      //gamma = y;
     }
 
     window.addEventListener('deviceorientation', handleOrientation);

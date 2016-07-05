@@ -5,7 +5,7 @@ import { storeUserCredentials, deleteUserCredentials, setUserNameEmail, setUserP
 import { Actions } from '../../custom_modules/react-native-router-flux';
 import { getUserNameEmail, getUserPicture, saveUserToDb } from '../utils/queries';
 import secret from '../config/secret';
-import coverImage from '../assets/images/momento.jpg';
+import coverImage from '../assets/images/momento5.jpg';
 
 const styles = StyleSheet.create({
   container: {
@@ -113,7 +113,7 @@ const LoginContainer = ({ store }) => (
               store.dispatch(setUserNameEmail(name, email))
           )// save profile picture in Redux store
           .then(() => store.dispatch(setUserPicture(store.getState().user.token)));
-           Actions.main();
+          // Actions.main();
         }}
         onLoginNotFound={() => console.log('Login not found')}
         onError={err => console.log('Error', err)}

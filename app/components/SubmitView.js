@@ -87,11 +87,11 @@ class SubmitView extends Component {
       type: 'image/jpeg',
     };
 
-    const saveToDb = () => {
+    const saveToDb = (data) => {
       const video = {
         // title: 'My awesome video',
         // userName: 'Awesome user'
-        url: this.store.getState().videos.currentVideo.url,
+        url: data.url,
         point: {
           type: 'Point',
           coordinates: [

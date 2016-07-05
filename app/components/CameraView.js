@@ -130,7 +130,7 @@ const html = `<!DOCTYPE html>
     <style>
       body { margin: 0; }
       canvas { width: 100%; height: 100% }
-      .output { color: red;}
+      .output { color: red; margin-top: 50px}
     </style>
   </head>
   <body>
@@ -189,6 +189,7 @@ const injectScript = `
         scene.add(meshes[i]);
         meshes[i].position.x = loc.x;
         meshes[i].position.z = loc.z;
+        // meshes[i].position.y = 50;
 
         //var test = screenPosition(loc.x, loc.y);
         //alert(test.x);
