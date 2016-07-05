@@ -4,6 +4,7 @@ import {
   UPDATE_USER_VIDEOS_LIST,
   SET_VIDEO_TITLE,
   SET_THUMBNAIL_PATH,
+  SET_THUMBNAIL_URL,
 } from '../constants';
 
 const initialState = {
@@ -15,12 +16,13 @@ const initialState = {
 export default function (state = initialState, action) {
   let newState;
   switch (action.type) {
-    case SET_CURRENT_VIDEO:
+    case SET_CURRENT_VIDEO: {
       newState = Object.assign({}, state);
       newState.currentVideo = newState.currentVideo || {};
       const currentVideo = Object.assign(newState.currentVideo, action.data);
       newState.currentVideo = currentVideo;
       return newState;
+    }
     case SET_VIDEO_TITLE: {
       newState = Object.assign({}, state);
       newState.currentVideo = newState.currentVideo || {};
@@ -41,6 +43,12 @@ export default function (state = initialState, action) {
       newState = Object.assign({}, state);
       newState.currentVideo = newState.currentVideo || {};
       newState.currentVideo.thumbnailPath = action.path;
+      return newState;
+    }
+    case SET_THUMBNAIL_URL: {
+      newState = Object.assign({}, state);
+      newState.currentVideo = newState.currentVideo || {};
+      newState.currentVideo.thumbnailUrl = action.url.url;
       return newState;
     }
     default:

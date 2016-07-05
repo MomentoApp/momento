@@ -63,7 +63,7 @@ const scenes = Actions.create(
           />
           <Scene key="submit" component={TabView} title="Submit" icon={TabIcon} hideTabBar />
         </Scene>
-        <Scene key="listWrap" title="Videos" initial icon={TabIcon} >
+        <Scene key="listWrap" title="Videos" icon={TabIcon} >
           <Scene key="list" component={TabView} title="Moments around you" icon={TabIcon} />
           <Scene
             key="videoPlayerForList"
@@ -75,7 +75,7 @@ const scenes = Actions.create(
           />
         </Scene>
         <Scene key="map" component={TabView} title="Map" icon={TabIcon} />
-        <Scene key="profile" component={TabView} title="User Profile" icon={TabIcon} hideNavBar />
+        <Scene key="profile" component={TabView} title="User Profile" icon={TabIcon} initial hideNavBar />
       </Scene>
       <Scene key="error" component={Error} />
     </Scene>

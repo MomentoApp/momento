@@ -130,7 +130,7 @@ const html = `<!DOCTYPE html>
     <style>
       body { margin: 0; }
       canvas { width: 100%; height: 100% }
-      .output { color: red; }
+      .output { color: red; margin-top: 50px}
     </style>
   </head>
   <body>
@@ -144,6 +144,16 @@ const html = `<!DOCTYPE html>
 </html>`;
 
 const injectScript = `
+  // function screenPosition(vectorX, vectorY) {
+  //   var widthHalf = 0.5*renderer.context.canvas.width;
+  //   var heightHalf = 0.5*renderer.context.canvas.height;
+
+  //   x = ( vectorX * widthHalf ) + widthHalf;
+  //   y = - ( vectorY * heightHalf ) + heightHalf;
+
+  //   return {x:x, y:y};
+  // }
+
   function webViewBridgeReady(cb) {
     //checks whether WebViewBridge exists in global scope.
     if (window.WebViewBridge) {
@@ -167,7 +177,7 @@ const injectScript = `
   webViewBridgeReady( function (webViewBridge) {
     webViewBridge.send( "BRIDGE_READY" );
     webViewBridge.onMessage = function (message) {
-      // Message is an array of all of the pins we want to display,
+      // Message is an array of all of the memories we want to display,
       // where x and z on each pin is the relative location to the
       // device in feet.
       var message = JSON.parse( message );
@@ -179,6 +189,10 @@ const injectScript = `
         scene.add(meshes[i]);
         meshes[i].position.x = loc.x;
         meshes[i].position.z = loc.z;
+        // meshes[i].position.y = 50;
+
+        //var test = screenPosition(loc.x, loc.y);
+        //alert(test.x);
       });
     };
   });
@@ -235,6 +249,7 @@ class CameraView extends React.Component {
 
     return locations;
   }
+
 
   sendLocsToBridge(coordinates) {
     const message = {};
@@ -429,7 +444,10 @@ class CameraView extends React.Component {
   renderAREngine() {
     if (this.store.getState().camera.ARorVideo === AR) {
       return (
-        <View style={styles.webViewWrap}>
+        <View
+          style={styles.webViewWrap}
+          onStartShouldSetResponder={(e) => console.log([e.nativeEvent.pageX, e.nativeEvent.pageY])}
+        >
           <WebViewBridge
             ref="webviewbridge"
             onBridgeMessage={this.onBridgeMessage}
