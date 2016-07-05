@@ -15,6 +15,7 @@ import {
   changeFlashMode,
   changeCameraType,
   setCurrentVideo,
+  setThumbnailPath,
 } from '../actions';
 
 import rearCameraIcon from './../assets/camera/ic_camera_rear_white.png';
@@ -129,7 +130,7 @@ const html = `<!DOCTYPE html>
     <style>
       body { margin: 0; }
       canvas { width: 100%; height: 100% }
-      .output { color: red;}
+      .output { color: red; margin-top: 50px}
     </style>
   </head>
   <body>
@@ -188,6 +189,7 @@ const injectScript = `
         scene.add(meshes[i]);
         meshes[i].position.x = loc.x;
         meshes[i].position.z = loc.z;
+        // meshes[i].position.y = 50;
 
         //var test = screenPosition(loc.x, loc.y);
         //alert(test.x);
@@ -265,11 +267,16 @@ class CameraView extends React.Component {
   }
 
   runTimer(mode) {
+    const context = this;
     if (mode) {
       const startDate = new Date();
       this.setState({ timer: setInterval(() => {
         const timeNow = new Date();
         let seconds = Math.floor((timeNow - startDate) / 1000);
+        if (seconds === 5) {
+          context.camera.capture({ mode: Camera.constants.CaptureMode.still })
+            .then(data => context.store.dispatch(setThumbnailPath(data.path)));
+        }
         seconds = seconds % 60 < 10 ? `0${(seconds % 60)}` : seconds % 60;
         let minutes = Math.floor(seconds / 60);
         minutes = minutes < 10 ? `0${minutes}` : minutes;
@@ -282,6 +289,7 @@ class CameraView extends React.Component {
   }
 
   recordVideo() {
+    const context = this;
     if (this.camera) {
       if (!this.store.getState().camera.recording) {
         console.log('about to start ', this.store.getState().camera.recording);
@@ -289,11 +297,24 @@ class CameraView extends React.Component {
         this.runTimer(true);
         this.camera.capture()
           .then((data) => {
-            const video = Object.assign({}, data, { url: data.path });
-            delete video.path;
-            this.store.dispatch(setCurrentVideo(video));
-            const redirect = () => { Actions.videoPlayer({ mode: MODE_SUBMIT }); };
-            redirect();
+            if (!context.store.getState().videos.currentVideo.thumbnailPath) {
+              // if there is no thumbnail, take one
+              context.camera.capture({ mode: Camera.constants.CaptureMode.still })
+              .then(picture => context.store.dispatch(setThumbnailPath(picture.path)))
+              .then(() => {
+                const video = Object.assign({}, data, { url: data.path });
+                delete video.path;
+                context.store.dispatch(setCurrentVideo(video));
+                const redirect = () => { Actions.videoPlayer({ mode: MODE_SUBMIT }); };
+                redirect();
+              });
+            } else {
+              const video = Object.assign({}, data, { url: data.path });
+              delete video.path;
+              context.store.dispatch(setCurrentVideo(video));
+              const redirect = () => { Actions.videoPlayer({ mode: MODE_SUBMIT }); };
+              redirect();
+            }
           })
           .catch(err => console.error(err));
       } else {
@@ -495,4 +516,9 @@ CameraView.propTypes = {
 };
 
 module.exports = CameraView;
+
+
+
+
+
 

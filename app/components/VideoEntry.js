@@ -4,6 +4,7 @@ import {
   View,
   TouchableHighlight,
   StyleSheet,
+  Image,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -76,6 +77,12 @@ class VideoEntry extends Component {
     this.store = this.props.store;
   }
 
+          // <Icon
+          //   style={style.pin}
+          //   name="play-circle"
+          //   size={50}
+          //   color="black"
+          // />
   render() {
     return (
       <TouchableHighlight
@@ -87,12 +94,7 @@ class VideoEntry extends Component {
         }
       >
         <View style={[style.container, style.friend, style.target]}>
-          <Icon
-            style={style.pin}
-            name="play-circle"
-            size={50}
-            color="black"
-          />
+          <Image source={{ uri: this.props.video.thumbnail }} style={style.pin} />
           <View style={style.left}>
             <Text style={[style.text, style.friendText, style.targetText]}>
               {this.props.video.title}

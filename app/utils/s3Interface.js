@@ -1,3 +1,5 @@
+require('es6-promise').polyfill();
+require('fetch-everywhere');
 import { RNS3 } from 'react-native-aws3';
 import AMAZON_S3 from '../config/apiKeys';
 
@@ -10,7 +12,7 @@ const options = {
   successActionStatus: 201,
 };
 
-const saveToS3 = (file, cb, progressCb) => {
+const saveToS3 = (file, cb, progressCb) => (
   RNS3.put(file, options)
   .then(response => {
     if (response.status !== 201) console.log('Failed to upload to S3');
@@ -18,7 +20,7 @@ const saveToS3 = (file, cb, progressCb) => {
     console.log('RESPONSE', JSON.stringify(response));
   })
   .catch((e) => console.log(e))
-  .progress((e) => { progressCb(e.loaded, e.total); });
-};
+  .progress((e) => { progressCb(e.loaded, e.total); })
+);
 
 module.exports.saveToS3 = saveToS3;

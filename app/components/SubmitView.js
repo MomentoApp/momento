@@ -9,6 +9,7 @@ import {
 import { saveToS3 } from '../utils/s3Interface';
 import { saveVideo } from '../utils/queries';
 import { Actions } from '../../custom_modules/react-native-router-flux';
+import { setThumbnailUrl } from '../actions';
 import secret from '../config/secret';
 
 const styles = StyleSheet.create({
@@ -81,11 +82,17 @@ class SubmitView extends Component {
       type: 'video/quicktime',
     };
 
-    const saveToDb = () => {
+    const thumbnail = {
+      uri: this.store.getState().videos.currentVideo.thumbnailPath,
+      name: `${this.store.getState().videos.currentVideo.size}.jpg`,
+      type: 'image/jpeg',
+    };
+
+    const saveToDb = (response) => {
       const video = {
         // title: 'My awesome video',
         // userName: 'Awesome user'
-        url: this.store.getState().videos.currentVideo.url,
+        url: response.headers.Location,
         point: {
           type: 'Point',
           coordinates: [
@@ -94,6 +101,7 @@ class SubmitView extends Component {
           ],
         },
         title: this.store.getState().videos.currentVideo.title,
+        thumbnailUrl: this.store.getState().videos.currentVideo.thumbnailUrl,
       };
 
       const headers = {
@@ -114,7 +122,10 @@ class SubmitView extends Component {
       }
     };
 
-    saveToS3(file, saveToDb, updateProgress);
+    saveToS3(thumbnail, (response) => { this.store.dispatch(setThumbnailUrl({ url: response.headers.Location })); }, () => {})
+    .then(() => {
+      saveToS3(file, saveToDb, updateProgress);
+    });
   }
 
   goBack() {
