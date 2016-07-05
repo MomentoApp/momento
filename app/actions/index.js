@@ -78,6 +78,13 @@ export const setThumbnailPath = (path) => (
   }
 );
 
+export const setThumbnailUrl = (url) => (
+  {
+    type: constants.SET_THUMBNAIL_URL,
+    url,
+  }
+);
+
 export const setVideoTitle = (title) => (
   {
     type: constants.SET_VIDEO_TITLE,

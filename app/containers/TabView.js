@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import VideoList from '../components/VideoList';
+import GridView from '../components/GridView';
 import VideoMap from '../components/VideoMap';
 import CameraView from '../components/CameraView';
 import VideoPlayer from '../components/VideoPlayer';
@@ -57,7 +58,8 @@ class TabView extends Component {
         }
 
         {this.props.name === 'list' &&
-          <VideoList store={this.props.store} />
+          // <VideoList store={this.props.store} />
+          <GridView store={this.props.store} />
         }
         {this.props.name === 'map' &&
           <VideoMap store={this.props.store} />
