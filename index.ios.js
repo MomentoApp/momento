@@ -13,10 +13,8 @@ import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 import promise from 'redux-promise';
 import LoginContainer from './app/containers/LoginContainer';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const TabIcon = ({ selected, title }) => (
-  <Text style={{ color: selected ? 'red' : 'black' }}>{title}</Text>
-);
 
 // create logger
 const logger = createLogger();
@@ -31,13 +29,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabBarStyle: {
-    backgroundColor: '#eee',
+    backgroundColor: 'transparent',
   },
   tabBarSelectedItemStyle: {
-    backgroundColor: '#ddd',
+    // color: 'rgb(0,0,0)',
   },
 });
 
+const TabIcon = ({ selected, title }) => {
+  switch (title) {
+    case 'Record':
+      return (<Icon name="video-camera" size={24} color={selected ? 'rgb(38,38,38)' : 'rgb(155,155,155)'} />);
+    case 'User Profile':
+      return (<Icon name="user" size={24} color={selected ? 'rgb(38,38,38)' : 'rgb(155,155,155)'} />);
+    case 'AR':
+      return (<Icon name="eye" size={24} color={selected ? 'rgb(38,38,38)' : 'rgb(155,155,155)'} />);
+    case 'Map':
+      return (<Icon name="map" size={24} color={selected ? 'rgb(38,38,38)' : 'rgb(155,155,155)'} />);
+    case 'Videos':
+      return (<Icon name="th" size={24} color={selected ? 'rgb(38,38,38)' : 'rgb(155,155,155)'} />);
+    default:
+      return null;
+  }
+};
 // when renaming the scenes, be aware that some of their keys
 // are used in custom_modules/react-native-router-flux/src/TabBar
 const scenes = Actions.create(
@@ -64,7 +78,7 @@ const scenes = Actions.create(
           <Scene key="submit" component={TabView} title="Submit" icon={TabIcon} hideTabBar />
         </Scene>
         <Scene key="listWrap" title="Videos" icon={TabIcon} >
-          <Scene key="list" component={TabView} title="Moments around you" icon={TabIcon} />
+          <Scene key="list" component={TabView} title="List" icon={TabIcon} />
           <Scene
             key="videoPlayerForList"
             component={TabView}

@@ -5,6 +5,7 @@ import {
   AlertIOS,
   Text,
   TouchableOpacity,
+  StatusBar,
 } from 'react-native';
 import Video from 'react-native-video';
 
@@ -230,6 +231,7 @@ class VideoPlayer extends Component {
     const videoStyle = this.state.skin === 'embed' ? styles.nativeVideoControls : styles.fullScreen;
     return (
       <View style={styles.container}>
+        <StatusBar hidden />
         <TouchableOpacity style={styles.fullScreen} onPress={this.tryToPause}>
           <Video
             source={{ uri: this.store.getState().videos.currentVideo.url }}

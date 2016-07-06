@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, MapView, View } from 'react-native';
+import { StyleSheet, MapView, View, StatusBar } from 'react-native';
 import { updateCoordinats } from '../actions';
 
 const style = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 64,
-    marginBottom: 52,
   },
   map: {
     position: 'absolute',
@@ -68,6 +67,7 @@ class VideoMap extends Component {
         // followUserLocation
     return (
       <View style={style.container}>
+        <StatusBar barStyle="light-content" hidden={false} />
         <MapView
           style={style.map}
           region={region}
