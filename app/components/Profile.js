@@ -5,7 +5,6 @@ import {
   Image,
   StatusBar,
   StyleSheet,
-  TouchableHighlight,
   TouchableOpacity,
 } from 'react-native';
 
@@ -13,7 +12,10 @@ import VideoList from './VideoList';
 import coverImage from '../assets/images/desert3.jpg';
 import redHeart from '../assets/images/btnRedHeart.png';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import { getUserVideos } from '../utils/queries.js';
+import getHeaders from '../utils/helpers';
+import { updateUserVideosList } from '../actions';
+import { Actions } from '../../custom_modules/react-native-router-flux';
 
 const styles = StyleSheet.create({
   container: {
@@ -115,9 +117,33 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.store = props.store;
+    this.updateVideos = this.updateVideos.bind(this);
+  }
+
+
+  componentWillMount() {
+    this.updateVideos();
+  }
+
+  componentDidMount() {
+    this.unsubscribe = this.store.subscribe(() =>
+      this.forceUpdate()
+    );
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  updateVideos() {
+    getUserVideos(
+      getHeaders(this.store),
+          (videos) => { this.store.dispatch(updateUserVideosList(videos)); }
+    );
   }
 
   render() {
+    const context = this;
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" hidden={false} />
@@ -135,7 +161,7 @@ class Profile extends Component {
             </Text>
           </View>
         </Image>
-        <TouchableOpacity style={styles.refreshWrap}>
+        <TouchableOpacity style={styles.refreshWrap} onPress={this.updateVideos}>
           <Icon
             style={styles.refreshIcon}
             name="undo"

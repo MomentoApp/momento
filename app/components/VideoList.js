@@ -63,10 +63,7 @@ class VideoList extends Component {
           (videos) => { this.store.dispatch(updateAllVideosList(videos)); }
         );
       } else {
-        getUserVideos(
-          getHeaders(this.store),
-          (videos) => { this.store.dispatch(updateUserVideosList(videos)); }
-        );
+        
       }
     });
   }
