@@ -23,10 +23,10 @@ LocationMath.locDegreesToFeet = function (degrees) {
 // };
 
 LocationMath.relativeLocsInFeet = function (start, end) {
-  const id = end.id || undefined;
-  const z = Math.abs(-1 * this.locDegreesToFeet((end.point.coordinates[0]).toFixed(3) - start.latitude).toFixed(1));
-  const x = Math.abs(this.locDegreesToFeet((end.point.coordinates[1]).toFixed(3) - start.longitude).toFixed(1));
-  return { id, x, z };
+  const thumbnail = end.thumbnail;
+  const z = -1 * this.locDegreesToFeet((end.point.coordinates[0]).toFixed(3) - start.latitude).toFixed(1);
+  const x = this.locDegreesToFeet((end.point.coordinates[1]).toFixed(3) - start.longitude).toFixed(1);
+  return { thumbnail, x, z };
 };
 
 // LocationMath.relativeLocsInFeet = function (start, end) {

@@ -144,16 +144,6 @@ const html = `<!DOCTYPE html>
 </html>`;
 
 const injectScript = `
-  // function screenPosition(vectorX, vectorY) {
-  //   var widthHalf = 0.5*renderer.context.canvas.width;
-  //   var heightHalf = 0.5*renderer.context.canvas.height;
-
-  //   x = ( vectorX * widthHalf ) + widthHalf;
-  //   y = - ( vectorY * heightHalf ) + heightHalf;
-
-  //   return {x:x, y:y};
-  // }
-
   function webViewBridgeReady(cb) {
     //checks whether WebViewBridge exists in global scope.
     if (window.WebViewBridge) {
@@ -182,17 +172,30 @@ const injectScript = `
       // device in feet.
       var message = JSON.parse( message );
 
+      //alert(mesh);
+
       mesh.visible = false;
       message.locs.forEach( function( loc, i ) {
         meshes[i] = mesh.clone();
+        //alert(JSON.stringify(meshes[i].material.map));
+        //alert(meshes[i].material.map);
+        //alert(meshes[i].material.setValues)
+        //alert(loc.thumbnail);
         meshes[i].visible = true;
+        //alert(JSON.stringify(meshes[i]))
         scene.add(meshes[i]);
         meshes[i].position.x = loc.x;
         meshes[i].position.z = loc.z;
-        // meshes[i].position.y = 50;
 
-        //var test = screenPosition(loc.x, loc.y);
-        //alert(test.x);
+        // var texture = loader.load(loc.thumbnail);
+        // var material = new THREE.MeshBasicMaterial( { map: texture } );
+        // meshes[i].material.setValues(material);
+
+        meshes[i].material.map = THREE.ImageUtils.loadTexture( loc.thumbnail );
+
+
+        // meshes[i].position.y = 50;
+        //meshes[i].position.y = 20;
       });
     };
   });

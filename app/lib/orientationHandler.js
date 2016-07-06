@@ -10,6 +10,7 @@ const HANDLE_ORIENTATION = `
     var alpha = null;
     var gamma = null;
 
+
     function handleOrientation(event) {
       var x = event.beta;  // In degree in the range [-180,180]
       var y = event.gamma; // In degree in the range [-90,90]
@@ -38,23 +39,15 @@ const HANDLE_ORIENTATION = `
           obj[meshes[i]] = meshes[i].position.y;
         }
 
-        // if (x >= 75 && x <= 80) {
-        //   meshes[i].position.y = obj[meshes[i]];
-        // }
+        if (x >= 70 && x <= 75) {
+          meshes[i].position.y = obj[meshes[i]];
+        }
 
         if (Number(x) > Number(beta)) {
           meshes[i].position.y -= Math.abs(Math.tan(degreeToRad(beta) - degreeToRad(x)) * meshes[i].position.z);
         } else if (Number(x) < Number(beta)) {
           meshes[i].position.y += Math.abs(Math.tan(degreeToRad(beta) - degreeToRad(x)) * meshes[i].position.z);
         }
-
-        // if (Number(z) > Number(gamma)) {
-        // meshes[i].position.x += (degreeToRad(gamma) - degreeToRad(z)) ;
-        // } 
-        // else if (Number(z) < Number(alpha)) {
-        //   meshes[i].position.x += (degreeToRad(alpha) - degreeToRad(z)) ;
-        // }
-
       }
 
       if (Number(z) !== Number(alpha)) {
