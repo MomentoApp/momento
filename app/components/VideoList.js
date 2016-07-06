@@ -15,16 +15,34 @@ import { updateAllVideosList, updateUserVideosList, updateCoordinats } from '../
 import getHeaders from '../utils/helpers';
 import { updateCurrentPosition } from '../utils/navigation';
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
+  list: {
+    alignSelf: 'stretch',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    // backgroundColor: 'red',
+  },
   container: {
     flex: 1,
-    marginTop: 64,
-    marginBottom: 52,
+    // backgroundColor: 'yellow',
+    alignSelf: 'stretch',
   },
   loading: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  videoContainer: {
+    // backgroundColor: 'green',
+    // height: 124,
+    // width: 124,
+    marginRight: 1,
+    marginBottom: 1,
+    // flex: 0.3333333,
+    // backgroundColor: 'green',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
   },
 });
 
@@ -45,10 +63,7 @@ class VideoList extends Component {
           (videos) => { this.store.dispatch(updateAllVideosList(videos)); }
         );
       } else {
-        getUserVideos(
-          getHeaders(this.store),
-          (videos) => { this.store.dispatch(updateUserVideosList(videos)); }
-        );
+        
       }
     });
   }
@@ -102,6 +117,7 @@ class VideoList extends Component {
       if (this.store.getState().videos.userVideosLoaded) {
         return (
           <ListView
+            contentContainerStyle={styles.list}
             automaticallyAdjustContentInsets={false}
             dataSource={this.store.getState().videos.userDataSource}
             initialListSize={9}
@@ -127,7 +143,7 @@ class VideoList extends Component {
 
 
     return (
-      <View style={style.loading}>
+      <View style={styles.loading}>
         <Text>Loading...</Text>
       </View>
     );
@@ -145,7 +161,7 @@ class VideoList extends Component {
     const vid = Object.assign({}, video, { userName: 'awesomeUser', kmAway });
 
     return (
-      <View>
+      <View style={styles.videoContainer}>
         <VideoEntry video={vid} store={this.store} />
       </View>
     );
@@ -153,7 +169,7 @@ class VideoList extends Component {
 
   render() {
     return (
-      <View style={style.container}>
+      <View style={styles.container}>
         {this.showLoadedVids()}
 
       </View>

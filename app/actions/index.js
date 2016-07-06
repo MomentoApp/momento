@@ -1,6 +1,10 @@
 import * as constants from '../constants';
 
+
 import { ListView } from 'react-native';
+
+const defaultThumbnail = 'https://images.unsplash.com/photo-1464013778555-8e723c2f01f8?dpr=0.5&auto=format&crop=entropy&fit=crop&w=5756&h=3838&q=80';
+
 // position
 export const updateCoordinats = (latitude, longitude) => (
   {
@@ -95,6 +99,9 @@ export const setVideoTitle = (title) => (
 // update all videos list from database
 export const updateAllVideosList = (videos) => {
   const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+  videos.forEach(video => {
+    if (video.thumbnail === null) { video.thumbnail = defaultThumbnail; }
+  });
   return {
     type: constants.UPDATE_ALL_VIDEOS_LIST,
     dataSource: ds.cloneWithRows(videos),
@@ -102,12 +109,14 @@ export const updateAllVideosList = (videos) => {
   };
 };
 
-
 // user
 
 // update user videos list from database
 export const updateUserVideosList = (videos) => {
   const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+  videos.forEach(video => {
+    if (video.thumbnail === null) { video.thumbnail = defaultThumbnail; }
+  });
   return {
     type: constants.UPDATE_USER_VIDEOS_LIST,
     dataSource: ds.cloneWithRows(videos),

@@ -114,7 +114,7 @@ const LoginContainer = ({ store }) => (
           )// save profile picture in Redux store
           .then(() => store.dispatch(setUserPicture(store.getState().user.token)));
           // Actions.main();
-          Actions.main();
+          //Actions.main();
         }}
         onLoginNotFound={() => console.log('Login not found')}
         onError={err => console.log('Error', err)}
