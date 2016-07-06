@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image, StatusBar } from 'react-native';
 import VideoList from '../components/VideoList';
 import GridView from '../components/GridView';
 import VideoMap from '../components/VideoMap';
@@ -8,6 +8,7 @@ import VideoPlayer from '../components/VideoPlayer';
 import Submit from '../components/SubmitView';
 import Profile from '../components/Profile';
 import { updateCurrentPosition } from '../utils/navigation';
+import tabBarImage from '../assets/images/bar06.png';
 
 import { MODE_SUBMIT, MODE_WATCH } from '../constants';
 
@@ -21,6 +22,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
+  },
+  tabBarWrap: {
+    // backgroundColor: 'red',
+    height: 49,
+  },
+  tabBarImage: {
+    height: 49,
+    //resizeMode: 'stretch',
   },
 });
 
@@ -71,6 +80,18 @@ class TabView extends Component {
 
         {this.props.name === 'profile' &&
           <Profile store={this.props.store} />
+        }
+
+        {(this.props.name === 'list' ||
+          this.props.name === 'map' ||
+          this.props.name === 'profile' ||
+          this.props.name === 'AR' ||
+          this.props.name === 'video')
+          ?
+            (<View style={styles.tabBarWrap}>
+              <Image source={tabBarImage} style={styles.tabBarImage} />
+            </View>)
+          : null
         }
 
       </View>

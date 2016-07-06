@@ -11,6 +11,7 @@ const initialState = {
   videosLoaded: false,
   userVideosLoaded: false,
   currentVideo: {},
+  userVideos: [],
 };
 
 export default function (state = initialState, action) {

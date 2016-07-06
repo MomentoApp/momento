@@ -35,7 +35,6 @@ import HANDLE_ORIENTATION from '../lib/orientationHandler.js';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 52,
   },
   overlay: {
     position: 'absolute',
@@ -483,10 +482,7 @@ class CameraView extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <StatusBar
-          animated
-          hidden
-        />
+        <StatusBar hidden />
         <Camera
           ref={(cam) => {
             this.camera = cam;

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
   Image,
   StatusBar,
   StyleSheet,
+  TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native';
 
 import VideoList from './VideoList';
@@ -46,30 +48,30 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 20,
-
   },
   momentText: {
     color: 'rgb(255,255,255)',
     fontSize: 12,
     opacity: 0.7,
-
-
   },
   refreshIcon: {
     // position: 'absolute',
-    position: 'absolute',
-    right: 20,
-    top: 45,
     color: 'rgb(235,235,235)',
     backgroundColor: 'transparent',
   },
+  refreshWrap: {
+    position: 'absolute',
+    right: 20,
+    top: 45,
+  },
   mapIcon: {
-    // position: 'absolute',
+    color: 'rgb(235,235,235)',
+    backgroundColor: 'transparent',
+  },
+  mapWrap: {
     position: 'absolute',
     left: 20,
     top: 45,
-    color: 'rgb(235,235,235)',
-    backgroundColor: 'transparent',
   },
   statusBar: {
     color: 'rgb(255,255,255)',
@@ -78,7 +80,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'stretch',
     // backgroundColor: 'blue',
-    height: 38,
+    height: 45,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -104,63 +106,79 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   redHeart: {
-    height: 14.5,
+    height: 18,
     resizeMode: 'contain',
   },
 });
 
-const Profile = ({ store }) => (
-  <View style={styles.container}>
-    <StatusBar
-      barStyle="light-content"
-    />
-    <Image style={styles.coverImage} source={coverImage} >
-      <View style={styles.textWrap}>
-        <Image style={styles.avatar} source={{ uri: store.getState().user.pictureUrl }} />
-        <Text style={styles.userName}>
-          {store.getState().user.name}
-        </Text>
+class Profile extends Component {
+  constructor(props) {
+    super(props);
+    this.store = props.store;
+  }
 
-        <Text style={styles.momentCount}>
-          35
-        </Text>
-        <Text style={styles.momentText}>
-          Moments
-        </Text>
+  render() {
+    return (
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" hidden={false} />
+        <Image style={styles.coverImage} source={coverImage} >
+          <View style={styles.textWrap}>
+            <Image style={styles.avatar} source={{ uri: this.store.getState().user.pictureUrl }} />
+            <Text style={styles.userName}>
+              {this.store.getState().user.name}
+            </Text>
+            <Text style={styles.momentCount}>
+              {this.store.getState().videos.userVideos.length}
+            </Text>
+            <Text style={styles.momentText}>
+              {this.store.getState().videos.userVideos.length === 1 ? 'Moment' : 'Moments'}
+            </Text>
+          </View>
+        </Image>
+        <TouchableOpacity style={styles.refreshWrap}>
+          <Icon
+            style={styles.refreshIcon}
+            name="undo"
+            size={24}
+            color="rgb(255,255,255)"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.mapWrap}>
+          <Icon
+            style={styles.mapIcon}
+            name="map-o"
+            size={24}
+            color="rgb(255,255,255)"
+          />
+        </TouchableOpacity>
+        <View style={styles.filtersWrap}>
+          <View style={styles.firstFilterWrap}>
+            <TouchableOpacity>
+              <Image style={styles.redHeart} source={redHeart} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.secondFilterWrap}>
+            <TouchableOpacity>
+              <Icon
+                name="clock-o"
+                size={24}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.thirdFilterWrap}>
+            <TouchableOpacity>
+              <Icon
+                name="list-ul"
+                size={24}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <VideoList mode="user" store={this.store} />
       </View>
-    </Image>
-    <Icon
-      style={styles.refreshIcon}
-      name="undo"
-      size={24}
-      color="rgb(255,255,255)"
-    />
-    <Icon
-      style={styles.mapIcon}
-      name="map-o"
-      size={24}
-      color="rgb(255,255,255)"
-    />
-    <View style={styles.filtersWrap}>
-      <View style={styles.firstFilterWrap}>
-        <Image style={styles.redHeart} source={redHeart} />
-      </View>
-      <View style={styles.secondFilterWrap}>
-        <Icon
-          name="clock-o"
-          size={20}
-        />
-      </View>
-      <View style={styles.thirdFilterWrap}>
-        <Icon
-          name="list-ul"
-          size={20}
-        />
-      </View>
-    </View>
-    <VideoList mode="user" store={store} />
-  </View>
-);
+    );
+  }
+}
 
 Profile.propTypes = {
   store: React.PropTypes.object,
