@@ -37,7 +37,7 @@ const THREE_JS_RENDER = `
 
 
 
-     var thumbnail = 'https://momentotest.s3.amazonaws.com/uploads%2F11575832.jpg';
+      var thumbnail = 'https://momentotest.s3.amazonaws.com/uploads%2F11575832.jpg';
 
       var geometry = new THREE.SphereGeometry( 30, 32, 32 );
 
@@ -47,32 +47,7 @@ const THREE_JS_RENDER = `
       var material = new THREE.MeshBasicMaterial( { map: texture } );
       
       mesh = new THREE.Mesh( geometry, material );
-
-      //alert(mesh);
-
-      //scene.add( mesh );
-
-      // var loader = new THREE.TextureLoader();
-      //  loader.load(
-      //    'img/iphone2.jpg',
-      //    function(texture) {
-      //      var geometry = new THREE.SphereGeometry( 500, 32, 16 );
-      //      var material = new THREE.MeshBasicMaterial( {
-      //        map: texture
-      //      });
-      //      var mesh = new THREE.Mesh( geometry, material );
-      //      scene.add( mesh );
-      //    },
-      //    function(xhr) {
-      //      console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-      //    },
-      //    function(xhr) {
-      //      console.log( 'An error happened' );
-      //    }
-      //  );
-
-
-
+      //mesh.material.needsUpdate = true;
 
       renderer = new THREE.WebGLRenderer();
       renderer.setPixelRatio( window.devicePixelRatio );
@@ -99,7 +74,6 @@ const THREE_JS_RENDER = `
         mesh.rotation.y += 0.01;
         mesh.rotation.x += 0.01;
 
-        
         mesh.scale.x += sizeChange*expansionDirection;
         mesh.scale.y += sizeChange*expansionDirection;
         mesh.scale.z += sizeChange*expansionDirection;
