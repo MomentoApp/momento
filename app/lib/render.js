@@ -27,7 +27,7 @@ const THREE_JS_RENDER = `
       light.position = camera.position;
       scene.add(light);
 
-     //  var geometry = new THREE.SphereGeometry(10,32,32);
+     
 
      // var geometry = new THREE.SphereGeometry(30,32,32);
      //  var material = new THREE.MeshLambertMaterial({color:0x0066FF, wireframe: true, transparent: true, opacity: 0.9});
@@ -42,9 +42,9 @@ const THREE_JS_RENDER = `
       var geometry = new THREE.SphereGeometry( 30, 32, 32 );
 
       var loader = new THREE.TextureLoader();
-      // var texture = loader.load('../lib/img/iphone2.jpg');
       var texture = loader.load(thumbnail);
       var material = new THREE.MeshBasicMaterial( { map: texture } );
+      // var material = new THREE.MeshBasicMaterial( { map: texture, color: 0xffffff, refractionRatio: 0.95 } );
       
       mesh = new THREE.Mesh( geometry, material );
       //mesh.material.needsUpdate = true;
@@ -74,9 +74,9 @@ const THREE_JS_RENDER = `
         mesh.rotation.y += 0.01;
         mesh.rotation.x += 0.01;
 
-        mesh.scale.x += sizeChange*expansionDirection;
-        mesh.scale.y += sizeChange*expansionDirection;
-        mesh.scale.z += sizeChange*expansionDirection;
+        // mesh.scale.x += sizeChange*expansionDirection;
+        // mesh.scale.y += sizeChange*expansionDirection;
+        // mesh.scale.z += sizeChange*expansionDirection;
       });
 
       render();

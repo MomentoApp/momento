@@ -35,27 +35,19 @@ const HANDLE_ORIENTATION = `
       
 
       for (var i = 0; i < meshes.length; i++) {
-        // if (!obj[meshes[i]]) {
-        //   obj[meshes[i]] = meshes[i].position.y;
-        // }
+        if (!obj[meshes[i]]) {
+          obj[meshes[i]] = meshes[i].position.y;
+        }
 
-        // if (x >= 75 && x <= 80) {
-        //   meshes[i].position.y = obj[meshes[i]];
-        // }
+        if (x >= 70 && x <= 75) {
+          meshes[i].position.y = obj[meshes[i]];
+        }
 
         if (Number(x) > Number(beta)) {
           meshes[i].position.y -= Math.abs(Math.tan(degreeToRad(beta) - degreeToRad(x)) * meshes[i].position.z);
         } else if (Number(x) < Number(beta)) {
           meshes[i].position.y += Math.abs(Math.tan(degreeToRad(beta) - degreeToRad(x)) * meshes[i].position.z);
         }
-
-        // if (Number(z) > Number(gamma)) {
-        // meshes[i].position.x += (degreeToRad(gamma) - degreeToRad(z)) ;
-        // } 
-        // else if (Number(z) < Number(alpha)) {
-        //   meshes[i].position.x += (degreeToRad(alpha) - degreeToRad(z)) ;
-        // }
-
       }
 
       if (Number(z) !== Number(alpha)) {

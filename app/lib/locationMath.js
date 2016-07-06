@@ -23,9 +23,7 @@ LocationMath.locDegreesToFeet = function (degrees) {
 // };
 
 LocationMath.relativeLocsInFeet = function (start, end) {
-  //const id = end.id || undefined;
   const thumbnail = end.thumbnail;
-  //console.log('******THUMBNAIL******', thumbnail);
   const z = -1 * this.locDegreesToFeet((end.point.coordinates[0]).toFixed(3) - start.latitude).toFixed(1);
   const x = this.locDegreesToFeet((end.point.coordinates[1]).toFixed(3) - start.longitude).toFixed(1);
   return { thumbnail, x, z };
