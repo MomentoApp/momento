@@ -16,6 +16,7 @@ import { getAllVideos } from '../utils/queries.js';
 import getHeaders from '../utils/helpers';
 import { updateAllVideosList } from '../actions';
 import { Actions } from '../../custom_modules/react-native-router-flux';
+import { updateCurrentPosition } from '../utils/navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -136,10 +137,9 @@ class GridView extends Component {
   }
 
   updateVideos() {
-    getAllVideos(
-      getHeaders(this.store),
-          (videos) => { this.store.dispatch(updateAllVideosList(videos)); }
-    );
+    updateCurrentPosition(this.store, () =>
+      getAllVideos(getHeaders(this.store), this.store.getState().position,
+        (videos) => { this.store.dispatch(updateAllVideosList(videos)); }));
   }
 
   render() {

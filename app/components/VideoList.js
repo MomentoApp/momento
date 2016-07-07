@@ -10,10 +10,6 @@ import {
 
 import VideoEntry from './VideoEntry';
 import { getVideoDistanceInKm } from '../utils/orientation';
-import { getAllVideos, getUserVideos } from '../utils/queries';
-import { updateAllVideosList, updateUserVideosList, updateCoordinats } from '../actions';
-import getHeaders from '../utils/helpers';
-import { updateCurrentPosition } from '../utils/navigation';
 
 const styles = StyleSheet.create({
   list: {
@@ -53,46 +49,10 @@ class VideoList extends Component {
     this.renderItem = this.renderItem.bind(this);
   }
 
-  componentWillMount() {
-    updateCurrentPosition(this.store,
-    () => {
-      if (this.props.mode !== 'user') {
-        getAllVideos(
-          getHeaders(this.store),
-          this.store.getState().position,
-          (videos) => { this.store.dispatch(updateAllVideosList(videos)); }
-        );
-      } else {
-        
-      }
-    });
-  }
-
   componentDidMount() {
     this.unsubscribe = this.store.subscribe(() =>
       this.forceUpdate()
     );
-
-    if (!navigator.geolocation) { console.log('geoloaction not available'); }
-    if (navigator.geolocation) { console.log('geoloaction available'); }
-    navigator.geolocation.getCurrentPosition(
-      (initialPosition) => {
-        this.store.dispatch(
-          updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude)
-        );
-      },
-      (error) => alert('error trying to find initial position', error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-
-
-    this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
-      // if we want function on position change, it should go here
-      // this.state.changePosFunction(lastPosition);
-      this.store.dispatch(
-        updateCoordinats(lastPosition.coords.latitude, lastPosition.coords.longitude)
-      );
-    });
   }
 
   componentWillUnmount() {
