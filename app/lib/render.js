@@ -10,6 +10,10 @@ const THREE_JS_RENDER = `
     var expansionDirection = 1;
     var time = 0;
     var expansionSizeMax = 120;
+    var geometry;
+    var loader;
+    var texture;
+    var material;
 
 
     init();
@@ -39,12 +43,11 @@ const THREE_JS_RENDER = `
 
       var thumbnail = 'https://momentotest.s3.amazonaws.com/uploads%2F11575832.jpg';
 
-      var geometry = new THREE.SphereGeometry( 30, 32, 32 );
+      geometry = new THREE.SphereGeometry( 30, 32, 32 );
 
-      var loader = new THREE.TextureLoader();
-      var texture = loader.load(thumbnail);
-      var material = new THREE.MeshBasicMaterial( { map: texture } );
-      // var material = new THREE.MeshBasicMaterial( { map: texture, color: 0xffffff, refractionRatio: 0.95 } );
+      loader = new THREE.TextureLoader();
+      texture = loader.load(thumbnail);
+      material = new THREE.MeshBasicMaterial( { map: texture } );
       
       mesh = new THREE.Mesh( geometry, material );
       //mesh.material.needsUpdate = true;
@@ -72,7 +75,7 @@ const THREE_JS_RENDER = `
       }
       meshes.forEach( function( mesh ) {
         mesh.rotation.y += 0.01;
-        mesh.rotation.x += 0.01;
+        //mesh.rotation.x += 0.01;
 
         // mesh.scale.x += sizeChange*expansionDirection;
         // mesh.scale.y += sizeChange*expansionDirection;

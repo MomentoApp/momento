@@ -23,9 +23,9 @@ const HANDLE_ORIENTATION = `
         z = event.alpha;
       }
 
-      output.innerHTML = "alpha: " + Number(z).toFixed(0) + ' ';
-      output.innerHTML += "gamma: " + Number(y).toFixed(0) + ' ';
-      output.innerHTML += "beta: " + Number(x).toFixed(0) + ' ';
+      // output.innerHTML = "alpha: " + Number(z).toFixed(0) + ' ';
+      // output.innerHTML += "gamma: " + Number(y).toFixed(0) + ' ';
+      // output.innerHTML += "beta: " + Number(x).toFixed(0) + ' ';
 
   
       //camera.rotation.x = -degreeToRad(x + 90);

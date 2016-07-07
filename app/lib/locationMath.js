@@ -16,10 +16,10 @@ LocationMath.locDegreesToFeet = function (degrees) {
 
 
 // LocationMath.relativeLocsInFeet = function (start, end) {
-//   const id = end.id || undefined;
+//   const thumbnail = end.thumbnail;
 //   const z = -1 * this.locDegreesToFeet(end.point.coordinates[0] - start.latitude).toFixed(1);
 //   const x = this.locDegreesToFeet(end.point.coordinates[1] - start.longitude).toFixed(1);
-//   return { id, x, z };
+//   return { thumbnail, x, z };
 // };
 
 LocationMath.relativeLocsInFeet = function (start, end) {

@@ -175,26 +175,22 @@ const injectScript = `
 
       mesh.visible = false;
       message.locs.forEach( function( loc, i ) {
-        meshes[i] = mesh.clone();
-        //alert(JSON.stringify(meshes[i].material.map));
-        //alert(meshes[i].material.map);
-        //alert(meshes[i].material.setValues)
-        //alert(loc.thumbnail);
+        // meshes[i] = mesh.clone();
+        // meshes[i].visible = true;
+        // scene.add(meshes[i]);
+        // meshes[i].position.x = loc.x;
+        // meshes[i].position.z = loc.z; 
+        // meshes[i].material.map = THREE.ImageUtils.loadTexture( loc.thumbnail );
+
+        geometry = new THREE.SphereGeometry( 30, 32, 32 );
+        loader = new THREE.TextureLoader();
+        texture = loader.load(loc.thumbnail);
+        material = new THREE.MeshBasicMaterial( { map: texture } );
+        meshes[i] = new THREE.Mesh( geometry, material );
         meshes[i].visible = true;
-        //alert(JSON.stringify(meshes[i]))
         scene.add(meshes[i]);
         meshes[i].position.x = loc.x;
-        meshes[i].position.z = loc.z;
-
-        // var texture = loader.load(loc.thumbnail);
-        // var material = new THREE.MeshBasicMaterial( { map: texture } );
-        // meshes[i].material.setValues(material);
-
-        meshes[i].material.map = THREE.ImageUtils.loadTexture( loc.thumbnail );
-
-
-        // meshes[i].position.y = 50;
-        //meshes[i].position.y = 20;
+        meshes[i].position.z = loc.z; 
       });
     };
   });
@@ -467,12 +463,7 @@ class CameraView extends React.Component {
     if (this.store.getState().camera.ARorVideo === AR) {
       return (
         <View style={styles.developerWrap}>
-          <Text style={styles.developerText}>
-            Latitude: {this.store.getState().position.latitude}
-          </Text>
-          <Text style={styles.developerText}>
-            Longitude: {this.store.getState().position.longitude}
-          </Text>
+
         </View>
       );
     }
