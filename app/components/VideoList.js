@@ -130,13 +130,14 @@ class VideoList extends Component {
       if (this.store.getState().videos.videosLoaded) {
         return (
           <ListView
+            contentContainerStyle={styles.list}
             automaticallyAdjustContentInsets={false}
             dataSource={this.store.getState().videos.dataSource}
             initialListSize={9}
             renderRow={this.renderItem}
             renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
             renderSeparator={this._renderSeperator}
-        />);
+          />);
       }
     }
 

@@ -124,6 +124,13 @@ export const updateUserVideosList = (videos) => {
   };
 };
 
+export const setPreviewVideo = (video) => (
+  {
+    type: constants.SET_PREVIEW_VIDEO,
+    video,
+  }
+);
+
 export const storeUserCredentials = (data) => (
   {
     type: constants.STORE_USER_CREDENTIALS,
