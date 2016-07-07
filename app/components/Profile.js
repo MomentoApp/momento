@@ -16,6 +16,7 @@ import { getUserVideos } from '../utils/queries.js';
 import getHeaders from '../utils/helpers';
 import { updateUserVideosList } from '../actions';
 import { Actions } from '../../custom_modules/react-native-router-flux';
+import { updateCurrentPosition } from '../utils/navigation';
 
 const styles = StyleSheet.create({
   container: {
@@ -136,14 +137,12 @@ class Profile extends Component {
   }
 
   updateVideos() {
-    getUserVideos(
-      getHeaders(this.store),
-          (videos) => { this.store.dispatch(updateUserVideosList(videos)); }
-    );
+    updateCurrentPosition(this.store, () =>
+      getUserVideos(getHeaders(this.store),
+        (videos) => { this.store.dispatch(updateUserVideosList(videos)); }));
   }
 
   render() {
-    const context = this;
     return (
       <View style={styles.container}>
         <StatusBar barStyle="light-content" hidden={false} />

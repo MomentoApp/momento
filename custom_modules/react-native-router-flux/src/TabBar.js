@@ -26,7 +26,6 @@ class TabBar extends Component {
     this.renderScene = this.renderScene.bind(this);
     
     const state = this.props.navigationState;
-    console.log('STATE IS', state);
     const newTab = objectAssignDeep({}, state.children[0]);
     newTab.key ='AR';
     newTab.children[0].key = 'AR_';

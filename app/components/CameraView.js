@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Text,
+  Dimensions,
 } from 'react-native';
 import Camera from 'react-native-camera';
 import { Actions } from '../../custom_modules/react-native-router-flux';
@@ -16,6 +17,7 @@ import {
   changeCameraType,
   setCurrentVideo,
   setThumbnailPath,
+  updateAllVideosList,
 } from '../actions';
 
 import rearCameraIcon from './../assets/camera/ic_camera_rear_white.png';
@@ -26,11 +28,14 @@ import flashOffIcon from './../assets/camera/ic_flash_off_white.png';
 import videoCameraIcon from './../assets/camera/ic_video_camera_36pt.png';
 import stopCameraIcon from './../assets/camera/ic_stop_camera_36pt.png';
 import { MODE_SUBMIT, VIDEO, AR } from '../constants';
-
+import { getAllVideos } from '../utils/queries.js';
+import getHeaders from '../utils/helpers';
 import WebViewBridge from 'react-native-webview-bridge';
 import THREE_JS_RENDER from '../lib/render.js';
 import LocationMath from '../lib/locationMath.js';
 import HANDLE_ORIENTATION from '../lib/orientationHandler.js';
+import { updateCurrentPosition } from '../utils/navigation';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -129,7 +134,7 @@ const html = `<!DOCTYPE html>
     <style>
       body { margin: 0; }
       canvas { width: 100%; height: 100% }
-      .output { color: red; margin-top: 50px}
+      //.output { color: red; margin-top: 50px}
     </style>
   </head>
   <body>
@@ -199,6 +204,7 @@ class CameraView extends React.Component {
     this.recordVideo = this.recordVideo.bind(this);
     this.switchType = this.switchType.bind(this);
     this.switchFlash = this.switchFlash.bind(this);
+    this.updateVideos = this.updateVideos.bind(this);
     this.onBridgeMessage = this.onBridgeMessage.bind(this);
     this.state = {
       recordingTime: '00:00',
@@ -217,6 +223,10 @@ class CameraView extends React.Component {
     this.unsubscribe();
   }
 
+  componentWillMount() {
+    this.updateVideos();
+  }
+
   onBridgeMessage(message) {
     if (message === 'BRIDGE_READY') {
       this.sendLocsToBridge.call(this, this.getCurrentLocation());
@@ -230,6 +240,12 @@ class CameraView extends React.Component {
     currentLocation.latitude = latitude;
     currentLocation.longitude = longitude;
     return currentLocation;
+  }
+
+  updateVideos() {
+    updateCurrentPosition(this.store, () =>
+      getAllVideos(getHeaders(this.store), this.store.getState().position,
+        (videos) => { this.store.dispatch(updateAllVideosList(videos)); }));
   }
 
   calculateLocations(currentLocation, locObj) {
@@ -437,7 +453,20 @@ class CameraView extends React.Component {
       return (
         <View
           style={styles.webViewWrap}
-          onStartShouldSetResponder={(e) => console.log([e.nativeEvent.pageX, e.nativeEvent.pageY])}
+          onStartShouldSetResponder={(e) => {
+            console.log([e.nativeEvent.pageX, e.nativeEvent.pageY]);
+            const { height, width } = Dimensions.get('window');
+            console.log('width and height of the screen', [width, height]);
+            if (
+              e.nativeEvent.pageX <= width * 0.75 &&
+              e.nativeEvent.pageX >= width * 0.25 &&
+              e.nativeEvent.pageY <= height * 0.75 &&
+              e.nativeEvent.pageY >= height * 0.25
+            ) {
+              this.store.dispatch(setCurrentVideo(this.store.getState().videos.videos[this.store.getState().videos.videos.length - 1]));
+              Actions.videoPlayerWatch();
+            }
+          }}
         >
           <WebViewBridge
             ref="webviewbridge"
@@ -496,8 +525,8 @@ class CameraView extends React.Component {
     );
   }
 }
+        // {this.renderARDevWrap()}
 
-//{this.renderARDevWrap()}
 
 CameraView.propTypes = {
   store: React.PropTypes.object,
