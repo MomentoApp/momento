@@ -165,23 +165,15 @@ const injectScript = `
 
   webViewBridgeReady( function (webViewBridge) {
     webViewBridge.send( "BRIDGE_READY" );
+    
     webViewBridge.onMessage = function (message) {
+
       // Message is an array of all of the memories we want to display,
       // where x and z on each pin is the relative location to the
-      // device in feet.
+      // device in feet. It also holds video thumbnails
       var message = JSON.parse( message );
 
-      //alert(mesh);
-
-      mesh.visible = false;
       message.locs.forEach( function( loc, i ) {
-        // meshes[i] = mesh.clone();
-        // meshes[i].visible = true;
-        // scene.add(meshes[i]);
-        // meshes[i].position.x = loc.x;
-        // meshes[i].position.z = loc.z; 
-        // meshes[i].material.map = THREE.ImageUtils.loadTexture( loc.thumbnail );
-
         geometry = new THREE.SphereGeometry( 30, 32, 32 );
         loader = new THREE.TextureLoader();
         texture = loader.load(loc.thumbnail);
@@ -191,6 +183,7 @@ const injectScript = `
         scene.add(meshes[i]);
         meshes[i].position.x = loc.x;
         meshes[i].position.z = loc.z; 
+        meshes[i].position.y = 20;
       });
     };
   });
