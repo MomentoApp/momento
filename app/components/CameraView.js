@@ -453,15 +453,20 @@ class CameraView extends React.Component {
   }
 
   renderARDevWrap() {
-    if (this.store.getState().camera.ARorVideo === AR) {
-      return (
-        <View style={styles.developerWrap}>
-
-        </View>
-      );
-    }
-    return null;
-  }
+   if (this.store.getState().camera.ARorVideo === AR) {
+     return (
+       <View style={styles.developerWrap}>
+         <Text style={styles.developerText}>
+           Latitude: {this.store.getState().position.latitude}
+         </Text>
+         <Text style={styles.developerText}>
+           Longitude: {this.store.getState().position.longitude}
+         </Text>
+       </View>
+     );
+   }
+   return null;
+ }
 
   render() {
     return (
@@ -485,14 +490,14 @@ class CameraView extends React.Component {
 
         {this.renderVideoTime()}
 
-        {this.renderARDevWrap()}
-
         {this.renderAREngine()}
 
       </View>
     );
   }
 }
+
+//{this.renderARDevWrap()}
 
 CameraView.propTypes = {
   store: React.PropTypes.object,
