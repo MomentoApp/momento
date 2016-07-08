@@ -224,6 +224,10 @@ class CameraView extends React.Component {
 
 // *********** AR VIEW METHODS ************
 
+  componentWillMount() {
+    this.updateVideos();
+  }
+
   componentDidMount() {
     this.unsubscribe = this.store.subscribe(() =>
       this.forceUpdate()
@@ -234,9 +238,6 @@ class CameraView extends React.Component {
     this.unsubscribe();
   }
 
-  componentWillMount() {
-    this.updateVideos();
-  }
 
   onBridgeMessage(message) {
     if (message === 'BRIDGE_READY') {
@@ -267,7 +268,6 @@ class CameraView extends React.Component {
 
     return locations;
   }
-
 
   sendLocsToBridge(coordinates) {
     const message = {};
@@ -323,14 +323,14 @@ class CameraView extends React.Component {
                 const video = Object.assign({}, data, { url: data.path });
                 delete video.path;
                 context.store.dispatch(setCurrentVideo(video));
-                const redirect = () => { Actions.videoPlayer({ mode: MODE_SUBMIT }); };
+                const redirect = () => { Actions.videoPlayer(); };
                 redirect();
               });
             } else {
               const video = Object.assign({}, data, { url: data.path });
               delete video.path;
               context.store.dispatch(setCurrentVideo(video));
-              const redirect = () => { Actions.videoPlayer({ mode: MODE_SUBMIT }); };
+              const redirect = () => { Actions.videoPlayer(); };
               redirect();
             }
           })
@@ -529,7 +529,6 @@ class CameraView extends React.Component {
         {this.renderBottomVideoBar()}
 
         {this.renderVideoTime()}
-
 
         {this.renderAREngine()}
 

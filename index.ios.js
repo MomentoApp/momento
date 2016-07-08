@@ -13,7 +13,9 @@ import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 import promise from 'redux-promise';
 import LoginContainer from './app/containers/LoginContainer';
+import VideoPlayer from './app/components/VideoPlayer';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { MODE_WATCH } from './app/constants';
 
 // create logger
 const logger = createLogger();
@@ -73,6 +75,14 @@ const scenes = Actions.create(
       >
         <Scene key="videoWrap" title="Record" icon={TabIcon} hideNavBar>
           <Scene key="video" component={TabView} title="Record" icon={TabIcon} hideNavBar />
+          <Scene
+            key="videoPlayer"
+            component={TabView}
+            title="Video player"
+            icon={TabIcon}
+            hideNavBar
+            hideTabBar
+          />
           <Scene key="submit" component={TabView} title="Submit" icon={TabIcon} hideTabBar />
         </Scene>
         <Scene key="listWrap" title="Videos" icon={TabIcon} >
