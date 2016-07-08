@@ -165,36 +165,25 @@ const injectScript = `
 
   webViewBridgeReady( function (webViewBridge) {
     webViewBridge.send( "BRIDGE_READY" );
+    
     webViewBridge.onMessage = function (message) {
+
       // Message is an array of all of the memories we want to display,
       // where x and z on each pin is the relative location to the
-      // device in feet.
+      // device in feet. It also holds video thumbnails
       var message = JSON.parse( message );
 
-      //alert(mesh);
-
-      mesh.visible = false;
       message.locs.forEach( function( loc, i ) {
-        meshes[i] = mesh.clone();
-        //alert(JSON.stringify(meshes[i].material.map));
-        //alert(meshes[i].material.map);
-        //alert(meshes[i].material.setValues)
-        //alert(loc.thumbnail);
+        geometry = new THREE.SphereGeometry( 30, 32, 32 );
+        loader = new THREE.TextureLoader();
+        texture = loader.load(loc.thumbnail);
+        material = new THREE.MeshBasicMaterial( { map: texture } );
+        meshes[i] = new THREE.Mesh( geometry, material );
         meshes[i].visible = true;
-        //alert(JSON.stringify(meshes[i]))
         scene.add(meshes[i]);
         meshes[i].position.x = loc.x;
-        meshes[i].position.z = loc.z;
-
-        // var texture = loader.load(loc.thumbnail);
-        // var material = new THREE.MeshBasicMaterial( { map: texture } );
-        // meshes[i].material.setValues(material);
-
-        meshes[i].material.map = THREE.ImageUtils.loadTexture( loc.thumbnail );
-
-
-        // meshes[i].position.y = 50;
-        //meshes[i].position.y = 20;
+        meshes[i].position.z = loc.z; 
+        meshes[i].position.y = 20;
       });
     };
   });
@@ -464,20 +453,20 @@ class CameraView extends React.Component {
   }
 
   renderARDevWrap() {
-    if (this.store.getState().camera.ARorVideo === AR) {
-      return (
-        <View style={styles.developerWrap}>
-          <Text style={styles.developerText}>
-            Latitude: {this.store.getState().position.latitude}
-          </Text>
-          <Text style={styles.developerText}>
-            Longitude: {this.store.getState().position.longitude}
-          </Text>
-        </View>
-      );
-    }
-    return null;
-  }
+   if (this.store.getState().camera.ARorVideo === AR) {
+     return (
+       <View style={styles.developerWrap}>
+         <Text style={styles.developerText}>
+           Latitude: {this.store.getState().position.latitude}
+         </Text>
+         <Text style={styles.developerText}>
+           Longitude: {this.store.getState().position.longitude}
+         </Text>
+       </View>
+     );
+   }
+   return null;
+ }
 
   render() {
     return (
@@ -501,14 +490,14 @@ class CameraView extends React.Component {
 
         {this.renderVideoTime()}
 
-        {this.renderARDevWrap()}
-
         {this.renderAREngine()}
 
       </View>
     );
   }
 }
+
+//{this.renderARDevWrap()}
 
 CameraView.propTypes = {
   store: React.PropTypes.object,
