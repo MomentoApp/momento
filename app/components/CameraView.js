@@ -178,18 +178,18 @@ const injectScript = `
       // device in feet. It also holds video thumbnails
       var message = JSON.parse( message );
 
-      message.locs.forEach( function( loc, i ) {
+      for (var i = message.locs.length - 1 ; i >= 0; i-- ) {  
         geometry = new THREE.SphereGeometry( 30, 32, 32 );
         loader = new THREE.TextureLoader();
-        texture = loader.load(loc.thumbnail);
+        texture = loader.load(message.locs[i].thumbnail);
         material = new THREE.MeshBasicMaterial( { map: texture } );
         meshes[i] = new THREE.Mesh( geometry, material );
         meshes[i].visible = true;
         scene.add(meshes[i]);
-        meshes[i].position.x = loc.x;
-        meshes[i].position.z = loc.z; 
+        meshes[i].position.x = message.locs[i].x;
+        meshes[i].position.z = message.locs[i].z; 
         meshes[i].position.y = 20;
-      });
+      };
     };
   });
 `;
@@ -206,6 +206,7 @@ class CameraView extends React.Component {
     this.switchFlash = this.switchFlash.bind(this);
     this.updateVideos = this.updateVideos.bind(this);
     this.onBridgeMessage = this.onBridgeMessage.bind(this);
+    this.sendLocsToBridge = this.sendLocsToBridge.bind(this);
     this.state = {
       recordingTime: '00:00',
     };
@@ -230,7 +231,7 @@ class CameraView extends React.Component {
 
   onBridgeMessage(message) {
     if (message === 'BRIDGE_READY') {
-      this.sendLocsToBridge.call(this, this.getCurrentLocation());
+      this.sendLocsToBridge(this.getCurrentLocation());
     }
   }
 
@@ -261,6 +262,10 @@ class CameraView extends React.Component {
   sendLocsToBridge(coordinates) {
     const message = {};
     message.locs = this.calculateLocations(coordinates, this.store.getState().videos.videos);
+    console.log('length of videos', this.store.getState().videos.videos.length);
+    
+
+    console.log(coordinates, this.store.getState().videos.videos)
     this.refs.webviewbridge.sendToBridge(JSON.stringify(message));
   }
 
@@ -291,6 +296,8 @@ class CameraView extends React.Component {
       }, 1000) });
     } else {
       this.setState({ recordingTime: '00:00' });
+      // clear current video so that the thumbnail will be different if recoring time is less than 5 sec
+      this.store.dispatch(setCurrentVideo({}));
       clearInterval(this.state.timer);
     }
   }
@@ -463,7 +470,7 @@ class CameraView extends React.Component {
               e.nativeEvent.pageY <= height * 0.75 &&
               e.nativeEvent.pageY >= height * 0.25
             ) {
-              this.store.dispatch(setCurrentVideo(this.store.getState().videos.videos[this.store.getState().videos.videos.length - 1]));
+              this.store.dispatch(setCurrentVideo(this.store.getState().videos.videos[0]));
               Actions.videoPlayerWatch();
             }
           }}
