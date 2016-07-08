@@ -178,18 +178,27 @@ const injectScript = `
       // device in feet. It also holds video thumbnails
       var message = JSON.parse( message );
 
-      for (var i = message.locs.length - 1 ; i >= 0; i-- ) {  
-        geometry = new THREE.SphereGeometry( 30, 32, 32 );
-        loader = new THREE.TextureLoader();
-        texture = loader.load(message.locs[i].thumbnail);
-        material = new THREE.MeshBasicMaterial( { map: texture } );
-        meshes[i] = new THREE.Mesh( geometry, material );
-        meshes[i].visible = true;
-        scene.add(meshes[i]);
-        meshes[i].position.x = message.locs[i].x;
-        meshes[i].position.z = message.locs[i].z; 
-        meshes[i].position.y = 20;
+      var savedCoords = {};
+      var coords;
+      var j = 0;
+      for (var i = 0 ; i < message.locs.length; i++ ) {  
+        coords = message.locs[i].z + ' ' + message.locs[i].x;
+        if (!(coords in savedCoords)) {
+          savedCoords[coords] = coords;
+          geometry = new THREE.SphereGeometry( 30, 32, 32 );
+          loader = new THREE.TextureLoader();
+          texture = loader.load(message.locs[i].thumbnail);
+          material = new THREE.MeshBasicMaterial( { map: texture } );
+          meshes[j] = new THREE.Mesh( geometry, material );
+          meshes[j].visible = true;
+          scene.add(meshes[j]);
+          meshes[j].position.x = message.locs[i].x;
+          meshes[j].position.z = message.locs[i].z; 
+          meshes[j].position.y = 20;
+          j++;
+        }
       };
+      //alert(JSON.stringify(savedCoords));
     };
   });
 `;
