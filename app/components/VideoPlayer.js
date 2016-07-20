@@ -132,6 +132,8 @@ class VideoPlayer extends Component {
     this.togglePlay = this.togglePlay.bind(this);
     this.tryToPause = this.tryToPause.bind(this);
     this.goToSubmit = this.goToSubmit.bind(this);
+    this.showReplayButton = this.showReplayButton.bind(this);
+    this.showPlayButton = this.showPlayButton.bind(this);
     this.state = {
       rate: 1,
       volume: 1,
@@ -194,6 +196,38 @@ class VideoPlayer extends Component {
 );
   }
 
+  showPlayButton() {
+    if (!this.state.videoEnded) {
+      return (
+        <TouchableOpacity style={styles.playButtonWrap} onPress={this.togglePlay}>
+          <Icon
+            style={[styles.playButton, this.playButtonStyle()]}
+            name="play-circle"
+            size={100}
+            color="white"
+          />
+        </TouchableOpacity>
+      );
+    }
+    return null;
+  }
+
+  showReplayButton() {
+    if (this.state.videoEnded) {
+      return (
+        <TouchableOpacity style={styles.playButtonWrap} onPress={this.togglePlay}>
+          <Icon
+            style={[styles.playButton, this.playButtonStyle()]}
+            name="undo"
+            size={100}
+            color="white"
+          />
+        </TouchableOpacity>
+      );
+    }
+    return null;
+  }
+
   renderControls() {
     if (this.props.mode === MODE_SUBMIT) {
       return (
@@ -227,6 +261,7 @@ class VideoPlayer extends Component {
     );
   }
 
+
   render() {
     const videoStyle = this.state.skin === 'embed' ? styles.nativeVideoControls : styles.fullScreen;
     return (
@@ -241,20 +276,15 @@ class VideoPlayer extends Component {
             volume={1}
             muted={false}
             resizeMode="contain"
-            onEnd={() => { AlertIOS.alert('Done!'); }}
+            onEnd={() => { this.setState({ videoEnded: true }); }}
             repeat={this.state.repeat}
             controls={false}
           />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.playButtonWrap} onPress={this.togglePlay}>
-          <Icon
-            style={[styles.playButton, this.playButtonStyle()]}
-            name="play-circle"
-            size={100}
-            color="white"
-          />
-        </TouchableOpacity>
+        {this.showPlayButton()}
+
+        {this.showReplayButton()}
 
         <View style={styles.controls}>
           <View style={styles.generalControls}>

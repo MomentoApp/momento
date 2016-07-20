@@ -170,37 +170,35 @@ const injectScript = `
 
   webViewBridgeReady( function (webViewBridge) {
     webViewBridge.send( "BRIDGE_READY" );
+    
     webViewBridge.onMessage = function (message) {
+
       // Message is an array of all of the memories we want to display,
       // where x and z on each pin is the relative location to the
-      // device in feet.
+      // device in feet. It also holds video thumbnails
       var message = JSON.parse( message );
 
-      //alert(mesh);
-
-      mesh.visible = false;
-      message.locs.forEach( function( loc, i ) {
-        meshes[i] = mesh.clone();
-        //alert(JSON.stringify(meshes[i].material.map));
-        //alert(meshes[i].material.map);
-        //alert(meshes[i].material.setValues)
-        //alert(loc.thumbnail);
-        meshes[i].visible = true;
-        //alert(JSON.stringify(meshes[i]))
-        scene.add(meshes[i]);
-        meshes[i].position.x = loc.x;
-        meshes[i].position.z = loc.z;
-
-        // var texture = loader.load(loc.thumbnail);
-        // var material = new THREE.MeshBasicMaterial( { map: texture } );
-        // meshes[i].material.setValues(material);
-
-        meshes[i].material.map = THREE.ImageUtils.loadTexture( loc.thumbnail );
-
-
-        // meshes[i].position.y = 50;
-        //meshes[i].position.y = 20;
-      });
+      var savedCoords = {};
+      var coords;
+      var j = 0;
+      for (var i = 0 ; i < message.locs.length; i++ ) {  
+        coords = message.locs[i].z + ' ' + message.locs[i].x;
+        if (!(coords in savedCoords)) {
+          savedCoords[coords] = coords;
+          geometry = new THREE.SphereGeometry( 30, 32, 32 );
+          loader = new THREE.TextureLoader();
+          texture = loader.load(message.locs[i].thumbnail);
+          material = new THREE.MeshBasicMaterial( { map: texture } );
+          meshes[j] = new THREE.Mesh( geometry, material );
+          meshes[j].visible = true;
+          scene.add(meshes[j]);
+          meshes[j].position.x = message.locs[i].x;
+          meshes[j].position.z = message.locs[i].z; 
+          meshes[j].position.y = 20;
+          j++;
+        }
+      };
+      //alert(JSON.stringify(savedCoords));
     };
   });
 `;
@@ -217,6 +215,7 @@ class CameraView extends React.Component {
     this.switchFlash = this.switchFlash.bind(this);
     this.updateVideos = this.updateVideos.bind(this);
     this.onBridgeMessage = this.onBridgeMessage.bind(this);
+    this.sendLocsToBridge = this.sendLocsToBridge.bind(this);
     this.state = {
       recordingTime: '00:00',
     };
@@ -241,7 +240,7 @@ class CameraView extends React.Component {
 
   onBridgeMessage(message) {
     if (message === 'BRIDGE_READY') {
-      this.sendLocsToBridge.call(this, this.getCurrentLocation());
+      this.sendLocsToBridge(this.getCurrentLocation());
     }
   }
 
@@ -272,6 +271,8 @@ class CameraView extends React.Component {
   sendLocsToBridge(coordinates) {
     const message = {};
     message.locs = this.calculateLocations(coordinates, this.store.getState().videos.videos);
+    console.log('length of videos', this.store.getState().videos.videos.length);
+    console.log(coordinates, this.store.getState().videos.videos);
     this.refs.webviewbridge.sendToBridge(JSON.stringify(message));
   }
 
@@ -302,6 +303,8 @@ class CameraView extends React.Component {
       }, 1000) });
     } else {
       this.setState({ recordingTime: '00:00' });
+      // clear current video so that the thumbnail will be different if recoring time is less than 5 sec
+      this.store.dispatch(setCurrentVideo({}));
       clearInterval(this.state.timer);
     }
   }
@@ -474,7 +477,7 @@ class CameraView extends React.Component {
               e.nativeEvent.pageY <= height * 0.75 &&
               e.nativeEvent.pageY >= height * 0.25
             ) {
-              this.store.dispatch(setCurrentVideo(this.store.getState().videos.videos[this.store.getState().videos.videos.length - 1]));
+              this.store.dispatch(setCurrentVideo(this.store.getState().videos.videos[0]));
               Actions.videoPlayerWatch();
             }
           }}
@@ -543,9 +546,3 @@ CameraView.propTypes = {
 };
 
 module.exports = CameraView;
-
-
-
-
-
-

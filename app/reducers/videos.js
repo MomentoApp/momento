@@ -22,7 +22,8 @@ export default function (state = initialState, action) {
     case SET_CURRENT_VIDEO: {
       newState = Object.assign({}, state);
       newState.currentVideo = newState.currentVideo || {};
-      const currentVideo = Object.assign(newState.currentVideo, action.data);
+      let currentVideo = Object.assign(newState.currentVideo, action.data);
+      if (Object.keys(action.data).length === 0) currentVideo = action.data;
       newState.currentVideo = currentVideo;
       return newState;
     }
