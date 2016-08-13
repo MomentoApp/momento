@@ -5,6 +5,7 @@ import {
   SET_VIDEO_TITLE,
   SET_THUMBNAIL_PATH,
   SET_THUMBNAIL_URL,
+  SET_PREVIEW_VIDEO,
 } from '../constants';
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
   userVideosLoaded: false,
   currentVideo: {},
   userVideos: [],
+  videos: [],
 };
 
 export default function (state = initialState, action) {
@@ -20,7 +22,8 @@ export default function (state = initialState, action) {
     case SET_CURRENT_VIDEO: {
       newState = Object.assign({}, state);
       newState.currentVideo = newState.currentVideo || {};
-      const currentVideo = Object.assign(newState.currentVideo, action.data);
+      let currentVideo = Object.assign(newState.currentVideo, action.data);
+      if (Object.keys(action.data).length === 0) currentVideo = action.data;
       newState.currentVideo = currentVideo;
       return newState;
     }
@@ -46,6 +49,10 @@ export default function (state = initialState, action) {
       newState.currentVideo.thumbnailPath = action.path;
       return newState;
     }
+    case SET_PREVIEW_VIDEO:
+      return Object.assign(
+        {}, state, { previewVideo: action.video }
+      );
     case SET_THUMBNAIL_URL: {
       newState = Object.assign({}, state);
       newState.currentVideo = newState.currentVideo || {};

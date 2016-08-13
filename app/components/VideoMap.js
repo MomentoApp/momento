@@ -5,7 +5,6 @@ import { updateCoordinats } from '../actions';
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 64,
   },
   map: {
     position: 'absolute',

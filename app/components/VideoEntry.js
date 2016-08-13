@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
   },
   playIcon: {
     position: 'absolute',
-    top: 47,
-    left: 47,
+    top: 55,
+    left: 55,
   },
 });
 
@@ -134,7 +134,7 @@ class VideoEntry extends Component {
       <TouchableHighlight
         onPress={() => {
           this.store.dispatch(setCurrentVideo(this.props.video));
-          Actions.videoPlayerForList({ mode: MODE_WATCH });
+          Actions.videoPlayerWatch();
         }
         }
       >
@@ -143,7 +143,7 @@ class VideoEntry extends Component {
           <Icon
             style={styles.playIcon}
             name="play-circle-o"
-            size={36}
+            size={29}
             color="rgba(255,255,255,0.46)"
           />
         </View>

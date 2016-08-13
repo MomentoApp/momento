@@ -13,8 +13,9 @@ import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 import promise from 'redux-promise';
 import LoginContainer from './app/containers/LoginContainer';
+import VideoPlayer from './app/components/VideoPlayer';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import { MODE_WATCH } from './app/constants';
 
 // create logger
 const logger = createLogger();
@@ -57,7 +58,14 @@ const TabIcon = ({ selected, title }) => {
 const scenes = Actions.create(
   <Scene key="modal" component={Modal} >
     <Scene key="root" hideNavBar>
-      <Scene key="login" title="Login" component={LoginContainer} hideNavBar hideTabBar/>
+      <Scene key="login" title="Login" component={LoginContainer} hideNavBar hideTabBar />
+      <Scene
+        key="videoPlayerWatch"
+        component={TabView}
+        title="Video player"
+        hideNavBar
+        hideTabBar
+      />
       <Scene
         key="main"
         tabs
@@ -78,18 +86,10 @@ const scenes = Actions.create(
           <Scene key="submit" component={TabView} title="Submit" icon={TabIcon} hideTabBar />
         </Scene>
         <Scene key="listWrap" title="Videos" icon={TabIcon} >
-          <Scene key="list" component={TabView} title="List" icon={TabIcon} />
-          <Scene
-            key="videoPlayerForList"
-            component={TabView}
-            title="Video player"
-            icon={TabIcon}
-            hideNavBar
-            hideTabBar
-          />
+          <Scene key="list" component={TabView} title="List" icon={TabIcon} hideNavBar />
         </Scene>
-        <Scene key="map" component={TabView} title="Map" icon={TabIcon} />
-        <Scene key="profile" component={TabView} title="User Profile" icon={TabIcon} initial hideNavBar />
+        <Scene key="map" component={TabView} title="Map" icon={TabIcon} hideNavBar />
+        <Scene key="profile" component={TabView} title="User Profile" icon={TabIcon} hideNavBar />
       </Scene>
       <Scene key="error" component={Error} />
     </Scene>

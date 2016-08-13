@@ -1,30 +1,116 @@
 import React, { Component } from 'react';
 import {
-  Text,
   View,
-  ListView,
+  Text,
+  Image,
+  StatusBar,
   StyleSheet,
-  RecyclerViewBackedScrollView,
+  TouchableOpacity,
 } from 'react-native';
 
-
-import VideoEntry from './VideoEntry';
-import { getVideoDistanceInKm } from '../utils/orientation';
-import { getAllVideos, getUserVideos } from '../utils/queries';
-import { updateAllVideosList, updateUserVideosList, updateCoordinats } from '../actions';
+import VideoList from './VideoList';
+import coverImage from '../assets/images/momento.jpg';
+import redHeart from '../assets/images/btnRedHeart.png';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { getAllVideos } from '../utils/queries.js';
 import getHeaders from '../utils/helpers';
+import { updateAllVideosList } from '../actions';
+import { Actions } from '../../custom_modules/react-native-router-flux';
 import { updateCurrentPosition } from '../utils/navigation';
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 64,
-    marginBottom: 52,
+    alignItems: 'center',
+    backgroundColor: 'rgb(246,246,246)',
   },
-  loading: {
+  avatar: {
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    marginTop: 50,
+
+  },
+  coverImage: {
+    height: 208,
+    resizeMode: 'contain',
+  },
+  textWrap: {
     flex: 1,
+    backgroundColor: 'rgba(25,25,25,0.7)',
+    alignItems: 'center',
+  },
+  momentsNearby: {
+    color: 'rgb(255,255,255)',
+    fontSize: 18,
+    letterSpacing: 1,
+    marginTop: 35,
+  },
+  momentCount: {
+    color: 'rgb(255,255,255)',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 50,
+  },
+  momentText: {
+    color: 'rgb(255,255,255)',
+    fontSize: 16,
+    opacity: 0.7,
+  },
+  refreshIcon: {
+    // position: 'absolute',
+    color: 'rgb(235,235,235)',
+    backgroundColor: 'transparent',
+  },
+  refreshWrap: {
+    position: 'absolute',
+    right: 20,
+    top: 45,
+  },
+  mapIcon: {
+    color: 'rgb(235,235,235)',
+    backgroundColor: 'transparent',
+  },
+  mapWrap: {
+    position: 'absolute',
+    left: 20,
+    top: 45,
+  },
+  statusBar: {
+    color: 'rgb(255,255,255)',
+  },
+  filtersWrap: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    // backgroundColor: 'blue',
+    height: 45,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  firstFilterWrap: {
+    flex: 0.3333333,
+    // backgroundColor: 'green',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+  },
+  secondFilterWrap: {
+    flex: 0.3333333,
+    // backgroundColor: 'orange',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+  },
+  thirdFilterWrap: {
+    flex: 0.3333333,
+    // backgroundColor: 'yellow',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+  },
+  redHeart: {
+    height: 18,
+    resizeMode: 'contain',
   },
 });
 
@@ -32,134 +118,94 @@ class GridView extends Component {
   constructor(props) {
     super(props);
     this.store = props.store;
-    this.renderItem = this.renderItem.bind(this);
+    this.updateVideos = this.updateVideos.bind(this);
   }
 
+
   componentWillMount() {
-    updateCurrentPosition(this.store,
-    () => {
-      if (this.props.mode !== 'user') {
-        getAllVideos(
-          getHeaders(this.store),
-          this.store.getState().position,
-          (videos) => { this.store.dispatch(updateAllVideosList(videos)); }
-        );
-      } else {
-        getUserVideos(
-          getHeaders(this.store),
-          (videos) => { this.store.dispatch(updateUserVideosList(videos)); }
-        );
-      }
-    });
+    this.updateVideos();
   }
 
   componentDidMount() {
     this.unsubscribe = this.store.subscribe(() =>
       this.forceUpdate()
     );
-
-    if (!navigator.geolocation) { console.log('geoloaction not available'); }
-    if (navigator.geolocation) { console.log('geoloaction available'); }
-    navigator.geolocation.getCurrentPosition(
-      (initialPosition) => {
-        this.store.dispatch(
-          updateCoordinats(initialPosition.coords.latitude, initialPosition.coords.longitude)
-        );
-      },
-      (error) => alert('error trying to find initial position', error.message),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    );
-
-
-    this.watchID = navigator.geolocation.watchPosition((lastPosition) => {
-      // if we want function on position change, it should go here
-      // this.state.changePosFunction(lastPosition);
-      this.store.dispatch(
-        updateCoordinats(lastPosition.coords.latitude, lastPosition.coords.longitude)
-      );
-    });
   }
 
   componentWillUnmount() {
     this.unsubscribe();
-    navigator.geolocation.clearWatch(this.watchID);
   }
 
-  _renderSeperator(sectionID, rowID, adjacentRowHighlighted) {
-    return (
-      <View
-        key={`${sectionID}-${rowID}`}
-        style={{
-          // height: adjacentRowHighlighted ? 4 : 1,
-          // backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#CCCCCC',
-        }}
-      />
-    );
-  }
-
-  showLoadedVids() {
-    if (this.props.mode === 'user') {
-      if (this.store.getState().videos.userVideosLoaded) {
-        return (
-          <ListView
-            automaticallyAdjustContentInsets={false}
-            dataSource={this.store.getState().videos.userDataSource}
-            initialListSize={9}
-            renderRow={this.renderItem}
-            renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
-            renderSeparator={this._renderSeperator}
-          />);
-      }
-    } else {
-      if (this.store.getState().videos.videosLoaded) {
-        return (
-          <ListView
-            automaticallyAdjustContentInsets={false}
-            dataSource={this.store.getState().videos.dataSource}
-            initialListSize={9}
-            renderRow={this.renderItem}
-            renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
-            renderSeparator={this._renderSeperator}
-        />);
-      }
-    }
-
-
-
-    return (
-      <View style={style.loading}>
-        <Text>Loading, hang in there...</Text>
-      </View>
-    );
-  }
-
-  renderItem(video) {
-    // const lat1 = video.point.coordinates[0];
-    // const lng1 = video.point.coordinates[1];
-    // const lat2 = this.store.getState().position.latitude;
-    // const lng2 = this.store.getState().position.longitude;
-    // <View>
-      // <Text>{getDistanceInKm(lat1, lng1, lat2, lng2)}URL:{video.url} LAT: {video.point.coordinates[0]}</Text>
-    // </View>
-    const kmAway = getVideoDistanceInKm(video, this.store.getState().position);
-    const vid = Object.assign({}, video, { userName: 'awesomeUser', kmAway });
-
-    return (
-      <View>
-        <VideoEntry video={vid} store={this.store} />
-      </View>
-    );
+  updateVideos() {
+    updateCurrentPosition(this.store, () =>
+      getAllVideos(getHeaders(this.store), this.store.getState().position,
+        (videos) => { this.store.dispatch(updateAllVideosList(videos)); }));
   }
 
   render() {
     return (
-      <View style={style.container}>
-        {this.showLoadedVids()}
-
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" hidden={false} />
+        <Image style={styles.coverImage} source={coverImage} >
+          <View style={styles.textWrap}>
+            <Text style={styles.momentsNearby}>
+              Moments nearby
+            </Text>
+            <Text style={styles.momentCount}>
+              {this.store.getState().videos.videos.length}
+            </Text>
+            <Text style={styles.momentText}>
+              {this.store.getState().videos.userVideos.length === 1 ? 'Moment' : 'Moments'}
+            </Text>
+          </View>
+        </Image>
+        <TouchableOpacity style={styles.refreshWrap} onPress={this.updateVideos}>
+          <Icon
+            style={styles.refreshIcon}
+            name="undo"
+            size={24}
+            color="rgb(255,255,255)"
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.mapWrap} onPress={Actions.map}>
+          <Icon
+            style={styles.mapIcon}
+            name="map-o"
+            size={24}
+            color="rgb(255,255,255)"
+          />
+        </TouchableOpacity>
+        <View style={styles.filtersWrap}>
+          <View style={styles.firstFilterWrap}>
+            <TouchableOpacity>
+              <Image style={styles.redHeart} source={redHeart} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.secondFilterWrap}>
+            <TouchableOpacity>
+              <Icon
+                name="clock-o"
+                size={24}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.thirdFilterWrap}>
+            <TouchableOpacity>
+              <Icon
+                name="list-ul"
+                size={24}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <VideoList mode="all" store={this.store} />
       </View>
     );
   }
-
 }
+
+GridView.propTypes = {
+  store: React.PropTypes.object,
+};
 
 module.exports = GridView;

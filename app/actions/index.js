@@ -102,6 +102,12 @@ export const updateAllVideosList = (videos) => {
   videos.forEach(video => {
     if (video.thumbnail === null) { video.thumbnail = defaultThumbnail; }
   });
+
+  // sort videos by creation date
+  videos = videos.sort(function(a,b){
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
+
   return {
     type: constants.UPDATE_ALL_VIDEOS_LIST,
     dataSource: ds.cloneWithRows(videos),
@@ -117,12 +123,25 @@ export const updateUserVideosList = (videos) => {
   videos.forEach(video => {
     if (video.thumbnail === null) { video.thumbnail = defaultThumbnail; }
   });
+  
+  // sort videos by creation date
+  videos = videos.sort(function(a,b){
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
+
   return {
     type: constants.UPDATE_USER_VIDEOS_LIST,
     dataSource: ds.cloneWithRows(videos),
     videos,
   };
 };
+
+export const setPreviewVideo = (video) => (
+  {
+    type: constants.SET_PREVIEW_VIDEO,
+    video,
+  }
+);
 
 export const storeUserCredentials = (data) => (
   {

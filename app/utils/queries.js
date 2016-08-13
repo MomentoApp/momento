@@ -2,7 +2,7 @@ require('es6-promise').polyfill();
 require('fetch-everywhere');
 import SERVER_ADDRESS from '../config/serverAddress';
 
-const radius = 20000000000;
+const radius = 1000;
 
 const getAllVideos = (headers, location, cb) => {
   console.log('location', location);

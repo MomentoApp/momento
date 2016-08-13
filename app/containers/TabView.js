@@ -62,9 +62,10 @@ class TabView extends Component {
           <VideoPlayer store={this.store} mode={MODE_SUBMIT} />
         }
 
-        {this.props.name === 'videoPlayerForList' &&
+        {this.props.name === 'videoPlayerWatch' &&
           <VideoPlayer store={this.store} mode={MODE_WATCH} />
         }
+
 
         {this.props.name === 'list' &&
           // <VideoList store={this.props.store} />

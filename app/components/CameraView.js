@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Text,
+  Dimensions,
 } from 'react-native';
 import Camera from 'react-native-camera';
 import { Actions } from '../../custom_modules/react-native-router-flux';
@@ -16,6 +17,7 @@ import {
   changeCameraType,
   setCurrentVideo,
   setThumbnailPath,
+  updateAllVideosList,
 } from '../actions';
 
 import rearCameraIcon from './../assets/camera/ic_camera_rear_white.png';
@@ -26,11 +28,14 @@ import flashOffIcon from './../assets/camera/ic_flash_off_white.png';
 import videoCameraIcon from './../assets/camera/ic_video_camera_36pt.png';
 import stopCameraIcon from './../assets/camera/ic_stop_camera_36pt.png';
 import { MODE_SUBMIT, VIDEO, AR } from '../constants';
-
+import { getAllVideos } from '../utils/queries.js';
+import getHeaders from '../utils/helpers';
 import WebViewBridge from 'react-native-webview-bridge';
 import THREE_JS_RENDER from '../lib/render.js';
 import LocationMath from '../lib/locationMath.js';
 import HANDLE_ORIENTATION from '../lib/orientationHandler.js';
+import { updateCurrentPosition } from '../utils/navigation';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -129,7 +134,7 @@ const html = `<!DOCTYPE html>
     <style>
       body { margin: 0; }
       canvas { width: 100%; height: 100% }
-      .output { color: red; margin-top: 50px}
+      //.output { color: red; margin-top: 50px}
     </style>
   </head>
   <body>
@@ -173,18 +178,27 @@ const injectScript = `
       // device in feet. It also holds video thumbnails
       var message = JSON.parse( message );
 
-      message.locs.forEach( function( loc, i ) {
-        geometry = new THREE.SphereGeometry( 30, 32, 32 );
-        loader = new THREE.TextureLoader();
-        texture = loader.load(loc.thumbnail);
-        material = new THREE.MeshBasicMaterial( { map: texture } );
-        meshes[i] = new THREE.Mesh( geometry, material );
-        meshes[i].visible = true;
-        scene.add(meshes[i]);
-        meshes[i].position.x = loc.x;
-        meshes[i].position.z = loc.z; 
-        meshes[i].position.y = 20;
-      });
+      var savedCoords = {};
+      var coords;
+      var j = 0;
+      for (var i = 0 ; i < message.locs.length; i++ ) {  
+        coords = message.locs[i].z + ' ' + message.locs[i].x;
+        if (!(coords in savedCoords)) {
+          savedCoords[coords] = coords;
+          geometry = new THREE.SphereGeometry( 30, 32, 32 );
+          loader = new THREE.TextureLoader();
+          texture = loader.load(message.locs[i].thumbnail);
+          material = new THREE.MeshBasicMaterial( { map: texture } );
+          meshes[j] = new THREE.Mesh( geometry, material );
+          meshes[j].visible = true;
+          scene.add(meshes[j]);
+          meshes[j].position.x = message.locs[i].x;
+          meshes[j].position.z = message.locs[i].z; 
+          meshes[j].position.y = 20;
+          j++;
+        }
+      };
+      //alert(JSON.stringify(savedCoords));
     };
   });
 `;
@@ -199,13 +213,19 @@ class CameraView extends React.Component {
     this.recordVideo = this.recordVideo.bind(this);
     this.switchType = this.switchType.bind(this);
     this.switchFlash = this.switchFlash.bind(this);
+    this.updateVideos = this.updateVideos.bind(this);
     this.onBridgeMessage = this.onBridgeMessage.bind(this);
+    this.sendLocsToBridge = this.sendLocsToBridge.bind(this);
     this.state = {
       recordingTime: '00:00',
     };
   }
 
 // *********** AR VIEW METHODS ************
+
+  componentWillMount() {
+    this.updateVideos();
+  }
 
   componentDidMount() {
     this.unsubscribe = this.store.subscribe(() =>
@@ -217,9 +237,10 @@ class CameraView extends React.Component {
     this.unsubscribe();
   }
 
+
   onBridgeMessage(message) {
     if (message === 'BRIDGE_READY') {
-      this.sendLocsToBridge.call(this, this.getCurrentLocation());
+      this.sendLocsToBridge(this.getCurrentLocation());
     }
   }
 
@@ -232,6 +253,12 @@ class CameraView extends React.Component {
     return currentLocation;
   }
 
+  updateVideos() {
+    updateCurrentPosition(this.store, () =>
+      getAllVideos(getHeaders(this.store), this.store.getState().position,
+        (videos) => { this.store.dispatch(updateAllVideosList(videos)); }));
+  }
+
   calculateLocations(currentLocation, locObj) {
     const locations = [];
     locObj.forEach(loc => {
@@ -241,10 +268,11 @@ class CameraView extends React.Component {
     return locations;
   }
 
-
   sendLocsToBridge(coordinates) {
     const message = {};
     message.locs = this.calculateLocations(coordinates, this.store.getState().videos.videos);
+    console.log('length of videos', this.store.getState().videos.videos.length);
+    console.log(coordinates, this.store.getState().videos.videos);
     this.refs.webviewbridge.sendToBridge(JSON.stringify(message));
   }
 
@@ -275,6 +303,8 @@ class CameraView extends React.Component {
       }, 1000) });
     } else {
       this.setState({ recordingTime: '00:00' });
+      // clear current video so that the thumbnail will be different if recoring time is less than 5 sec
+      this.store.dispatch(setCurrentVideo({}));
       clearInterval(this.state.timer);
     }
   }
@@ -296,14 +326,14 @@ class CameraView extends React.Component {
                 const video = Object.assign({}, data, { url: data.path });
                 delete video.path;
                 context.store.dispatch(setCurrentVideo(video));
-                const redirect = () => { Actions.videoPlayer({ mode: MODE_SUBMIT }); };
+                const redirect = () => { Actions.videoPlayer(); };
                 redirect();
               });
             } else {
               const video = Object.assign({}, data, { url: data.path });
               delete video.path;
               context.store.dispatch(setCurrentVideo(video));
-              const redirect = () => { Actions.videoPlayer({ mode: MODE_SUBMIT }); };
+              const redirect = () => { Actions.videoPlayer(); };
               redirect();
             }
           })
@@ -437,7 +467,20 @@ class CameraView extends React.Component {
       return (
         <View
           style={styles.webViewWrap}
-          onStartShouldSetResponder={(e) => console.log([e.nativeEvent.pageX, e.nativeEvent.pageY])}
+          onStartShouldSetResponder={(e) => {
+            console.log([e.nativeEvent.pageX, e.nativeEvent.pageY]);
+            const { height, width } = Dimensions.get('window');
+            console.log('width and height of the screen', [width, height]);
+            if (
+              e.nativeEvent.pageX <= width * 0.75 &&
+              e.nativeEvent.pageX >= width * 0.25 &&
+              e.nativeEvent.pageY <= height * 0.75 &&
+              e.nativeEvent.pageY >= height * 0.25
+            ) {
+              this.store.dispatch(setCurrentVideo(this.store.getState().videos.videos[0]));
+              Actions.videoPlayerWatch();
+            }
+          }}
         >
           <WebViewBridge
             ref="webviewbridge"
@@ -453,20 +496,20 @@ class CameraView extends React.Component {
   }
 
   renderARDevWrap() {
-   if (this.store.getState().camera.ARorVideo === AR) {
-     return (
-       <View style={styles.developerWrap}>
-         <Text style={styles.developerText}>
-           Latitude: {this.store.getState().position.latitude}
-         </Text>
-         <Text style={styles.developerText}>
-           Longitude: {this.store.getState().position.longitude}
-         </Text>
-       </View>
-     );
-   }
-   return null;
- }
+    if (this.store.getState().camera.ARorVideo === AR) {
+      return (
+        <View style={styles.developerWrap}>
+          <Text style={styles.developerText}>
+            Latitude: {this.store.getState().position.latitude}
+          </Text>
+          <Text style={styles.developerText}>
+            Longitude: {this.store.getState().position.longitude}
+          </Text>
+        </View>
+      );
+    }
+    return null;
+  }
 
   render() {
     return (
@@ -496,17 +539,10 @@ class CameraView extends React.Component {
     );
   }
 }
-
-//{this.renderARDevWrap()}
+        // {this.renderARDevWrap()}
 
 CameraView.propTypes = {
   store: React.PropTypes.object,
 };
 
 module.exports = CameraView;
-
-
-
-
-
-

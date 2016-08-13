@@ -4,6 +4,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 
 import { saveToS3 } from '../utils/s3Interface';
