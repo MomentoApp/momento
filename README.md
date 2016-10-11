@@ -1,6 +1,6 @@
 # Momento
 <br>
-![App screenshot](https://raw.githubusercontent.com/momentoapp/momento/master/docs/screenshot.png)
+![App screenshot](/docs/screenshot.png)
 
 ## Team
 
