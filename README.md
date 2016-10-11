@@ -1,6 +1,6 @@
-# Project Name
-
-> Momento
+# Momento
+<br>
+![App screenshot](https://raw.githubusercontent.com/momentoapp/momento/master/docs/screenshot.png)
 
 ## Team
 
