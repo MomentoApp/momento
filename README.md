@@ -26,9 +26,9 @@
 
 - Node 0.10.x
 - Express x.x.x
-- Postgresql 9.1.x
-- etc
-- etc
+- XCode 7.3.x
+- React Native cli
+- Watchman
 
 ## Development
 
@@ -37,9 +37,9 @@
 From within the root directory:
 
 ```sh
-sudo npm install -g bower
 npm install
-bower install
+npm install -g react-native-cli
+react-native run-ios
 ```
 
 ### Roadmap
